@@ -13,6 +13,7 @@ python = "^3.5"
 
 [tool.poetry.dev-dependencies]
 
+pyramid = "*"
 changelog-gen = "~0.7.0"
 flake8 = "^3.7"
 flake8-commas = "^2.0"

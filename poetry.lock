@@ -163,6 +163,14 @@ gitdb = ">=4.0.1,<5"
 
 [[package]]
 category = "dev"
+description = "Integrated process monitor for developing and reloading daemons."
+name = "hupper"
+optional = false
+python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
+version = "1.10.2"
+
+[[package]]
+category = "dev"
 description = "Read metadata from Python packages"
 marker = "python_version < \"3.8\""
 name = "importlib-metadata"
@@ -222,6 +230,14 @@ six = "*"
 
 [[package]]
 category = "dev"
+description = "Load, configure, and compose WSGI applications and servers"
+name = "pastedeploy"
+optional = false
+python-versions = "*"
+version = "2.1.0"
+
+[[package]]
+category = "dev"
 description = "A module wrapper for os.path"
 name = "path"
 optional = false
@@ -255,6 +271,29 @@ version = "2.3.5"
 
 [package.dependencies]
 six = "*"
+
+[[package]]
+category = "dev"
+description = "A loader interface around multiple config file formats."
+name = "plaster"
+optional = false
+python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
+version = "1.0"
+
+[package.dependencies]
+setuptools = "*"
+
+[[package]]
+category = "dev"
+description = "A loader implementing the PasteDeploy syntax to be used by plaster."
+name = "plaster-pastedeploy"
+optional = false
+python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
+version = "0.7"
+
+[package.dependencies]
+PasteDeploy = ">=2.0"
+plaster = ">=0.5"
 
 [[package]]
 category = "dev"
@@ -300,6 +339,25 @@ name = "pyparsing"
 optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 version = "2.4.7"
+
+[[package]]
+category = "dev"
+description = "The Pyramid Web Framework, a Pylons project"
+name = "pyramid"
+optional = false
+python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
+version = "1.10.4"
+
+[package.dependencies]
+hupper = ">=1.5"
+plaster = "*"
+plaster-pastedeploy = "*"
+setuptools = "*"
+translationstring = ">=0.4"
+venusian = ">=1.0"
+webob = ">=1.8.3"
+"zope.deprecation" = ">=3.5.0"
+"zope.interface" = ">=3.8.0"
 
 [[package]]
 category = "dev"
@@ -414,11 +472,35 @@ version = "6.14.2"
 
 [[package]]
 category = "dev"
+description = "Utility library for i18n relied on by various Repoze and Pyramid packages"
+name = "translationstring"
+optional = false
+python-versions = "*"
+version = "1.4"
+
+[[package]]
+category = "dev"
+description = "A library for deferring decorator actions"
+name = "venusian"
+optional = false
+python-versions = ">=3.5"
+version = "3.0.0"
+
+[[package]]
+category = "dev"
 description = "Measures the displayed width of unicode strings in a terminal"
 name = "wcwidth"
 optional = false
 python-versions = "*"
 version = "0.2.5"
+
+[[package]]
+category = "dev"
+description = "WSGI request and response object"
+name = "webob"
+optional = false
+python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*"
+version = "1.8.6"
 
 [[package]]
 category = "dev"
@@ -429,8 +511,30 @@ optional = false
 python-versions = ">=2.7"
 version = "1.2.0"
 
+[[package]]
+category = "dev"
+description = "Zope Deprecation Infrastructure"
+name = "zope.deprecation"
+optional = false
+python-versions = "*"
+version = "4.4.0"
+
+[package.dependencies]
+setuptools = "*"
+
+[[package]]
+category = "dev"
+description = "Interfaces for Python"
+name = "zope.interface"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "5.1.2"
+
+[package.dependencies]
+setuptools = "*"
+
 [metadata]
-content-hash = "e60560ee83abeb81fd2a18078aadb25e1fc0abd4ef3b11f2f7f6669174b6e122"
+content-hash = "acc223e3f20ab2f82e534b878b105abf4c2fc5045b42f0931bb0665516976f8c"
 python-versions = "^3.5"
 
 [metadata.hashes]
@@ -450,20 +554,25 @@ flake8-isort = ["0d34b266080e1748412b203a1690792245011706b1858c203476b43460bf365
 flake8-quotes = ["c844c9592940c8926c60f00bc620808912ff2acd34923ab5338f3a5ca618a331"]
 gitdb = ["91f36bfb1ab7949b3b40e23736db18231bf7593edada2ba5c3a174a7b23657ac", "c9e1f2d0db7ddb9a704c2a0217be31214e91a4fe1dea1efad19ae42ba0c285c9"]
 gitpython = ["138016d519bf4dd55b22c682c904ed2fd0235c3612b2f8f65ce218ff358deed8", "a03f728b49ce9597a6655793207c6ab0da55519368ff5961e4a74ae475b9fa8e"]
+hupper = ["3818f53dabc24da66f65cf4878c1c7a9b5df0c46b813e014abdd7c569eb9a02a", "5de835f3b58324af2a8a16f52270c4d1a3d1734c45eed94b77fd622aea737f29"]
 importlib-metadata = ["77a540690e24b0305878c37ffd421785a6f7e53c8b5720d211b211de8d0e95da", "cefa1a2f919b866c5beb7c9f7b0ebb4061f30a8a9bf16d609b000e2dfaceb9c3"]
 isort = ["54da7e92468955c4fceacd0c86bd0ec997b0e1ee80d97f67c35a78b719dccab1", "6e811fcb295968434526407adb8796944f1988c5b65e8139058f2014cbe100fd"]
 mccabe = ["ab8a6258860da4b6677da4bd2fe5dc2c659cff31b3ee4f7f5d64e79735b80d42", "dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"]
 mock = ["83657d894c90d5681d62155c82bda9c1187827525880eda8ff5df4ec813437c3", "d157e52d4e5b938c550f39eb2fd15610db062441a9c2747d3dbfa9298211d0f8"]
 more-itertools = ["6f83822ae94818eae2612063a5101a7311e68ae8002005b5e05f03fd74a86a20", "9b30f12df9393f0d28af9210ff8efe48d10c94f73e5daf886f10c4b0b0b4f03c"]
 packaging = ["4357f74f47b9c12db93624a82154e9b120fa8293699949152b22065d556079f8", "998416ba6962ae7fbd6596850b80e17859a5753ba17c32284f67bfff33784181"]
+pastedeploy = ["bc6578735a32c77435a3e0769426983d3df6dc53a7229290c495ec10aefb81a5", "e7559878b6e92023041484be9bcb6d767cf4492fc3de7257a5dae76a7cc11a9b"]
 path = ["41f0db0b6e32b3fc33c0bede630f6b58c7790af3a27c899e0c7ff69143d8696d", "97249b37e5e4017429a780920147200a2215e268c1a18fa549fec0b654ce99b7"]
 "path.py" = ["8d885e8b2497aed005703d94e0fd97943401f035e42a136810308bff034529a8", "a43e82eb2c344c3fd0b9d6352f6b856f40b8b7d3d65cc05978b42c3715668496"]
 pathlib2 = ["0ec8205a157c80d7acc301c0b18fbd5d44fe655968f5d947b6ecef5290fc35db", "6cd9a47b597b37cc57de1c05e56fb1a1c9cc9fab04fe78c29acd090418529868"]
+plaster = ["215c921a438b5349931fd7df9a5a11a3572947f20f4bc6dd622ac08f1c3ba249", "8351c7c7efdf33084c1de88dd0f422cbe7342534537b553c49b857b12d98c8c3"]
+plaster-pastedeploy = ["391d93a4e1ff81fc3bae27508ebb765b61f1724ae6169f83577f06b6357be7fd", "7c8aa37c917b615c70bf942b24dc1e0455c49f62f1a2214b1a0dd98871644bbb"]
 pluggy = ["15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0", "966c145cd83c96502c3c3868f50408687b38434af77734af1e9ca461a4081d2d"]
 py = ["366389d1db726cd2fcfc79732e75410e5fe4d31db13692115529d34069a043c2", "9ca6883ce56b4e8da7e79ac18787889fa5206c79dcc67fb065376cd2fe03f342"]
 pycodestyle = ["2295e7b2f6b5bd100585ebcb1f616591b652db8a741695b3d8f5d28bdc934367", "c58a7d2815e0e8d7972bf1803331fb0152f867bd89adf8a01dfd55085434192e"]
 pyflakes = ["0d94e0e05a19e57a99444b6ddcf9a6eb2e5c68d3ca1e98e90707af8152c90a92", "35b2d75ee967ea93b55750aa9edbbf72813e06a66ba54438df2cfac9e3c27fc8"]
 pyparsing = ["c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1", "ef9d7589ef3c200abe66653d3f1ab1033c3c419ae9b9bdb1240a85b024efc88b"]
+pyramid = ["51bf64647345237c00d2fe558935e0e4938c156e29f17e203457fd8e1d757dc7", "d80ccb8cfa550139b50801591d4ca8a5575334adb493c402fce2312f55d07d66"]
 pytest = ["5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1", "7979331bfcba207414f5e1263b5a0f8f521d0f457318836a7355531ed1a4c7d8"]
 pytest-cov = ["45ec2d5182f89a81fc3eb29e3d1ed3113b9e9a873bcddb2a71faaab066110191", "47bd0ce14056fdd79f93e1713f88fad7bdcc583dcd7783da86ef2f085a0bb88e"]
 pytest-git = ["356fef84eb0d663d2a5eceafb3ff6b2c3043b2b964b1872b67e51979dbbb43f8", "43bea064524b8e2b814960ec0e5506cacd00db8eab636a991b7d426e3ee2bd01", "a7672cd62e25505b83d805a66cfef79d7fced05031919e3f23727f6c9df5aca4", "f0737e688bb6d53b4a501d9eba340885e63522ee57e17c24137525c7d9a17361"]
@@ -473,5 +582,10 @@ six = ["30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259", "8b74
 smmap = ["54c44c197c819d5ef1991799a7e30b662d1e520f2ac75c9efbeb54a742214cf4", "9c98bbd1f9786d22f14b3d4126894d56befb835ec90cef151af566c7e19b5d24"]
 termcolor = ["1d6d69ce66211143803fbc56652b41d73b4a400a2891d7bf7a1cdf4c02de613b"]
 testfixtures = ["14d9907390f5f9c7189b3d511b64f34f1072d07cc13b604a57e1bb79029376e3", "816557888877f498081c1b5c572049b4a2ddffedb77401308ff4cdc1bb9147b7"]
+translationstring = ["5f4dc4d939573db851c8d840551e1a0fb27b946afe3b95aafc22577eed2d6262", "bf947538d76e69ba12ab17283b10355a9ecfbc078e6123443f43f2107f6376f3"]
+venusian = ["06e7385786ad3a15c70740b2af8d30dfb063a946a851dcb4159f9e2a2302578f", "f6842b7242b1039c0c28f6feef29016e7e7dd3caaeb476a193acf737db31ee38"]
 wcwidth = ["beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784", "c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"]
+webob = ["a3c89a8e9ba0aeb17382836cdb73c516d0ecf6630ec40ec28288f3ed459ce87b", "aa3a917ed752ba3e0b242234b2a373f9c4e2a75d35291dcbe977649bd21fd108"]
 zipp = ["c70410551488251b0fee67b460fb9a536af8d6f9f008ad10ac51f615b6a521b1", "e0d9e63797e483a30d27e09fffd308c59a700d365ec34e93cc100844168bf921"]
+"zope.deprecation" = ["0d453338f04bacf91bbfba545d8bcdf529aa829e67b705eac8c1a7fdce66e2df", "f1480b74995958b24ce37b0ef04d3663d2683e5d6debc96726eff18acf4ea113"]
+"zope.interface" = ["040f833694496065147e76581c0bf32b229a8b8c5eda120a0293afb008222387", "11198b44e4a3d8c7a80cc20bbdd65522258a4d82fe467cd310c9fcce8ffe2ed2", "121a9dccfe0c34be9c33b2c28225f0284f9b8e090580ffdff26c38fa16c7ffe1", "15f3082575e7e19581a80b866664f843719b647a7f7189c811ba7f9ab3309f83", "1d73d8986f948525536956ddd902e8a587a6846ebf4492117db16daba2865ddf", "208e82f73b242275b8566ac07a25158e7b21fa2f14e642a7881048430612d1a6", "2557833df892558123d791d6ff80ac4a2a0351f69c7421c7d5f0c07db72c8865", "25ea6906f9987d42546329d06f9750e69f0ee62307a2e7092955ed0758e64f09", "2c867914f7608674a555ac8daf20265644ac7be709e1da7d818089eebdfe544e", "2eadac20711a795d3bb7a2bfc87c04091cb5274d9c3281b43088a1227099b662", "37999d5ebd5d7bcd32438b725ca3470df05a7de8b1e9c0395bef24296b31ca99", "3ae8946d51789779f76e4fa326fd6676d8c19c1c3b4c4c5e9342807185264875", "5636cd7e60583b1608044ae4405e91575399430e66a5e1812f4bf30bcc55864e", "570e637cb6509998555f7e4af13006d89fad6c09cfc5c4795855385391063e4b", "590a40447ff3803c44050ce3c17c3958f11ca028dae3eacdd7b96775184394fa", "5aab51b9c1af1b8a84f40aa49ffe1684d41810b18d6c3e94aa50194e0a563f01", "5ffe4e0753393bcbcfc9a58133ed3d3a584634cc7cc2e667f8e3e6fbcbb2155d", "663982381bd428a275a841009e52983cc69c471a4979ce01344fadbf72cf353d", "6d06bf8e24dd6c473c4fbd8e16a83bd2e6d74add6ba25169043deb46d497b211", "6e5b9a4bf133cf1887b4a04c21c10ca9f548114f19c83957b2820d5c84254940", "70a2aed9615645bbe9d82c0f52bc7e676d2c0f8a63933d68418e0cb307f30536", "7750746421c4395e3d2cc3d805919f4f57bb9f2a9a0ccd955566a9341050a1b4", "7fc8708bc996e50fc7a9a2ad394e1f015348e389da26789fa6916630237143d7", "91abd2f080065a7c007540f6bbd93ef7bdbbffa6df4a4cfab3892d8623b83c98", "988f8b2281f3d95c66c01bdb141cefef1cc97db0d473c25c3fe2927ef00293b9", "9f56121d8a676802044584e6cc41250bbcde069d8adf725b9b817a6b0fd87f09", "a0f51536ce6e817a7aa25b0dca8b62feb210d4dc22cabfe8d1a92d47979372cd", "a1cdd7390d7f66ddcebf545203ca3728c4890d605f9f2697bc8e31437906e8e7", "b10eb4d0a77609679bf5f23708e20b1cd461a1643bd8ea42b1ca4149b1a5406c", "b274ac8e511b55ffb62e8292316bd2baa80c10e9fe811b1aa5ce81da6b6697d8", "c75b502af2c83fcfa2ee9c2257c1ba5806634a91a50db6129ff70e67c42c7e7b", "c9c8e53a5472b77f6a391b515c771105011f4b40740ce53af8428d1c8ca20004", "d867998a56c5133b9d31992beb699892e33b72150a8bf40f86cb52b8c606c83f", "eb566cab630ec176b2d6115ed08b2cf4d921b47caa7f02cca1b4a9525223ee94", "f61e6b95b414431ffe9dc460928fe9f351095fde074e2c2f5c6dda7b67a2192d", "f718675fd071bcce4f7cbf9250cbaaf64e2e91ef1b0b32a1af596e7412647556", "f9d4bfbd015e4b80dbad11c97049975f94592a6a0440e903ee647309f6252a1f", "fae50fc12a5e8541f6f1cc4ed744ca8f76a9543876cf63f618fb0e6aca8f8375", "fcf9c8edda7f7b2fd78069e97f4197815df5e871ec47b0f22580d330c6dec561", "fdedce3bc5360bd29d4bb90396e8d4d3c09af49bc0383909fe84c7233c5ee675"]
