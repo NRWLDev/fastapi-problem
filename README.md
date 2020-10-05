@@ -70,5 +70,24 @@ This will handle all unexpected errors, and any app specific errors.
 ```python
 @view_config(route_name="test", renderer="json")
 def test(request):
-    raise MyNotFoundError("debug message")
+    raise UserNotFoundError("debug message")
+```
+
+
+## Flask
+
+Register the error handler with your application
+
+```python
+app.register_error_handler(Exception, web_error.handler.flask.exception_handler)
+```
+
+## Aiohttp
+
+Decorate your views with the error handler.
+
+```python
+@web_error.handler.aiohttp.view_error_handler
+async def user(self):
+    raise UserNotFoundError("debug message")
 ```
