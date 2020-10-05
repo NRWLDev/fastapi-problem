@@ -1,6 +1,0 @@
-.git/
-.github/
-tests/
-**.pyc
-**/__pycache__/
-scripts/accounts.csv
