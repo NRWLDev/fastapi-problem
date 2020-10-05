@@ -37,7 +37,7 @@ description = "Changelog generation tool"
 name = "changelog-gen"
 optional = false
 python-versions = ">=3.5,<4.0"
-version = "0.6.0"
+version = "0.7.0"
 
 [package.dependencies]
 bump2version = ">=0.5.11,<0.6.0"
@@ -430,7 +430,7 @@ python-versions = ">=2.7"
 version = "1.2.0"
 
 [metadata]
-content-hash = "759ffa9d6d4e3ca84793d29a6a83609b136d8e584ff888a59fde46e748bf8502"
+content-hash = "e60560ee83abeb81fd2a18078aadb25e1fc0abd4ef3b11f2f7f6669174b6e122"
 python-versions = "^3.5"
 
 [metadata.hashes]
@@ -438,7 +438,7 @@ apipkg = ["37228cda29411948b422fae072f57e31d3396d2ee1c9783775980ee9c9990af6", "5
 atomicwrites = ["6d1784dea7c0c8d4a5172b6c620f40b6e4cbfdf96d783691f2e1302a7b88e197", "ae70396ad1a434f9c7046fd2dd196fc04b12f9e91ffb859164193be8b6168a7a"]
 attrs = ["26b54ddbbb9ee1d34d5d3668dd37d6cf74990ab23c828c2888dccdceee395594", "fce7fc47dfc976152e82d53ff92fa0407700c21acd20886a13777a0d20e655dc"]
 bump2version = ["524bde030318fe2543038defe0f77739605636fef96924883813cb290cf79c1e", "bfcc051498dda9fd9ac8634689f4516e1c20fdeeace3278932cc6e1248418b36"]
-changelog-gen = ["57480e72fc947b4daea95ea4d5bdcb1e82f918cda91514b93afba8eb6b14973e", "79e45899cca5e5a96f418a78e4fe5a3a182e09876ff54c121d4c6dfa4c960587"]
+changelog-gen = ["5a4d92a07259bc9b6b77cf9c6d205e7b02264a6a17a0cee509fa797815d6a69b", "eec788ff33a2a4283e4f18892bd66326f638db61de3d6637b74c777c558fe653"]
 click = ["d2b5255c7c6349bc1bd1e59e08cd12acbbd63ce649f2588755783aa94dfb6b1a", "dacca89f4bfadd5de3d7489b7c8a566eee0d3676333fbb50030263894c38c0dc"]
 colorama = ["7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff", "e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"]
 contextlib2 = ["01f490098c18b19d2bd5bb5dc445b2054d2fa97f09a4280ba2c5f3c394c8162e", "3355078a159fbb44ee60ea80abd0d87b80b78c248643b49aa6d94673b413609b"]
