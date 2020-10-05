@@ -19,7 +19,7 @@ And will render a response with status as the status code:
 
 ```json
 {
-    "code": "code"
+    "code": "code",
     "message": "message",
     "debug_message": "debug_message",
 }
