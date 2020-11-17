@@ -31,5 +31,5 @@ pytest-git = "^1.7.0"
 pytest-random-order = "^1.0"
 
 [build-system]
-requires = ["poetry<1.0"]
+requires = ["poetry=>1.1,<2.0"]
 build-backend = "poetry.masonry.api"
