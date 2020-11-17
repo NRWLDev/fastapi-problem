@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.0
+
+### Features and Improvements
+
+- Add handler to support fastapi [[#2](https://github.com/EdgyEdgemond/web-error/2)]
+
 ## v0.1.1
 
 ## v0.1.0
