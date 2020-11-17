@@ -9,13 +9,14 @@ homepage="https://github.com/EdgyEdgemond/web-error/"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.5"
+python = "^3.6"
 
 [tool.poetry.dev-dependencies]
 
 aiohttp = "*"
 pyramid = "*"
 flask = "*"
+fastapi = "*"
 
 changelog-gen = "~0.7.0"
 flake8 = "^3.7"
@@ -30,5 +31,5 @@ pytest-git = "^1.7.0"
 pytest-random-order = "^1.0"
 
 [build-system]
-requires = ["poetry<1.0"]
+requires = ["poetry=>1.1,<2.0"]
 build-backend = "poetry.masonry.api"
