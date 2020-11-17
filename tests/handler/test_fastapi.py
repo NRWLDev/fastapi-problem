@@ -23,7 +23,10 @@ class TestExceptionHandler:
         assert json.loads(response.body) == {
             "message": "Unhandled exception occured.", "debug_message": "Something went bad", "code": None,
         }
-        assert fastapi.logger.exception.call_args == mock.call("Unhandled exception occured.")
+        assert fastapi.logger.exception.call_args == mock.call(
+            "Unhandled exception occured.",
+            exc_info=(type(exc), exc, None),
+        )
 
     def test_known_error(self):
         request = mock.Mock()

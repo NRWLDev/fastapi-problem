@@ -23,7 +23,7 @@ def exception_handler(request: Request, exc: Exception):
         status = exc.status
 
     if status >= 500:
-        logger.exception(message)
+        logger.exception(message, exc_info=(type(exc), exc, exc.__traceback__))
 
     return JSONResponse(
         status_code=status,
