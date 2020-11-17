@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.1
+
+### Bug fixes
+
+- Bugfix for fastapi exception logging [[#2](https://github.com/EdgyEdgemond/web-error/2)]
+
 ## v0.2.0
 
 ### Features and Improvements
