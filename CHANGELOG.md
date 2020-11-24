@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.2
+
+### Bug fixes
+
+- Support RequestValidationError exceptions in fastapi handler. [[#4](https://github.com/EdgyEdgemond/web-error/4)]
+
 ## v0.2.1
 
 ### Bug fixes
