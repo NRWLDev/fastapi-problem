@@ -1,6 +1,8 @@
 import json
 from unittest import mock
 
+from fastapi.exceptions import RequestValidationError
+
 from web_error import error
 from web_error.handler import fastapi
 
@@ -37,4 +39,15 @@ class TestExceptionHandler:
         assert response.status_code == 500
         assert json.loads(response.body) == {
             "message": "This is an error.", "debug_message": "something bad", "code": "E123",
+        }
+
+    def test_fastapi_error(self):
+        request = mock.Mock()
+        exc = RequestValidationError([])
+
+        response = fastapi.exception_handler(request, exc)
+
+        assert response.status_code == 422
+        assert json.loads(response.body) == {
+            "message": "Request validation error.", "debug_message": [], "code": None,
         }
