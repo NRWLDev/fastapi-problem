@@ -37,3 +37,25 @@ def test_marshal(exc):
         "message": e.message,
         "debug_message": "debug_message",
     }
+
+
+@pytest.mark.parametrize("exc", [
+    A404Error,
+    A401Error,
+    A400Error,
+    A500Error,
+])
+def test_reraise(exc):
+    e = exc("debug_message")
+
+    d = e.marshal()
+
+    try:
+        error.HttpException.reraise(status=e.status, **d)
+    except error.HttpException as exc:
+        assert exc.status == e.status
+        assert exc.marshal() == {
+            "code": "E{}".format(e.status),
+            "message": e.message,
+            "debug_message": "debug_message",
+        }
