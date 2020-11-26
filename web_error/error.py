@@ -18,6 +18,15 @@ class HttpException(Exception):
             "debug_message": self.debug_message,
         }
 
+    @classmethod
+    def reraise(cls, message, debug_message=None, code=None, status=500):
+        raise cls(
+            message=message,
+            code=code,
+            debug_message=debug_message,
+            status=status,
+        )
+
 
 class HttpCodeException(HttpException):
     status = None
