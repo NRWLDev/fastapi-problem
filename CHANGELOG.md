@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.0
+
+### Features and Improvements
+
+- Add support for reraising from an error response from another api. [[#5](https://github.com/EdgyEdgemond/web-error/5)]
+
 ## v0.2.2
 
 ### Bug fixes
