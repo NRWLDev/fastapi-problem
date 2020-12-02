@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.1
+
+### Bug fixes
+
+- Generate fastapi handler with cors support. [[#7](https://github.com/EdgyEdgemond/web-error/7)]
+
 ## v0.3.0
 
 ### Features and Improvements
