@@ -1,7 +1,7 @@
 # Web Errors v0.3.0
-[![image](https://img.shields.io/pypi/v/changelog_gen.svg)](https://pypi.org/project/changelog_gen/)
-[![image](https://img.shields.io/pypi/l/changelog_gen.svg)](https://pypi.org/project/changelog_gen/)
-[![image](https://img.shields.io/pypi/pyversions/changelog_gen.svg)](https://pypi.org/project/changelog_gen/)
+[![image](https://img.shields.io/pypi/v/web_error.svg)](https://pypi.org/project/web_error/)
+[![image](https://img.shields.io/pypi/l/web_error.svg)](https://pypi.org/project/web_error/)
+[![image](https://img.shields.io/pypi/pyversions/web_error.svg)](https://pypi.org/project/web_error/)
 ![style](https://github.com/EdgyEdgemond/web-error/workflows/style/badge.svg)
 ![tests](https://github.com/EdgyEdgemond/web-error/workflows/tests/badge.svg)
 [![codecov](https://codecov.io/gh/EdgyEdgemond/web-error/branch/master/graph/badge.svg)](https://codecov.io/gh/EdgyEdgemond/web-error)
