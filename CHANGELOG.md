@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.4.0
+
+### Features and Improvements
+
+- Migrate fastapi handler to starlette handler, extend starlette handler to support fastapi. [[#9](https://github.com/EdgyEdgemond/web-error/9)]
+
 ## v0.3.1
 
 ### Bug fixes

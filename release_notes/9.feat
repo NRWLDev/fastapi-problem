@@ -1,1 +1,0 @@
-Migrate fastapi handler to starlette handler, extend starlette handler to support fastapi.
