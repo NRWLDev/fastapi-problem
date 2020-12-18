@@ -2,6 +2,7 @@ import json
 import logging
 
 from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException
 
 from web_error.error import HttpException
 from web_error.handler import starlette
@@ -18,6 +19,10 @@ def exception_handler(request: starlette.Request, exc: Exception):
         "debug_message": str(exc),
         "code": None,
     }
+
+    if isinstance(exc, HTTPException):
+        response["message"] = exc.detail
+        status = exc.status_code
 
     if isinstance(exc, RequestValidationError):
         response["message"] = "Request validation error."

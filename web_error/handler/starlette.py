@@ -1,5 +1,6 @@
 import logging
 
+from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
@@ -18,6 +19,10 @@ def exception_handler(request: Request, exc: Exception):
         "debug_message": str(exc),
         "code": None,
     }
+
+    if isinstance(exc, HTTPException):
+        response["message"] = exc.detail
+        status = exc.status_code
 
     if isinstance(exc, HttpException):
         response = exc.marshal()

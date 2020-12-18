@@ -1,6 +1,8 @@
 import json
 from unittest import mock
 
+from starlette.exceptions import HTTPException
+
 from web_error import error
 from web_error.handler import starlette
 
@@ -27,6 +29,17 @@ class TestExceptionHandler:
             "Unhandled exception occured.",
             exc_info=(type(exc), exc, None),
         )
+
+    def test_starlette_error(self):
+        request = mock.Mock()
+        exc = HTTPException(404, "something bad")
+
+        response = starlette.exception_handler(request, exc)
+
+        assert response.status_code == 404
+        assert json.loads(response.body) == {
+            "message": "something bad", "debug_message": "(404, 'something bad')", "code": None,
+        }
 
     def test_known_error(self):
         request = mock.Mock()

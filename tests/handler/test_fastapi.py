@@ -2,6 +2,7 @@ import json
 from unittest import mock
 
 from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException
 
 from web_error import error
 from web_error.handler import fastapi
@@ -50,6 +51,17 @@ class TestExceptionHandler:
         assert response.status_code == 422
         assert json.loads(response.body) == {
             "message": "Request validation error.", "debug_message": [], "code": None,
+        }
+
+    def test_starlette_error(self):
+        request = mock.Mock()
+        exc = HTTPException(404, "something bad")
+
+        response = fastapi.exception_handler(request, exc)
+
+        assert response.status_code == 404
+        assert json.loads(response.body) == {
+            "message": "something bad", "debug_message": "(404, 'something bad')", "code": None,
         }
 
     def test_error_with_origin(self):
