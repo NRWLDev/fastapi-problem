@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.4.2
+
+### Bug fixes
+
+- Handle starlette core exceptions [[#11](https://github.com/EdgyEdgemond/web-error/11)]
+
 ## v0.4.1
 
 ## v0.4.0
