@@ -29,9 +29,9 @@ class TestExceptionHandler:
 
         assert response.status == 500
         assert json.loads(response.text) == {
-            "message": "Unhandled exception occured.", "debug_message": "Something went bad", "code": None,
+            "message": "Unhandled exception occurred.", "debug_message": "Something went bad", "code": None,
         }
-        assert aiohttp.logger.exception.call_args == mock.call("Unhandled exception occured.")
+        assert aiohttp.logger.exception.call_args == mock.call("Unhandled exception occurred.")
 
     @pytest.mark.asyncio
     async def test_aiohttp_error(self):

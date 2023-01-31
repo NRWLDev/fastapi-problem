@@ -34,7 +34,7 @@ def exception_handler(exc, request):
     # If the view has two formal arguments, the first is the context.
     # The context is always available as ``request.context`` too.
     status = 500
-    message = "Unhandled exception occured."
+    message = "Unhandled exception occurred."
     response = {
         "message": message,
         "debug_message": str(exc),

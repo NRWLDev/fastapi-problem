@@ -14,7 +14,7 @@ def exception_handler(exc):
     """Return JSON instead of HTML for HTTP errors."""
     # start with the correct headers and status code from the error
     status = 500
-    message = "Unhandled exception occured."
+    message = "Unhandled exception occurred."
     data = {
         "message": message,
         "debug_message": str(exc),

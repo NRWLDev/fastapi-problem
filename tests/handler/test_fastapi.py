@@ -24,10 +24,10 @@ class TestExceptionHandler:
 
         assert response.status_code == 500
         assert json.loads(response.body) == {
-            "message": "Unhandled exception occured.", "debug_message": "Something went bad", "code": None,
+            "message": "Unhandled exception occurred.", "debug_message": "Something went bad", "code": None,
         }
         assert fastapi.logger.exception.call_args == mock.call(
-            "Unhandled exception occured.",
+            "Unhandled exception occurred.",
             exc_info=(type(exc), exc, None),
         )
 

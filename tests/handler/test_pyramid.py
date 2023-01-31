@@ -60,9 +60,9 @@ class TestExceptionHandler:
 
         assert request.response.status == "500 Internal Server Error"
         assert response == {
-            "message": "Unhandled exception occured.", "debug_message": "Something went bad", "code": None,
+            "message": "Unhandled exception occurred.", "debug_message": "Something went bad", "code": None,
         }
-        assert pyramid.logger.exception.call_args == mock.call("Unhandled exception occured.")
+        assert pyramid.logger.exception.call_args == mock.call("Unhandled exception occurred.")
 
     def test_known_error(self):
         request = testing.DummyRequest()

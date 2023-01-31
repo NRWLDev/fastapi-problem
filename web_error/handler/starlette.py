@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def exception_handler(request: Request, exc: Exception):
     status = 500
-    message = "Unhandled exception occured."
+    message = "Unhandled exception occurred."
     response = {
         "message": message,
         "debug_message": str(exc),

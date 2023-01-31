@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 def view_error_handler(view_method):
     async def wrapped_view_method(*args, **kwargs):
-        message = "Unhandled exception occured."
+        message = "Unhandled exception occurred."
         status = 500
         try:
             return await view_method(*args, **kwargs)
@@ -20,7 +20,7 @@ def view_error_handler(view_method):
             status = ex.status
             response = web.json_response(data=ex.marshal(), status=ex.status)
         except web_exceptions.HTTPError as ex:
-            message = "Http error occured."
+            message = "Http error occurred."
             response = web.json_response(
                 data={"message": ex.__class__.__name__, "debug_message": ex.text, "code": None},
                 status=ex.status_code,
