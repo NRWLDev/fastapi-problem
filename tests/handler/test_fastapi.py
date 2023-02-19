@@ -4,7 +4,7 @@ from unittest import mock
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 
-from web_error import error
+from web_error import constant, error
 from web_error.handler import fastapi
 
 
@@ -22,9 +22,11 @@ class TestExceptionHandler:
 
         response = fastapi.exception_handler(request, exc)
 
-        assert response.status_code == 500
+        assert response.status_code == constant.SERVER_ERROR
         assert json.loads(response.body) == {
-            "message": "Unhandled exception occurred.", "debug_message": "Something went bad", "code": None,
+            "message": "Unhandled exception occurred.",
+            "debug_message": "Something went bad",
+            "code": None,
         }
         assert fastapi.logger.exception.call_args == mock.call(
             "Unhandled exception occurred.",
@@ -37,9 +39,11 @@ class TestExceptionHandler:
 
         response = fastapi.exception_handler(request, exc)
 
-        assert response.status_code == 500
+        assert response.status_code == constant.SERVER_ERROR
         assert json.loads(response.body) == {
-            "message": "This is an error.", "debug_message": "something bad", "code": "E123",
+            "message": "This is an error.",
+            "debug_message": "something bad",
+            "code": "E123",
         }
 
     def test_fastapi_error(self):
@@ -48,20 +52,24 @@ class TestExceptionHandler:
 
         response = fastapi.exception_handler(request, exc)
 
-        assert response.status_code == 422
+        assert response.status_code == constant.VALIDATION_ERROR
         assert json.loads(response.body) == {
-            "message": "Request validation error.", "debug_message": [], "code": None,
+            "message": "Request validation error.",
+            "debug_message": [],
+            "code": None,
         }
 
     def test_starlette_error(self):
         request = mock.Mock()
-        exc = HTTPException(404, "something bad")
+        exc = HTTPException(constant.NOT_FOUND, "something bad")
 
         response = fastapi.exception_handler(request, exc)
 
-        assert response.status_code == 404
+        assert response.status_code == constant.NOT_FOUND
         assert json.loads(response.body) == {
-            "message": "something bad", "debug_message": "(404, 'something bad')", "code": None,
+            "message": "something bad",
+            "debug_message": "(404, 'something bad')",
+            "code": None,
         }
 
     def test_error_with_origin(self):

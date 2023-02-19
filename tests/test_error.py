@@ -23,39 +23,45 @@ class A500Error(error.ServerException):
     message = "a 500 message"
 
 
-@pytest.mark.parametrize("exc", [
-    A404Error,
-    A401Error,
-    A400Error,
-    A500Error,
-])
+@pytest.mark.parametrize(
+    "exc",
+    [
+        A404Error,
+        A401Error,
+        A400Error,
+        A500Error,
+    ],
+)
 def test_marshal(exc):
     e = exc("debug_message")
 
     assert e.marshal() == {
-        "code": "E{}".format(e.status),
+        "code": f"E{e.status}",
         "message": e.message,
         "debug_message": "debug_message",
     }
 
 
-@pytest.mark.parametrize("exc", [
-    A404Error,
-    A401Error,
-    A400Error,
-    A500Error,
-])
+@pytest.mark.parametrize(
+    "exc",
+    [
+        A404Error,
+        A401Error,
+        A400Error,
+        A500Error,
+    ],
+)
 def test_reraise(exc):
     e = exc("debug_message")
 
     d = e.marshal()
 
-    try:
+    with pytest.raises(error.HttpException) as exc:
         error.HttpException.reraise(status=e.status, **d)
-    except error.HttpException as exc:
-        assert exc.status == e.status
-        assert exc.marshal() == {
-            "code": "E{}".format(e.status),
-            "message": e.message,
-            "debug_message": "debug_message",
-        }
+
+    assert exc.value.status == e.status
+    assert exc.value.marshal() == {
+        "code": f"E{e.status}",
+        "message": e.message,
+        "debug_message": "debug_message",
+    }

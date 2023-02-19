@@ -3,7 +3,7 @@ from unittest import mock
 
 from starlette.exceptions import HTTPException
 
-from web_error import error
+from web_error import constant, error
 from web_error.handler import starlette
 
 
@@ -21,9 +21,11 @@ class TestExceptionHandler:
 
         response = starlette.exception_handler(request, exc)
 
-        assert response.status_code == 500
+        assert response.status_code == constant.SERVER_ERROR
         assert json.loads(response.body) == {
-            "message": "Unhandled exception occurred.", "debug_message": "Something went bad", "code": None,
+            "message": "Unhandled exception occurred.",
+            "debug_message": "Something went bad",
+            "code": None,
         }
         assert starlette.logger.exception.call_args == mock.call(
             "Unhandled exception occurred.",
@@ -32,13 +34,15 @@ class TestExceptionHandler:
 
     def test_starlette_error(self):
         request = mock.Mock()
-        exc = HTTPException(404, "something bad")
+        exc = HTTPException(constant.NOT_FOUND, "something bad")
 
         response = starlette.exception_handler(request, exc)
 
-        assert response.status_code == 404
+        assert response.status_code == constant.NOT_FOUND
         assert json.loads(response.body) == {
-            "message": "something bad", "debug_message": "(404, 'something bad')", "code": None,
+            "message": "something bad",
+            "debug_message": "(404, 'something bad')",
+            "code": None,
         }
 
     def test_known_error(self):
@@ -47,9 +51,11 @@ class TestExceptionHandler:
 
         response = starlette.exception_handler(request, exc)
 
-        assert response.status_code == 500
+        assert response.status_code == constant.SERVER_ERROR
         assert json.loads(response.body) == {
-            "message": "This is an error.", "debug_message": "something bad", "code": "E123",
+            "message": "This is an error.",
+            "debug_message": "something bad",
+            "code": "E123",
         }
 
     def test_error_with_origin(self):

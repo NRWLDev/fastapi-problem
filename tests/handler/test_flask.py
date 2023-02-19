@@ -21,7 +21,9 @@ class TestExceptionHandler:
 
         assert response.status == "500 INTERNAL SERVER ERROR"
         assert response.json == {
-            "message": "Unhandled exception occurred.", "debug_message": "Something went bad", "code": None,
+            "message": "Unhandled exception occurred.",
+            "debug_message": "Something went bad",
+            "code": None,
         }
         assert flask.logger.exception.call_args == mock.call("Unhandled exception occurred.")
 

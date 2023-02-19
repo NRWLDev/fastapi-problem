@@ -1,18 +1,17 @@
 import logging
+from typing import Callable
 
-from aiohttp import web
-from aiohttp import web_exceptions
+from aiohttp import web, web_exceptions
 
-from web_error import error
-
+from web_error import constant, error
 
 logger = logging.getLogger(__name__)
 
 
-def view_error_handler(view_method):
-    async def wrapped_view_method(*args, **kwargs):
+def view_error_handler(view_method: Callable) -> Callable:
+    async def wrapped_view_method(*args, **kwargs) -> web.Response:
         message = "Unhandled exception occurred."
-        status = 500
+        status = constant.SERVER_ERROR
         try:
             return await view_method(*args, **kwargs)
         except error.HttpException as ex:
@@ -25,12 +24,12 @@ def view_error_handler(view_method):
                 data={"message": ex.__class__.__name__, "debug_message": ex.text, "code": None},
                 status=ex.status_code,
             )
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             response = web.json_response(
                 data={"message": message, "debug_message": str(e), "code": None},
                 status=status,
             )
-        if status >= 500:
+        if status >= constant.SERVER_ERROR:
             logger.exception(message)
         return response
 

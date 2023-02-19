@@ -1,0 +1,1 @@
+Introduce ruff, black, pre-commit. Drop support for py 3.7 and earlier.

@@ -1,17 +1,27 @@
-class HttpException(Exception):
+from typing import Dict, Optional
+
+
+class HttpException(Exception):  # noqa: N818
     """
     A base exception designed to support all API error handling.
     All exceptions should inherit from this or a subclass of it (depending on the usage),
     this will allow all apps and libraries to maintain a common exception chain
     """
-    def __init__(self, message, debug_message=None, code=None, status=500):
+
+    def __init__(
+        self,
+        message: str,
+        debug_message: Optional[str] = None,
+        code: Optional[str] = None,
+        status: int = 500,
+    ) -> None:
         super().__init__(message)
         self.status = status
         self.code = code
         self.message = message
         self.debug_message = debug_message
 
-    def marshal(self):
+    def marshal(self) -> Dict[str, str]:
         return {
             "code": self.code,
             "message": self.message,
@@ -19,7 +29,13 @@ class HttpException(Exception):
         }
 
     @classmethod
-    def reraise(cls, message, debug_message=None, code=None, status=500):
+    def reraise(
+        cls,
+        message: str,
+        debug_message: Optional[str] = None,
+        code: Optional[str] = None,
+        status: int = 500,
+    ) -> None:
         raise cls(
             message=message,
             code=code,
@@ -33,7 +49,7 @@ class HttpCodeException(HttpException):
     code = None
     message = None
 
-    def __init__(self, debug_message=None):
+    def __init__(self, debug_message: Optional[str] = None) -> None:
         super().__init__(self.message, debug_message, self.code, self.status)
 
 

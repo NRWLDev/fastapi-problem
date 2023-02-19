@@ -1,18 +1,19 @@
 import logging
+from typing import Callable, List, Optional
 
 from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
-from starlette.requests import Request
+from starlette.requests import Request  # noqa: TCH002
 from starlette.responses import JSONResponse
 
+from web_error import constant
 from web_error.error import HttpException
-
 
 logger = logging.getLogger(__name__)
 
 
-def exception_handler(request: Request, exc: Exception):
-    status = 500
+def exception_handler(request: Request, exc: Exception) -> JSONResponse:  # noqa: ARG001
+    status = constant.SERVER_ERROR
     message = "Unhandled exception occurred."
     response = {
         "message": message,
@@ -28,7 +29,7 @@ def exception_handler(request: Request, exc: Exception):
         response = exc.marshal()
         status = exc.status
 
-    if status >= 500:
+    if status >= constant.SERVER_ERROR:
         logger.exception(message, exc_info=(type(exc), exc, exc.__traceback__))
 
     return JSONResponse(
@@ -38,17 +39,17 @@ def exception_handler(request: Request, exc: Exception):
 
 
 def generate_handler_with_cors(
-    allow_origins=None,
-    allow_credentials=True,
-    allow_methods=None,
-    allow_headers=None,
-    _exception_handler=exception_handler,  # allow fastapi to pass in exception handler
-):
+    allow_origins: Optional[List[str]] = None,
+    allow_credentials: bool = True,
+    allow_methods: Optional[List[str]] = None,
+    allow_headers: Optional[List[str]] = None,
+    _exception_handler: Callable = exception_handler,  # allow fastapi to pass in exception handler
+) -> Callable:
     allow_origins = allow_origins if allow_origins is not None else ["*"]
     allow_methods = allow_methods if allow_methods is not None else ["*"]
     allow_headers = allow_headers if allow_headers is not None else ["*"]
 
-    def inner(request: Request, exc: Exception):
+    def inner(request: Request, exc: Exception) -> JSONResponse:
         response = _exception_handler(request, exc)
 
         # Since the CORSMiddleware is not executed when an unhandled server exception
@@ -90,4 +91,5 @@ def generate_handler_with_cors(
                 response.headers.add_vary_header("Origin")
 
         return response
+
     return inner
