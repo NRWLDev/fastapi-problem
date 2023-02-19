@@ -50,6 +50,22 @@ class UserNotFoundError(NotFoundException):
     code = "E001"
 ```
 
+
+## FastAPI
+
+Include the `exception_handler` in your app.
+
+```python
+    exception_handler = web_error.handler.fastapi.exception_handler
+
+    return FastAPI(
+        exception_handlers={
+            Exception: exception_handler,
+            RequestValidationError: exception_handler,
+            HTTPException: exception_handler,
+        },
+    )
+```
 ## Pyramid
 
 Include the pyramid exception handlers in your config.
