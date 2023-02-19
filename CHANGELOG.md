@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.0
+
+### Features and Improvements
+
+- Introduce ruff, black, pre-commit. Drop support for py 3.7 and earlier. [[#13](https://github.com/EdgyEdgemond/web-error/13)]
+
 ## v0.4.2
 
 ### Bug fixes
