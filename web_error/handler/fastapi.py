@@ -45,7 +45,7 @@ class ExceptionHandler:
         self.unhandled_code = unhandled_code
         self.request_validation_code = request_validation_code
 
-    def __call__(self, request: starlette.Request, exc: Exception) -> starlette.JSONResponse:
+    def __call__(self, request: starlette.Request, exc: Exception) -> starlette.JSONResponse:  # noqa: ARG002
         response, status = _handle_exception(exc)
 
         if response["code"] is None:
