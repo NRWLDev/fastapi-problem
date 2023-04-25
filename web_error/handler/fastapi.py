@@ -12,7 +12,7 @@ from web_error.handler import starlette
 logger = logging.getLogger(__name__)
 
 
-def exception_handler(request: starlette.Request, exc: Exception) -> starlette.JSONResponse:  # noqa: ARG001
+def _handle_exception(exc: Exception) -> tuple[dict, str]:
     status = constant.SERVER_ERROR
     message = "Unhandled exception occurred."
     response = {
@@ -36,6 +36,29 @@ def exception_handler(request: starlette.Request, exc: Exception) -> starlette.J
 
     if status >= constant.SERVER_ERROR:
         logger.exception(message, exc_info=(type(exc), exc, exc.__traceback__))
+
+    return response, status
+
+
+class ExceptionHandler:
+    def __init__(self, unhandled_code: str, request_validation_code: str) -> None:
+        self.unhandled_code = unhandled_code
+        self.request_validation_code = request_validation_code
+
+    def __call__(self, request: starlette.Request, exc: Exception) -> starlette.JSONResponse:
+        response, status = _handle_exception(exc)
+
+        if response["code"] is None:
+            response["code"] = self.request_validation_code if status == 422 else self.unhandled_code  # noqa: PLR2004
+
+        return starlette.JSONResponse(
+            status_code=status,
+            content=response,
+        )
+
+
+def exception_handler(request: starlette.Request, exc: Exception) -> starlette.JSONResponse:  # noqa: ARG001
+    response, status = _handle_exception(exc)
 
     return starlette.JSONResponse(
         status_code=status,

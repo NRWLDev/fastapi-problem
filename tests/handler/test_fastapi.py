@@ -14,6 +14,26 @@ class ATestError(error.ServerException):
 
 
 class TestExceptionHandler:
+    def test_unexpected_error_replaces_code(self, monkeypatch):
+        monkeypatch.setattr(fastapi.logger, "exception", mock.Mock())
+
+        request = mock.Mock()
+        exc = Exception("Something went bad")
+
+        h = fastapi.ExceptionHandler("E000", "E001")
+        response = h(request, exc)
+
+        assert response.status_code == constant.SERVER_ERROR
+        assert json.loads(response.body) == {
+            "message": "Unhandled exception occurred.",
+            "debug_message": "Something went bad",
+            "code": "E000",
+        }
+        assert fastapi.logger.exception.call_args == mock.call(
+            "Unhandled exception occurred.",
+            exc_info=(type(exc), exc, None),
+        )
+
     def test_unexpected_error(self, monkeypatch):
         monkeypatch.setattr(fastapi.logger, "exception", mock.Mock())
 
