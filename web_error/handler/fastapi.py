@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
@@ -12,7 +12,7 @@ from web_error.handler import starlette
 logger = logging.getLogger(__name__)
 
 
-def _handle_exception(exc: Exception) -> tuple[dict, str]:
+def _handle_exception(exc: Exception) -> Tuple[dict, str]:
     status = constant.SERVER_ERROR
     message = "Unhandled exception occurred."
     response = {
