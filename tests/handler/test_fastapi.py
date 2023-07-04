@@ -34,6 +34,21 @@ class TestExceptionHandler:
             exc_info=(type(exc), exc, None),
         )
 
+    def test_debug_disabled(self, monkeypatch):
+        monkeypatch.setattr(fastapi.logger, "exception", mock.Mock())
+
+        request = mock.Mock()
+        exc = Exception("Something went bad")
+
+        h = fastapi.ExceptionHandler("E000", "E001", debug_enabled=False)
+        response = h(request, exc)
+
+        assert response.status_code == constant.SERVER_ERROR
+        assert json.loads(response.body) == {
+            "message": "Unhandled exception occurred.",
+            "code": "E000",
+        }
+
     def test_unexpected_error(self, monkeypatch):
         monkeypatch.setattr(fastapi.logger, "exception", mock.Mock())
 
