@@ -27,7 +27,7 @@ def _handle_exception(exc: Exception, *, debug_enabled: bool = True) -> Tuple[di
 
     if isinstance(exc, RequestValidationError):
         response["message"] = "Request validation error."
-        response["debug_message"] = json.loads(exc.json())
+        response["debug_message"] = json.loads(json.dumps(exc.errors(), default=str))
         status = 422
 
     if isinstance(exc, HttpException):
