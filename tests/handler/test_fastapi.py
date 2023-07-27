@@ -1,3 +1,4 @@
+import http
 import json
 from unittest import mock
 
@@ -106,6 +107,24 @@ class TestExceptionHandler:
             "debug_message": "(404, 'something bad')",
             "code": None,
         }
+
+    def test_starlette_error_with_headers(self):
+        request = mock.Mock()
+        exc = HTTPException(
+            status_code=http.HTTPStatus.UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+        response = fastapi.exception_handler(request, exc)
+
+        assert response.status_code == http.HTTPStatus.UNAUTHORIZED
+        assert json.loads(response.body) == {
+            "message": "Incorrect username or password",
+            "debug_message": "",
+            "code": None,
+        }
+        assert response.headers["www-authenticate"] == "Basic"
 
     def test_error_with_origin(self):
         request = mock.Mock(headers={"origin": "localhost"})

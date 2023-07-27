@@ -20,10 +20,12 @@ def _handle_exception(exc: Exception, *, debug_enabled: bool = True) -> Tuple[di
         "debug_message": str(exc),
         "code": None,
     }
+    headers = {}
 
     if isinstance(exc, HTTPException):
         response["message"] = exc.detail
         status = exc.status_code
+        headers = exc.headers
 
     if isinstance(exc, RequestValidationError):
         response["message"] = "Request validation error."
@@ -40,7 +42,7 @@ def _handle_exception(exc: Exception, *, debug_enabled: bool = True) -> Tuple[di
     if not debug_enabled:
         response.pop("debug_message", None)
 
-    return response, status
+    return response, status, headers
 
 
 class ExceptionHandler:
@@ -50,7 +52,7 @@ class ExceptionHandler:
         self.debug_enabled = debug_enabled
 
     def __call__(self, request: starlette.Request, exc: Exception) -> starlette.JSONResponse:  # noqa: ARG002
-        response, status = _handle_exception(exc, debug_enabled=self.debug_enabled)
+        response, status, headers = _handle_exception(exc, debug_enabled=self.debug_enabled)
 
         if response["code"] is None:
             response["code"] = self.request_validation_code if status == 422 else self.unhandled_code  # noqa: PLR2004
@@ -62,11 +64,12 @@ class ExceptionHandler:
 
 
 def exception_handler(request: starlette.Request, exc: Exception) -> starlette.JSONResponse:  # noqa: ARG001
-    response, status = _handle_exception(exc)
+    response, status, headers = _handle_exception(exc)
 
     return starlette.JSONResponse(
         status_code=status,
         content=response,
+        headers=headers,
     )
 
 
