@@ -40,7 +40,10 @@ def _handle_exception(exc: Exception, *, debug_enabled: bool = True) -> Tuple[di
         logger.exception(message, exc_info=(type(exc), exc, exc.__traceback__))
 
     if not debug_enabled:
-        response.pop("debug_message", None)
+        debug_message = response.pop("debug_message", None)
+        if debug_message:
+            msg = f"Removed debug message: {debug_message}"
+            logger.debug(msg)
 
     return response, status, headers
 
