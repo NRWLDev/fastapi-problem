@@ -23,12 +23,16 @@ class HttpException(Exception):  # noqa: N818
         self.message = message
         self.debug_message = debug_message
 
-    def marshal(self: typing.Self) -> dict[str, str]:
-        return {
+    def marshal(self: typing.Self, *, strip_debug: bool = False) -> dict[str, str]:
+        ret = {
             "code": self.code,
             "message": self.message,
             "debug_message": self.debug_message,
         }
+        if strip_debug:
+            ret.pop("debug_message")
+
+        return ret
 
     @classmethod
     def reraise(

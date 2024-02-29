@@ -50,60 +50,76 @@ class UserNotFoundError(NotFoundException):
     code = "E001"
 ```
 
+## Starlette
+
+
+```python
+    import starlette.applications
+    import web_error.handler.starlette
+
+    exception_handler = web_error.handler.starlette.generate_handler()
+
+    return starlette.applications.Starlette(
+        exception_handlers={
+            Exception: exception_handler,
+            HTTPException: exception_handler,
+        },
+    )
+```
+
+A custom logger can be provided to `generate_handler(logger=...)`.
+
+If you require cors headers, you can pass a `web_error.cors.CorsConfiguration`
+instance to `generate_handler(cors=...)`.
+
+```python
+generate_handler(
+    cors=CorsConfiguration(
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
+        allow_credentials=True,
+    )
+)
+```
+
+To handle unexpected errors provide `unhandled_wrappers`, a dict mapping http
+status code to `HttpCodeException`, the system key `default` is also accepted
+as the root wrapper for all unhandled exceptions.
+
+If you wish to hide debug messaging from external users, `strip_debug=True`
+will log the debug message and remove it from the response.
+
+```python
+    from web_error.error import HttpCodeException
+
+    class NotFoundError(HttpCodeException):
+        status = 404
+        message = "Endpoint not found."
+
+    exception_handler = web_error.handler.starlette.generate_handler(
+        unhandled_wrappers={
+            "404": NotFoundError,
+        },
+    )
+```
 
 ## FastAPI
 
-Include the `exception_handler` in your app.
+The FastAPI handler is identical to the starlette handler with the additional
+handling of `RequestValidationError`.
 
 ```python
-    exception_handler = web_error.handler.fastapi.exception_handler
+    import fastapi
+    import web_error.handler.fastapi
 
-    return FastAPI(
+    exception_handler = web_error.handler.fastapi.generate_handler()
+
+    return fastapi.FastAPI(
         exception_handlers={
             Exception: exception_handler,
             RequestValidationError: exception_handler,
             HTTPException: exception_handler,
         },
     )
-```
-## Pyramid
-
-Include the pyramid exception handlers in your config.
-
-```python
-def main(global_config, **config_blob):
-    config = Configurator(settings=config_blob)
-
-    ...
-
-    config.scan("web_error.handler.pyramid")
-
-    return config.make_wsgi_app()
-```
-
-This will handle all unexpected errors, and any app specific errors.
-
-```python
-@view_config(route_name="test", renderer="json")
-def test(request):
-    raise UserNotFoundError("debug message")
-```
-
-
-## Flask
-
-Register the error handler with your application
-
-```python
-app.register_error_handler(Exception, web_error.handler.flask.exception_handler)
-```
-
-## Aiohttp
-
-Decorate your views with the error handler.
-
-```python
-@web_error.handler.aiohttp.view_error_handler
-async def user(self):
-    raise UserNotFoundError("debug message")
 ```

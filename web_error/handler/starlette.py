@@ -1,61 +1,29 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Callable
+import typing
 
 from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
 from web_error import constant
-from web_error.error import HttpException
+from web_error.error import HttpCodeException, HttpException
 
-if TYPE_CHECKING:
+if typing.TYPE_CHECKING:
     from starlette.requests import Request
 
-logger = logging.getLogger(__name__)
+    from web_error.cors import CorsConfiguration
+
+logger_ = logging.getLogger(__name__)
 
 
-def exception_handler(request: Request, exc: Exception) -> JSONResponse:  # noqa: ARG001
-    status = constant.SERVER_ERROR
-    message = "Unhandled exception occurred."
-    response = {
-        "message": message,
-        "debug_message": str(exc),
-        "code": None,
-    }
-
-    if isinstance(exc, HTTPException):
-        response["message"] = exc.detail
-        status = exc.status_code
-
-    if isinstance(exc, HttpException):
-        response = exc.marshal()
-        status = exc.status
-
-    if status >= constant.SERVER_ERROR:
-        logger.exception(message, exc_info=(type(exc), exc, exc.__traceback__))
-
-    return JSONResponse(
-        status_code=status,
-        content=response,
-    )
-
-
-def generate_handler_with_cors(
-    allow_origins: list[str] | None = None,
-    allow_methods: list[str] | None = None,
-    allow_headers: list[str] | None = None,
-    *,
-    allow_credentials: bool = True,
-    _exception_handler: Callable = exception_handler,  # allow fastapi to pass in exception handler
-) -> Callable:
-    allow_origins = allow_origins if allow_origins is not None else ["*"]
-    allow_methods = allow_methods if allow_methods is not None else ["*"]
-    allow_headers = allow_headers if allow_headers is not None else ["*"]
-
-    def inner(request: Request, exc: Exception) -> JSONResponse:
-        response = _exception_handler(request, exc)
+def cors_wrapper_factory(
+    cors: CorsConfiguration,
+    handler: typing.Callable[[Request, Exception], JSONResponse],
+) -> typing.Callable[[Request, Exception], JSONResponse]:
+    def wrapper(request: Request, exc: Exception) -> JSONResponse:
+        response = handler(request, exc)
 
         # Since the CORSMiddleware is not executed when an unhandled server exception
         # occurs, we need to manually set the CORS headers ourselves if we want the FE
@@ -70,31 +38,88 @@ def generate_handler_with_cors(
         if origin:
             # Have the middleware do the heavy lifting for us to parse
             # all the config, then update our response headers
-            cors = CORSMiddleware(
+            mw = CORSMiddleware(
                 app=None,
-                allow_origins=allow_origins,
-                allow_credentials=allow_credentials,
-                allow_methods=allow_methods,
-                allow_headers=allow_headers,
+                allow_origins=cors.allow_origins,
+                allow_credentials=cors.allow_credentials,
+                allow_methods=cors.allow_methods,
+                allow_headers=cors.allow_headers,
             )
 
             # Logic directly from Starlette"s CORSMiddleware:
             # https://github.com/encode/starlette/blob/master/starlette/middleware/cors.py#L152
 
-            response.headers.update(cors.simple_headers)
+            response.headers.update(mw.simple_headers)
             has_cookie = "cookie" in request.headers
 
             # If request includes any cookie headers, then we must respond
             # with the specific origin instead of "*".
-            if cors.allow_all_origins and has_cookie:
+            if mw.allow_all_origins and has_cookie:
                 response.headers["Access-Control-Allow-Origin"] = origin
 
             # If we only allow specific origins, then we have to mirror back
             # the Origin header in the response.
-            elif not cors.allow_all_origins and cors.is_allowed_origin(origin=origin):
+            elif not mw.allow_all_origins and mw.is_allowed_origin(origin=origin):
                 response.headers["Access-Control-Allow-Origin"] = origin
                 response.headers.add_vary_header("Origin")
 
         return response
 
-    return inner
+    return wrapper
+
+
+def exception_handler_factory(
+    logger: logging.Logger,
+    unhandled_wrappers: dict[str, type[HttpCodeException]],
+    *,
+    strip_debug: bool = False,
+) -> typing.Callable[[Exception], JSONResponse]:
+    unhandled_wrappers = unhandled_wrappers or {}
+
+    def exception_handler(_request: Request, exc: Exception) -> JSONResponse:
+        wrapper = unhandled_wrappers.get("default")
+        ret = wrapper(str(exc)) if wrapper else HttpException("Unhandled exception occurred.", str(exc))
+        headers = {}
+
+        if isinstance(exc, HTTPException):
+            wrapper = unhandled_wrappers.get(str(exc.status_code))
+            debug_message = exc.detail
+            ret = (
+                wrapper(debug_message)
+                if wrapper
+                else HttpException("Unhandled HTTPException occurred.", debug_message, status=exc.status_code)
+            )
+            headers = exc.headers
+
+        if isinstance(exc, HttpException):
+            ret = exc
+
+        if ret.status >= constant.SERVER_ERROR:
+            logger.exception(ret.message, exc_info=(type(exc), exc, exc.__traceback__))
+
+        if strip_debug and ret.debug_message:
+            msg = f"Removed debug message: {ret.debug_message}"
+            logger.debug(msg)
+
+        return JSONResponse(
+            status_code=ret.status,
+            content=ret.marshal(strip_debug=strip_debug),
+            headers=headers,
+        )
+
+    return exception_handler
+
+
+def generate_handler(
+    logger: logging.Logger = logger_,
+    cors: CorsConfiguration | None = None,
+    unhandled_wrappers: dict[str, type[HttpCodeException]] | None = None,
+    *,
+    strip_debug: bool = False,
+) -> typing.Callable:
+    handler = exception_handler_factory(
+        logger=logger,
+        unhandled_wrappers=unhandled_wrappers,
+        strip_debug=strip_debug,
+    )
+    return cors_wrapper_factory(cors, handler) if cors else handler

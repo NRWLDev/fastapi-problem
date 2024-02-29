@@ -9,20 +9,17 @@ homepage="https://github.com/EdgyEdgemond/web-error/"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 
 [tool.poetry.dev-dependencies]
 
-aiohttp = "*"
-pyramid = "*"
-flask = "*"
 fastapi = "*"
 
 changelog-gen = "^0.8.1"
-pytest = "^7.1.2"
-pytest-asyncio = "*"
-pytest-cov = "^3.0.0"
-pytest-git = "^1.7.0"
+pytest = "~7.4.3"
+pytest-asyncio = "^0.21"
+pytest-cov = "^4.1.0"
+pytest-httpx = "^0.26.0"
 pytest-random-order = "^1.0"
 
 # Style
@@ -30,6 +27,7 @@ ruff = "^0.1.2"
 pre-commit = "^3.0.2"
 
 [tool.pytest.ini_options]
+asyncio_mode = "auto"
 testpaths = ["tests"]
 addopts = "--random-order"
 
