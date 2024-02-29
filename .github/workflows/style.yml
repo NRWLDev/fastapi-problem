@@ -5,7 +5,7 @@ on:
     branches:
       # Push will only build on branches that match this name
       # Pull requests will override this, so pushes to pull requests will still build
-      - tescovalue
+      - master
   pull_request:
     branches:
       - main
