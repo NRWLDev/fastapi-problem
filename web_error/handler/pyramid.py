@@ -1,8 +1,7 @@
 import logging
-from typing import Dict
 
 from pyramid.httpexceptions import HTTPException
-from pyramid.request import Request  # noqa: TCH002
+from pyramid.request import Request
 from pyramid.view import view_config
 
 from web_error import constant
@@ -12,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 @view_config(context=HTTPException, renderer="json")
-def pyramid_handler(exc: HTTPException, request: Request) -> Dict:
+def pyramid_handler(exc: HTTPException, request: Request) -> dict:
     status = exc.code
     response = {
         "message": exc.explanation,
@@ -32,7 +31,7 @@ def pyramid_handler(exc: HTTPException, request: Request) -> Dict:
 
 
 @view_config(context=Exception, renderer="json")
-def exception_handler(exc: Exception, request: Request) -> Dict:
+def exception_handler(exc: Exception, request: Request) -> dict:
     # If the view has two formal arguments, the first is the context.
     # The context is always available as ``request.context`` too.
     status = constant.SERVER_ERROR

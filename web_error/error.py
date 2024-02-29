@@ -1,4 +1,6 @@
-from typing import Dict, Optional
+from __future__ import annotations
+
+import typing
 
 
 class HttpException(Exception):  # noqa: N818
@@ -9,10 +11,10 @@ class HttpException(Exception):  # noqa: N818
     """
 
     def __init__(
-        self,
+        self: typing.Self,
         message: str,
-        debug_message: Optional[str] = None,
-        code: Optional[str] = None,
+        debug_message: str | None = None,
+        code: str | None = None,
         status: int = 500,
     ) -> None:
         super().__init__(message)
@@ -21,7 +23,7 @@ class HttpException(Exception):  # noqa: N818
         self.message = message
         self.debug_message = debug_message
 
-    def marshal(self) -> Dict[str, str]:
+    def marshal(self: typing.Self) -> dict[str, str]:
         return {
             "code": self.code,
             "message": self.message,
@@ -30,10 +32,10 @@ class HttpException(Exception):  # noqa: N818
 
     @classmethod
     def reraise(
-        cls,
+        cls: HttpException,
         message: str,
-        debug_message: Optional[str] = None,
-        code: Optional[str] = None,
+        debug_message: str | None = None,
+        code: str | None = None,
         status: int = 500,
     ) -> None:
         raise cls(
@@ -49,7 +51,7 @@ class HttpCodeException(HttpException):
     code = None
     message = None
 
-    def __init__(self, debug_message: Optional[str] = None) -> None:
+    def __init__(self: typing.Self, debug_message: str | None = None) -> None:
         super().__init__(self.message, debug_message, self.code, self.status)
 
 

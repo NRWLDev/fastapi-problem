@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import json
 import logging
-from typing import List, Optional, Tuple
+import typing
 
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
@@ -12,7 +14,7 @@ from web_error.handler import starlette
 logger = logging.getLogger(__name__)
 
 
-def _handle_exception(exc: Exception, *, debug_enabled: bool = True) -> Tuple[dict, str]:
+def _handle_exception(exc: Exception, *, debug_enabled: bool = True) -> tuple[dict, str]:
     status = constant.SERVER_ERROR
     message = "Unhandled exception occurred."
     response = {
@@ -49,12 +51,18 @@ def _handle_exception(exc: Exception, *, debug_enabled: bool = True) -> Tuple[di
 
 
 class ExceptionHandler:
-    def __init__(self, unhandled_code: str, request_validation_code: str, *, debug_enabled: bool = True) -> None:
+    def __init__(
+        self: typing.Self,
+        unhandled_code: str,
+        request_validation_code: str,
+        *,
+        debug_enabled: bool = True,
+    ) -> None:
         self.unhandled_code = unhandled_code
         self.request_validation_code = request_validation_code
         self.debug_enabled = debug_enabled
 
-    def __call__(self, request: starlette.Request, exc: Exception) -> starlette.JSONResponse:  # noqa: ARG002
+    def __call__(self: typing.Self, request: starlette.Request, exc: Exception) -> starlette.JSONResponse:  # noqa: ARG002
         response, status, headers = _handle_exception(exc, debug_enabled=self.debug_enabled)
 
         if response["code"] is None:
@@ -77,10 +85,11 @@ def exception_handler(request: starlette.Request, exc: Exception) -> starlette.J
 
 
 def generate_handler_with_cors(
-    allow_origins: Optional[List[str]] = None,
+    allow_origins: list[str] | None = None,
+    allow_methods: list[str] | None = None,
+    allow_headers: list[str] | None = None,
+    *,
     allow_credentials: bool = True,
-    allow_methods: Optional[List[str]] = None,
-    allow_headers: Optional[List[str]] = None,
 ) -> starlette.JSONResponse:
     return starlette.generate_handler_with_cors(
         allow_origins=allow_origins,

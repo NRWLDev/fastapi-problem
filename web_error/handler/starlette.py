@@ -1,13 +1,17 @@
+from __future__ import annotations
+
 import logging
-from typing import Callable, List, Optional
+from typing import TYPE_CHECKING, Callable
 
 from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
-from starlette.requests import Request  # noqa: TCH002
 from starlette.responses import JSONResponse
 
 from web_error import constant
 from web_error.error import HttpException
+
+if TYPE_CHECKING:
+    from starlette.requests import Request
 
 logger = logging.getLogger(__name__)
 
@@ -39,10 +43,11 @@ def exception_handler(request: Request, exc: Exception) -> JSONResponse:  # noqa
 
 
 def generate_handler_with_cors(
-    allow_origins: Optional[List[str]] = None,
+    allow_origins: list[str] | None = None,
+    allow_methods: list[str] | None = None,
+    allow_headers: list[str] | None = None,
+    *,
     allow_credentials: bool = True,
-    allow_methods: Optional[List[str]] = None,
-    allow_headers: Optional[List[str]] = None,
     _exception_handler: Callable = exception_handler,  # allow fastapi to pass in exception handler
 ) -> Callable:
     allow_origins = allow_origins if allow_origins is not None else ["*"]

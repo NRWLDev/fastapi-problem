@@ -41,7 +41,7 @@ class TestExceptionHandler:
         assert response.status_code == constant.NOT_FOUND
         assert json.loads(response.body) == {
             "message": "something bad",
-            "debug_message": "(404, 'something bad')",
+            "debug_message": str(exc),
             "code": None,
         }
 

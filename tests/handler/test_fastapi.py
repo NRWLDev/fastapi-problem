@@ -104,7 +104,7 @@ class TestExceptionHandler:
         assert response.status_code == constant.NOT_FOUND
         assert json.loads(response.body) == {
             "message": "something bad",
-            "debug_message": "(404, 'something bad')",
+            "debug_message": str(exc),
             "code": None,
         }
 
@@ -121,7 +121,7 @@ class TestExceptionHandler:
         assert response.status_code == http.HTTPStatus.UNAUTHORIZED
         assert json.loads(response.body) == {
             "message": "Incorrect username or password",
-            "debug_message": "",
+            "debug_message": str(exc),
             "code": None,
         }
         assert response.headers["www-authenticate"] == "Basic"
