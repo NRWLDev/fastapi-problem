@@ -26,6 +26,30 @@ pytest-random-order = "^1.0"
 ruff = "^0.1.2"
 pre-commit = "^3.0.2"
 
+[tool.bumpversion]
+current_version = "0.6.0"
+commit = true
+tag = true
+
+[[tool.bumpversion.files]]
+filename = "README.md"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[tool.changelog_gen]
+release = true
+commit = true
+reject_empty = true
+allowed_branches = [
+    "master",
+]
+date_format = "- %Y-%m-%d"
+issue_link = "https://github.com/EdgyEdgemond/web-error/issues/::issue_ref::"
+commit_link = "https://github.com/EdgyEdgemond/web-error/commit/::commit_hash::"
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
