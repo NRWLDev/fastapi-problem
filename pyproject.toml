@@ -30,7 +30,9 @@ pre-commit = "^3.0.2"
 asyncio_mode = "auto"
 testpaths = ["tests"]
 addopts = "--random-order"
-
+markers = [
+    "backwards_compat: marks tests as part of backwards compatibility checks.",
+]
 
 [tool.coverage.report]
 sort = "cover"
@@ -67,5 +69,5 @@ docstring-quotes = "double"
 convention = "google"
 
 [build-system]
-requires = ["poetry>=1.1,<2.0"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,1 @@
+Drop support for aiohttp, flask and pyramid. Refactor fastapi/starlette interface.

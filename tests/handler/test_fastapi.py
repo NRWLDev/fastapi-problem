@@ -8,9 +8,38 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 
-from web_error import constant, error
+from web_error import error
 from web_error.cors import CorsConfiguration
 from web_error.handler import fastapi
+
+
+class SomethingWrongError(error.ServerException):
+    title = "This is an error."
+
+
+class CustomUnhandledException(error.ServerException):
+    title = "Unhandled exception occurred."
+
+
+class CustomValidationError(error.HttpCodeException):
+    status = 422
+    title = "Request validation error."
+
+
+class ALegacyError(error.ServerException):
+    title = "This is an error."
+    code = "E123"
+
+
+class LegacyUnhandledException(error.ServerException):
+    code = "E000"
+    title = "Unhandled exception occurred."
+
+
+class LegacyValidationError(error.HttpCodeException):
+    status = 422
+    code = "E001"
+    title = "Request validation error."
 
 
 @pytest.fixture()
@@ -23,22 +52,6 @@ def cors():
     )
 
 
-class ATestError(error.ServerException):
-    message = "This is an error."
-    code = "E123"
-
-
-class UnhandledException(error.ServerException):
-    code = "E000"
-    message = "Unhandled exception occurred."
-
-
-class ValidationError(error.HttpCodeException):
-    status = 422
-    code = "E001"
-    message = "Request validation error."
-
-
 class TestExceptionHandler:
     def test_unexpected_error_replaces_code(self):
         logger = mock.Mock()
@@ -49,12 +62,40 @@ class TestExceptionHandler:
         eh = fastapi.generate_handler(
             logger=logger,
             unhandled_wrappers={
-                "default": UnhandledException,
+                "default": CustomUnhandledException,
             },
         )
         response = eh(request, exc)
 
-        assert response.status_code == constant.SERVER_ERROR
+        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
+        assert json.loads(response.body) == {
+            "title": "Unhandled exception occurred.",
+            "details": "Something went bad",
+            "type": "custom-unhandled-exception",
+            "status": 500,
+        }
+        assert logger.exception.call_args == mock.call(
+            "Unhandled exception occurred.",
+            exc_info=(type(exc), exc, None),
+        )
+
+    @pytest.mark.backwards_compat()
+    def test_unexpected_error_replaced_legacy(self):
+        logger = mock.Mock()
+
+        request = mock.Mock()
+        exc = Exception("Something went bad")
+
+        eh = fastapi.generate_handler(
+            logger=logger,
+            unhandled_wrappers={
+                "default": LegacyUnhandledException,
+            },
+            legacy=True,
+        )
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
         assert json.loads(response.body) == {
             "message": "Unhandled exception occurred.",
             "debug_message": "Something went bad",
@@ -65,19 +106,40 @@ class TestExceptionHandler:
             exc_info=(type(exc), exc, None),
         )
 
-    def test_debug_disabled(self):
+    def test_strip_debug(self):
         request = mock.Mock()
         exc = Exception("Something went bad")
 
         eh = fastapi.generate_handler(
             strip_debug=True,
             unhandled_wrappers={
-                "default": UnhandledException,
+                "default": CustomUnhandledException,
             },
         )
         response = eh(request, exc)
 
-        assert response.status_code == constant.SERVER_ERROR
+        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
+        assert json.loads(response.body) == {
+            "title": "Unhandled exception occurred.",
+            "type": "custom-unhandled-exception",
+            "status": 500,
+        }
+
+    @pytest.mark.backwards_compat()
+    def test_strip_debug_legacy(self):
+        request = mock.Mock()
+        exc = Exception("Something went bad")
+
+        eh = fastapi.generate_handler(
+            strip_debug=True,
+            unhandled_wrappers={
+                "default": LegacyUnhandledException,
+            },
+            legacy=True,
+        )
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
         assert json.loads(response.body) == {
             "message": "Unhandled exception occurred.",
             "code": "E000",
@@ -92,11 +154,12 @@ class TestExceptionHandler:
         eh = fastapi.generate_handler(logger=logger)
         response = eh(request, exc)
 
-        assert response.status_code == constant.SERVER_ERROR
+        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
         assert json.loads(response.body) == {
-            "message": "Unhandled exception occurred.",
-            "debug_message": "Something went bad",
-            "code": None,
+            "title": "Unhandled exception occurred.",
+            "details": "Something went bad",
+            "type": "unhandled-exception",
+            "status": 500,
         }
         assert logger.exception.call_args == mock.call(
             "Unhandled exception occurred.",
@@ -105,12 +168,28 @@ class TestExceptionHandler:
 
     def test_known_error(self):
         request = mock.Mock()
-        exc = ATestError("something bad")
+        exc = SomethingWrongError("something bad")
 
         eh = fastapi.generate_handler()
         response = eh(request, exc)
 
-        assert response.status_code == constant.SERVER_ERROR
+        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
+        assert json.loads(response.body) == {
+            "title": "This is an error.",
+            "details": "something bad",
+            "type": "something-wrong",
+            "status": 500,
+        }
+
+    @pytest.mark.backwards_compat()
+    def test_known_error_legacy(self):
+        request = mock.Mock()
+        exc = ALegacyError("something bad")
+
+        eh = fastapi.generate_handler(legacy=True)
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
         assert json.loads(response.body) == {
             "message": "This is an error.",
             "debug_message": "something bad",
@@ -123,12 +202,33 @@ class TestExceptionHandler:
 
         eh = fastapi.generate_handler(
             unhandled_wrappers={
-                "422": ValidationError,
+                "422": CustomValidationError,
             },
         )
         response = eh(request, exc)
 
-        assert response.status_code == constant.VALIDATION_ERROR
+        assert response.status_code == http.HTTPStatus.UNPROCESSABLE_ENTITY
+        assert json.loads(response.body) == {
+            "title": "Request validation error.",
+            "errors": [],
+            "type": "custom-validation",
+            "status": 422,
+        }
+
+    @pytest.mark.backwards_compat()
+    def test_fastapi_error_legacy(self):
+        request = mock.Mock()
+        exc = RequestValidationError([])
+
+        eh = fastapi.generate_handler(
+            unhandled_wrappers={
+                "422": LegacyValidationError,
+            },
+            legacy=True,
+        )
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.UNPROCESSABLE_ENTITY
         assert json.loads(response.body) == {
             "message": "Request validation error.",
             "debug_message": [],
@@ -137,16 +237,17 @@ class TestExceptionHandler:
 
     def test_starlette_error(self):
         request = mock.Mock()
-        exc = HTTPException(constant.NOT_FOUND, "something bad")
+        exc = HTTPException(http.HTTPStatus.NOT_FOUND, "something bad")
 
         eh = fastapi.generate_handler()
         response = eh(request, exc)
 
-        assert response.status_code == constant.NOT_FOUND
+        assert response.status_code == http.HTTPStatus.NOT_FOUND
         assert json.loads(response.body) == {
-            "message": "Unhandled HTTPException occurred.",
-            "debug_message": exc.detail,
-            "code": None,
+            "title": "Unhandled HTTPException occurred.",
+            "details": exc.detail,
+            "type": "http-exception",
+            "status": 404,
         }
 
     def test_starlette_error_with_headers(self):
@@ -162,15 +263,16 @@ class TestExceptionHandler:
 
         assert response.status_code == http.HTTPStatus.UNAUTHORIZED
         assert json.loads(response.body) == {
-            "message": "Unhandled HTTPException occurred.",
-            "debug_message": exc.detail,
-            "code": None,
+            "title": "Unhandled HTTPException occurred.",
+            "details": exc.detail,
+            "type": "http-exception",
+            "status": 401,
         }
         assert response.headers["www-authenticate"] == "Basic"
 
     def test_error_with_origin(self, cors):
         request = mock.Mock(headers={"origin": "localhost"})
-        exc = ATestError("something bad")
+        exc = SomethingWrongError("something bad")
 
         eh = fastapi.generate_handler(cors=cors)
         response = eh(request, exc)
@@ -180,7 +282,7 @@ class TestExceptionHandler:
 
     def test_error_with_origin_and_cookie(self, cors):
         request = mock.Mock(headers={"origin": "localhost", "cookie": "something"})
-        exc = ATestError("something bad")
+        exc = SomethingWrongError("something bad")
 
         eh = fastapi.generate_handler(cors=cors)
         response = eh(request, exc)
@@ -190,7 +292,7 @@ class TestExceptionHandler:
 
     def test_missing_token_with_origin_limited_origins(self, cors):
         request = mock.Mock(headers={"origin": "localhost", "cookie": "something"})
-        exc = ATestError("something bad")
+        exc = SomethingWrongError("something bad")
 
         cors.allow_origins = ["localhost"]
 
@@ -202,7 +304,7 @@ class TestExceptionHandler:
 
     def test_missing_token_with_origin_limited_origins_no_match(self, cors):
         request = mock.Mock(headers={"origin": "localhost2", "cookie": "something"})
-        exc = ATestError("something bad")
+        exc = SomethingWrongError("something bad")
 
         cors.allow_origins = ["localhost"]
 
@@ -215,8 +317,8 @@ class TestExceptionHandler:
 async def test_exception_handler_in_app():
     exception_handler = fastapi.generate_handler(
         unhandled_wrappers={
-            "422": ValidationError,
-            "default": UnhandledException,
+            "422": CustomValidationError,
+            "default": CustomUnhandledException,
         },
     )
 
@@ -232,7 +334,8 @@ async def test_exception_handler_in_app():
 
     r = await client.get("/endpoint")
     assert r.json() == {
-        "code": None,
-        "message": "Unhandled HTTPException occurred.",
-        "debug_message": "Not Found",
+        "type": "http-exception",
+        "title": "Unhandled HTTPException occurred.",
+        "details": "Not Found",
+        "status": 404,
     }

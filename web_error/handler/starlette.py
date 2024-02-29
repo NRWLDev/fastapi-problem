@@ -1,13 +1,14 @@
 from __future__ import annotations
 
+import http
 import logging
 import typing
+from warnings import warn
 
 from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
-from web_error import constant
 from web_error.error import HttpCodeException, HttpException
 
 if typing.TYPE_CHECKING:
@@ -73,37 +74,61 @@ def exception_handler_factory(
     unhandled_wrappers: dict[str, type[HttpCodeException]],
     *,
     strip_debug: bool = False,
+    legacy: bool = False,
 ) -> typing.Callable[[Exception], JSONResponse]:
     unhandled_wrappers = unhandled_wrappers or {}
 
     def exception_handler(_request: Request, exc: Exception) -> JSONResponse:
         wrapper = unhandled_wrappers.get("default")
-        ret = wrapper(str(exc)) if wrapper else HttpException("Unhandled exception occurred.", str(exc))
+        ret = (
+            wrapper(str(exc))
+            if wrapper
+            else HttpException(
+                title="Unhandled exception occurred.",
+                details=str(exc),
+                code="unhandled-exception",
+            )
+        )
         headers = {}
 
         if isinstance(exc, HTTPException):
             wrapper = unhandled_wrappers.get(str(exc.status_code))
-            debug_message = exc.detail
+            details = exc.detail
             ret = (
-                wrapper(debug_message)
+                wrapper(details)
                 if wrapper
-                else HttpException("Unhandled HTTPException occurred.", debug_message, status=exc.status_code)
+                else HttpException(
+                    title="Unhandled HTTPException occurred.",
+                    code="http-exception",
+                    details=details,
+                    status=exc.status_code,
+                )
             )
-            headers = exc.headers
+            headers = exc.headers or headers
 
         if isinstance(exc, HttpException):
             ret = exc
 
-        if ret.status >= constant.SERVER_ERROR:
-            logger.exception(ret.message, exc_info=(type(exc), exc, exc.__traceback__))
+        if ret.status >= http.HTTPStatus.INTERNAL_SERVER_ERROR:
+            logger.exception(ret.title, exc_info=(type(exc), exc, exc.__traceback__))
 
-        if strip_debug and ret.debug_message:
-            msg = f"Removed debug message: {ret.debug_message}"
+        if strip_debug and (ret.details or ret.extras):
+            msg = "Stripping debug information from exception."
             logger.debug(msg)
+
+            for k, v in {
+                "details": ret.details,
+                **ret.extras,
+            }.items():
+                msg = f"Removed {k}: {v}"
+                logger.debug(msg)
+
+        if not legacy:
+            headers["content-type"] = "application/problem+json"
 
         return JSONResponse(
             status_code=ret.status,
-            content=ret.marshal(strip_debug=strip_debug),
+            content=ret.marshal(strip_debug=strip_debug, legacy=legacy),
             headers=headers,
         )
 
@@ -116,10 +141,18 @@ def generate_handler(
     unhandled_wrappers: dict[str, type[HttpCodeException]] | None = None,
     *,
     strip_debug: bool = False,
+    legacy: bool = False,
 ) -> typing.Callable:
+    if legacy:
+        warn(
+            "legacy format is deprecated, please convert errors to RFC9547",
+            DeprecationWarning,
+            stacklevel=2,
+        )
     handler = exception_handler_factory(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
         strip_debug=strip_debug,
+        legacy=legacy,
     )
     return cors_wrapper_factory(cors, handler) if cors else handler

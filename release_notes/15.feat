@@ -1,0 +1,1 @@
+Default to RFC9457 response formats, optional legacy generator kwarg can be provided to maintain old response formats.
