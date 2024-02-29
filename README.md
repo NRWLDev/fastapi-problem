@@ -13,6 +13,58 @@ Each exception easily marshals to JSON based on the
 [[RFC9457](https://www.rfc-editor.org/rfc/rfc9457.html)] spec for use in api
 errors.
 
+## Migrating to 0.6
+
+To maintain existing functionality without migrating to RFC9457 support,
+update any current subclasses to replace `message = ""` with `title = ""`.
+
+Replacements:
+
+```
+exception_handler = web_error.handler.fastapi.generate_handler_with_cors(
+    allow_origins=config.cors_allow_origins,
+)
+
+exception_handler = web_error.handler.fastapi.ExceptionHandler(
+    unhandled_code="E000",
+    request_validation_code="E001",
+)
+
+exception_handler = web_error.handler.fastapi.exception_handler
+```
+
+Become:
+
+```
+exception_handler = web_error.handler.fastapi.generate_handler(
+    cors=web_error.cors.CorsConfiguration(
+        allow_origins=config.cors_allow_origins,
+        ...
+    ),
+    legacy=True,
+)
+
+class UnhandledError(web_error.error.ServerException):
+    code = "E000"
+    title = "A title"
+
+class ValidationError(web_error.error.ServerException):
+    code = "E001"
+    title = "A title"
+
+exception_handler = web_error.handler.fastapi.generate_handler(
+    unhandled_wrappers={
+        "default": UnhandledError,
+        "422": ValidationError,
+    }
+    legacy=True,
+)
+
+exception_handler = web_error.handler.fastapi.generate_handler(legacy=True)
+```
+
+Any references in tests/code to `exc.debug_message` become `exc.details`.
+
 ## Errors
 
 The base `web_error.error.HttpException` accepts a `title`, `details`, `status`
