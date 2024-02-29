@@ -12,6 +12,7 @@ from starlette.responses import JSONResponse
 
 from web_error.error import HttpCodeException, HttpException
 from web_error.handler.starlette import cors_wrapper_factory
+from web_error.handler.util import convert_status_code
 
 if typing.TYPE_CHECKING:
     from starlette.requests import Request
@@ -46,12 +47,13 @@ def exception_handler_factory(
         if isinstance(exc, HTTPException):
             wrapper = unhandled_wrappers.get(str(exc.status_code))
             details = exc.detail
+            title, code = convert_status_code(exc.status_code)
             ret = (
                 wrapper(details)
                 if wrapper
                 else HttpException(
-                    title="Unhandled HTTPException occurred.",
-                    code="http-exception",
+                    title=title,
+                    code=code,
                     details=details,
                     status=exc.status_code,
                 )
@@ -63,7 +65,14 @@ def exception_handler_factory(
             errors = json.loads(json.dumps(exc.errors(), default=str))
             kwargs = {"details": errors} if legacy else {"errors": errors}
             ret = (
-                wrapper(**kwargs) if wrapper else HttpException(title="Request validation error.", status=422, **kwargs)
+                wrapper(**kwargs)
+                if wrapper
+                else HttpException(
+                    title="Request validation error.",
+                    code="request-validation-failed",
+                    status=422,
+                    **kwargs,
+                )
             )
 
         if isinstance(exc, HttpException):

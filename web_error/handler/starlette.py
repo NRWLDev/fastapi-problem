@@ -10,6 +10,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
 from web_error.error import HttpCodeException, HttpException
+from web_error.handler.util import convert_status_code
 
 if typing.TYPE_CHECKING:
     from starlette.requests import Request
@@ -93,13 +94,14 @@ def exception_handler_factory(
 
         if isinstance(exc, HTTPException):
             wrapper = unhandled_wrappers.get(str(exc.status_code))
+            title, code = convert_status_code(exc.status_code)
             details = exc.detail
             ret = (
                 wrapper(details)
                 if wrapper
                 else HttpException(
-                    title="Unhandled HTTPException occurred.",
-                    code="http-exception",
+                    title=title,
+                    code=code,
                     details=details,
                     status=exc.status_code,
                 )

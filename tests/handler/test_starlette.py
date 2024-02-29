@@ -204,9 +204,9 @@ class TestExceptionHandler:
 
         assert response.status_code == http.HTTPStatus.NOT_FOUND
         assert json.loads(response.body) == {
-            "title": "Unhandled HTTPException occurred.",
+            "title": "Not Found",
             "details": exc.detail,
-            "type": "http-exception",
+            "type": "http-not-found",
             "status": 404,
         }
 
@@ -223,9 +223,9 @@ class TestExceptionHandler:
 
         assert response.status_code == http.HTTPStatus.UNAUTHORIZED
         assert json.loads(response.body) == {
-            "title": "Unhandled HTTPException occurred.",
+            "title": "Unauthorized",
             "details": exc.detail,
-            "type": "http-exception",
+            "type": "http-unauthorized",
             "status": 401,
         }
         assert response.headers["www-authenticate"] == "Basic"
@@ -301,8 +301,8 @@ async def test_exception_handler_in_app():
 
     r = await client.get("/endpoint")
     assert r.json() == {
-        "type": "http-exception",
-        "title": "Unhandled HTTPException occurred.",
+        "type": "http-not-found",
+        "title": "Not Found",
         "details": "Not Found",
         "status": 404,
     }
