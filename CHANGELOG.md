@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.1 - 2024-02-29
+
+### Bug fixes
+
+- Derive title/type from unexpected error status_codes.  [[#19](https://github.com/EdgyEdgemond/web-error/issues/19)] [[a62d99a](https://github.com/EdgyEdgemond/web-error/commit/a62d99a64b02d79a0e54ceaab7c3d7bc689b56e1)]
+
 ## v0.6.0
 
 ### Features and Improvements
