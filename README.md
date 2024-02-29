@@ -13,57 +13,11 @@ Each exception easily marshals to JSON based on the
 [[RFC9457](https://www.rfc-editor.org/rfc/rfc9457.html)] spec for use in api
 errors.
 
-## Migrating to 0.6
+## Migrating to 0.6 (RFC9457 support)
 
-To maintain existing functionality without migrating to RFC9457 support,
-update any current subclasses to replace `message = ""` with `title = ""`.
-
-Replacements:
-
-```
-exception_handler = web_error.handler.fastapi.generate_handler_with_cors(
-    allow_origins=config.cors_allow_origins,
-)
-
-exception_handler = web_error.handler.fastapi.ExceptionHandler(
-    unhandled_code="E000",
-    request_validation_code="E001",
-)
-
-exception_handler = web_error.handler.fastapi.exception_handler
-```
-
-Become:
-
-```
-exception_handler = web_error.handler.fastapi.generate_handler(
-    cors=web_error.cors.CorsConfiguration(
-        allow_origins=config.cors_allow_origins,
-        ...
-    ),
-    legacy=True,
-)
-
-class UnhandledError(web_error.error.ServerException):
-    code = "E000"
-    title = "A title"
-
-class ValidationError(web_error.error.ServerException):
-    code = "E001"
-    title = "A title"
-
-exception_handler = web_error.handler.fastapi.generate_handler(
-    unhandled_wrappers={
-        "default": UnhandledError,
-        "422": ValidationError,
-    }
-    legacy=True,
-)
-
-exception_handler = web_error.handler.fastapi.generate_handler(legacy=True)
-```
-
-Any references in tests/code to `exc.debug_message` become `exc.details`.
+Check the discussion [[here](github.com/EdgyEdgemond/web-error/discussions/22)]
+for details on how to update usage to maintain legacy functionality or move over
+to problem details support.
 
 ## Errors
 
@@ -72,7 +26,7 @@ The base `web_error.error.HttpException` accepts a `title`, `details`, `status`
 which will be used as the `type`, if not provided the `type` is derived from
 the class name.
 
-And will render a json response with status as the status code:
+And will return a JSON response with `exc.status` as the status code and response body:
 
 ```json
 {
