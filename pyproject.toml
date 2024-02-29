@@ -26,9 +26,8 @@ pytest-git = "^1.7.0"
 pytest-random-order = "^1.0"
 
 # Style
-ruff = "^0.0"
+ruff = "^0.1.2"
 pre-commit = "^3.0.2"
-black = "^22.12.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
