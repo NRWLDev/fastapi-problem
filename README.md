@@ -10,12 +10,12 @@
 applications to support easy error management and responses
 
 Each exception easily marshals to JSON based on the
-[[RFC9457](https://www.rfc-editor.org/rfc/rfc9457.html)] spec for use in api
+[RFC9457](https://www.rfc-editor.org/rfc/rfc9457.html) spec for use in api
 errors.
 
 ## Migrating to 0.6 (RFC9457 support)
 
-Check the discussion [[here](github.com/EdgyEdgemond/web-error/discussions/22)]
+Check the discussion [here](github.com/EdgyEdgemond/web-error/discussions/22)
 for details on how to update usage to maintain legacy functionality or move over
 to problem details support.
 
