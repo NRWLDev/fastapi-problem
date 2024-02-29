@@ -1,5 +1,12 @@
 # Changelog
 
+## vv0.6.0
+
+### Features and Improvements
+
+- Default to RFC9457 response formats, optional legacy generator kwarg can be provided to maintain old response formats. [[#15](https://github.com/EdgyEdgemond/web-error/issues/15)]
+- Drop support for aiohttp, flask and pyramid. Refactor fastapi/starlette interface. [[#16](https://github.com/EdgyEdgemond/web-error/issues/16)]
+
 ## v0.5.6
 
 ## v0.5.5
