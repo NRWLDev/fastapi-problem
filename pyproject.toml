@@ -74,22 +74,22 @@ source = ["web_error"]
 [tool.ruff]
 line-length = 120
 target-version = "py38"
-select = ["ALL"]
-ignore = [
+lint.select = ["ALL"]
+lint.ignore = [
     "ANN002",  # ParamSpec not available in 3.9
     "ANN003",  # ParamSpec not available in 3.9
     "FIX",  # allow TODO
     "D",
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tasks.py" = ["ANN", "E501", "INP001"]
 "tests/*" = ["ANN", "D", "S101", "S105", "S106", "SLF001"]
 
-[tool.ruff.flake8-quotes]
+[tool.ruff.lint.flake8-quotes]
 docstring-quotes = "double"
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [build-system]
