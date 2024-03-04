@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.2 - 2024-03-04
+
+### Features and Improvements
+
+- Attach exception handlers to an active app, rather than providing to `__init__` [[#23](https://github.com/EdgyEdgemond/web-error/issues/23)] [[3d61d82](https://github.com/EdgyEdgemond/web-error/commit/3d61d82be86e12ee477cb5737e8085ff8982167f)]
+
 ## v0.6.1 - 2024-02-29
 
 ### Bug fixes
