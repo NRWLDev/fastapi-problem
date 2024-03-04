@@ -44,7 +44,7 @@ release = true
 commit = true
 reject_empty = true
 allowed_branches = [
-    "master",
+    "main",
 ]
 date_format = "- %Y-%m-%d"
 issue_link = "https://github.com/EdgyEdgemond/web-error/issues/::issue_ref::"
