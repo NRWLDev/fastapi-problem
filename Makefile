@@ -5,7 +5,7 @@ install-dev:
 	poetry install
 
 release:
-	changelog-gen
+	changelog generate
 
 check-style:
 	ruff .

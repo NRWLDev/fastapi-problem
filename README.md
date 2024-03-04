@@ -120,23 +120,19 @@ raise UserNotFoundError(details="details", user_id="1234", metadata={"hello": "w
     import starlette.applications
     import web_error.handler.starlette
 
-    exception_handler = web_error.handler.starlette.generate_handler()
+    app = starlette.applications.Starlette()
 
-    return starlette.applications.Starlette(
-        exception_handlers={
-            Exception: exception_handler,
-            HTTPException: exception_handler,
-        },
-    )
+    web_error.handler.starlette.add_exception_handler(app)
 ```
 
-A custom logger can be provided to `generate_handler(logger=...)`.
+A custom logger can be provided to `add_exception_handler(app, logger=...)`.
 
 If you require cors headers, you can pass a `web_error.cors.CorsConfiguration`
-instance to `generate_handler(cors=...)`.
+instance to `add_exception_handler(cors=...)`.
 
 ```python
-generate_handler(
+add_exception_handler(
+    app,
     cors=CorsConfiguration(
         allow_origins=["*"],
         allow_methods=["*"],
@@ -160,7 +156,8 @@ will log the debug message and remove it from the response.
         status = 404
         message = "Endpoint not found."
 
-    exception_handler = web_error.handler.starlette.generate_handler(
+    web_error.handler.starlette.add_exception_handler(
+        app,
         unhandled_wrappers={
             "404": NotFoundError,
         },
@@ -176,13 +173,7 @@ handling of `RequestValidationError`.
     import fastapi
     import web_error.handler.fastapi
 
-    exception_handler = web_error.handler.fastapi.generate_handler()
 
-    return fastapi.FastAPI(
-        exception_handlers={
-            Exception: exception_handler,
-            RequestValidationError: exception_handler,
-            HTTPException: exception_handler,
-        },
-    )
+    app = fastapi.FastAPI()
+    web_error.handler.fastapi.add_exception_handler(app)
 ```

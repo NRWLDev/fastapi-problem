@@ -15,6 +15,7 @@ from web_error.handler.starlette import cors_wrapper_factory
 from web_error.handler.util import convert_status_code
 
 if typing.TYPE_CHECKING:
+    from fastapi import FastAPI
     from starlette.requests import Request
 
     from web_error.cors import CorsConfiguration
@@ -125,3 +126,18 @@ def generate_handler(
         legacy=legacy,
     )
     return cors_wrapper_factory(cors, handler) if cors else handler
+
+
+def add_exception_handler(  # noqa: PLR0913
+    app: FastAPI,
+    logger: logging.Logger = logger_,
+    cors: CorsConfiguration | None = None,
+    unhandled_wrappers: dict[str, type[HttpCodeException]] | None = None,
+    *,
+    strip_debug: bool = False,
+    legacy: bool = False,
+) -> None:
+    eh = generate_handler(logger, cors, unhandled_wrappers, strip_debug=strip_debug, legacy=legacy)
+    app.exception_handler(Exception)(eh)
+    app.exception_handler(HTTPException)(eh)
+    app.exception_handler(RequestValidationError)(eh)

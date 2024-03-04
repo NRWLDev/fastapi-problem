@@ -339,3 +339,26 @@ async def test_exception_handler_in_app():
         "details": "Not Found",
         "status": 404,
     }
+
+
+async def test_exception_handler_in_app_post_register():
+    app = FastAPI()
+
+    fastapi.add_exception_handler(
+        app,
+        unhandled_wrappers={
+            "422": CustomValidationError,
+            "default": CustomUnhandledException,
+        },
+    )
+
+    transport = httpx.ASGITransport(app=app, raise_app_exceptions=False, client=("1.2.3.4", 123))
+    client = httpx.AsyncClient(transport=transport, app=app, base_url="https://test")
+
+    r = await client.get("/endpoint")
+    assert r.json() == {
+        "type": "http-not-found",
+        "title": "Not Found",
+        "details": "Not Found",
+        "status": 404,
+    }
