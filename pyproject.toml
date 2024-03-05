@@ -74,8 +74,10 @@ source = ["web_error"]
 [tool.ruff]
 line-length = 120
 target-version = "py38"
-lint.select = ["ALL"]
-lint.ignore = [
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
     "ANN002",  # ParamSpec not available in 3.9
     "ANN003",  # ParamSpec not available in 3.9
     "FIX",  # allow TODO
