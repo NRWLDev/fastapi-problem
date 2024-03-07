@@ -3,7 +3,8 @@ name: Publish
 on:
   push:
     tags:
-    - 'v\d+\.\d+\.\d+.*'
+    - 'v\d+\.\d+\.\d+'
+    - 'v\d+\.\d+\.\d+rc\d+'
   workflow_dispatch:
 
 jobs:
