@@ -6,6 +6,12 @@
 ![tests](https://github.com/EdgyEdgemond/web-error/workflows/tests/badge.svg)
 [![codecov](https://codecov.io/gh/EdgyEdgemond/web-error/branch/main/graph/badge.svg)](https://codecov.io/gh/EdgyEdgemond/web-error)
 
+# Archived
+
+This repository has migrated to [NRWLDev](https://github.com/NRWLDev/web-error).
+
+# Details
+
 `web_error` is a set of exceptions and handlers for use in starlette/fastapi
 applications to support easy error management and responses
 
