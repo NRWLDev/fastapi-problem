@@ -2,8 +2,8 @@
 [![image](https://img.shields.io/pypi/v/web_error.svg)](https://pypi.org/project/web_error/)
 [![image](https://img.shields.io/pypi/l/web_error.svg)](https://pypi.org/project/web_error/)
 [![image](https://img.shields.io/pypi/pyversions/web_error.svg)](https://pypi.org/project/web_error/)
-![style](https://github.com/NRWLDev/web-error/workflows/style/badge.svg)
-![tests](https://github.com/NRWLDev/web-error/workflows/tests/badge.svg)
+![style](https://github.com/NRWLDev/web-error/actions/workflows/style.yml/badge.svg)
+![tests](https://github.com/NRWLDev/web-error/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/NRWLDev/web-error/branch/main/graph/badge.svg)](https://codecov.io/gh/NRWLDev/web-error)
 
 `web_error` is a set of exceptions and handlers for use in starlette/fastapi
