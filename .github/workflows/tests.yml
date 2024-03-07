@@ -34,13 +34,13 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+        slug: NRWLDev/web-error
         file: ./coverage.xml
         flags: unittests
         name: codecov-umbrella
         yml: ./codecov.yml
-        fail_ci_if_error: true
+        fail_ci_if_error: false
 
-  no legacy code yet
   test-legacy:
 
     runs-on: ubuntu-latest
