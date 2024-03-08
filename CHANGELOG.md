@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.6 - 2024-03-08
+
+### Bug fixes
+
+- Clean up message deprecation detection [[c2a0e3f](https://github.com/EdgyEdgemond/web-error/commit/c2a0e3f552fad60e0ea73b449e269c89c3c2f43c)]
+
 ## v0.6.5 - 2024-03-08
 
 ### Bug fixes
