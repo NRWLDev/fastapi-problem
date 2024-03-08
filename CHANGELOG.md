@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.5 - 2024-03-08
+
+### Bug fixes
+
+- Expose legacy attributes, accessing new attributes. [[30c3682](https://github.com/EdgyEdgemond/web-error/commit/30c3682ea9526b6c2a4b180cd928becd69396961)]
+
 ## v0.6.4 - 2024-03-08
 
 ### Bug fixes
