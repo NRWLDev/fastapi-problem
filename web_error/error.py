@@ -20,12 +20,19 @@ class HttpException(Exception):  # noqa: N818
 
     def __init__(
         self: typing.Self,
-        title: str,
+        title: str | None = None,  # legacy support for message/debug_message in kwargs
         code: str | None = None,
         details: str | None = None,
         status: int = 500,
         **kwargs,
     ) -> None:
+        if title is None:
+            if "message" not in kwargs:
+                msg = "HttpException.__init__() missing 1 required positional argument: 'title'"
+                raise TypeError(msg)
+            title = kwargs.pop("message")
+            details = kwargs.pop("debug_message", details)
+
         super().__init__(title)
         self._code = code
         self.title = title

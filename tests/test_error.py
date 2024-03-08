@@ -53,3 +53,32 @@ def test_marshal_legacy():
         "message": "a 500 message",
         "debug_message": "debug_message",
     }
+
+
+@pytest.mark.backwards_compat()
+def test_init_legacy():
+    e = error.HttpException(
+        message="Unable to connect to service.",
+        debug_message="debug_message",
+        code="E000",
+        status=400,
+    )
+
+    assert e.marshal() == {
+        "type": "E000",
+        "title": "Unable to connect to service.",
+        "details": "debug_message",
+        "status": 400,
+    }
+
+
+@pytest.mark.backwards_compat()
+def test_init_legacy_no_message():
+    with pytest.raises(TypeError) as e:
+        error.HttpException(
+            debug_message="debug_message",
+            code="E000",
+            status=400,
+        )
+
+    assert str(e.value) == "HttpException.__init__() missing 1 required positional argument: 'title'"
