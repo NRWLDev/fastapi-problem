@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.4 - 2024-03-08
+
+### Bug fixes
+
+- Handle legacy exception definitions with message attribute [[c07215c](https://github.com/EdgyEdgemond/web-error/commit/c07215cc4ec9e10953abded8311a93717704a324)]
+
 ## v0.6.3 - 2024-03-08
 
 ### Bug fixes
