@@ -47,6 +47,24 @@ class HttpException(Exception):  # noqa: N818
         self.extras = kwargs
 
     @property
+    def message(self: typing.Self) -> str:
+        warn(
+            "HttpException.message attribute deprecated, please convert to HttpException.title",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.title
+
+    @property
+    def debug_message(self: typing.Self) -> str | None:
+        warn(
+            "HttpException.debug_message attribute deprecated, please convert to HttpException.debug_message",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        return self.details
+
+    @property
     def type(self: typing.Self) -> str:
         type_ = self.__class__.__name__.replace("Error", "")
         type_ = CONVERT_RE.sub("-", type_).lower()

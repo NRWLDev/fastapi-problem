@@ -45,6 +45,15 @@ def test_marshal(exc, type_):
 
 
 @pytest.mark.backwards_compat()
+def test_legacy_attributes():
+    e = ALegacyError("debug_message")
+
+    assert e.message == e.title
+    assert e.code == e.type
+    assert e.debug_message == e.details
+
+
+@pytest.mark.backwards_compat()
 def test_marshal_legacy():
     e = ALegacyError("debug_message")
 
