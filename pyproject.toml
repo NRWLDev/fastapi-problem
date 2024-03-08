@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "web_error"
-version = "0.6.4"
+version = "0.6.5"
 description = "Web based error utils"
 authors = ["Daniel Edgecombe <edgy.edgemond@gmail.com>"]
 license = "Apache-2.0"
@@ -27,7 +27,7 @@ ruff = "^0.3.0"
 pre-commit = "^3.0.2"
 
 [tool.bumpversion]
-current_version = "0.6.4"
+current_version = "0.6.5"
 commit = true
 tag = true
 
