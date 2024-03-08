@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.3 - 2024-03-08
+
+### Bug fixes
+
+- Support legacy init [[e83a8f8](https://github.com/EdgyEdgemond/web-error/commit/e83a8f8b29b11694414b20e2e2ac1856b61dbb0c)]
+
 ## v0.6.2 - 2024-03-04
 
 ### Features and Improvements
