@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import re
 import typing
+from warnings import warn
 
 CONVERT_RE = re.compile(r"(?<!^)(?=[A-Z])")
 
@@ -28,6 +29,11 @@ class HttpException(Exception):  # noqa: N818
     ) -> None:
         if title is None:
             if "message" not in kwargs:
+                warn(
+                    "message attribute deprecated, please convert to 'title=...'",
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
                 msg = "HttpException.__init__() missing 1 required positional argument: 'title'"
                 raise TypeError(msg)
             title = kwargs.pop("message")
@@ -89,7 +95,17 @@ class HttpCodeException(HttpException):
     status = 500
 
     def __init__(self: typing.Self, details: str | None = None, **kwargs) -> None:
-        super().__init__(self.title, code=self.code, details=details, status=self.status, **kwargs)
+        title = self.title
+        # Handle legacy definitions. Where a dependency raises an error you
+        # don't own, you can't change message -> title.
+        if hasattr(self, "message"):
+            title = self.message
+            warn(
+                "message attribute deprecated, please convert to 'title=...'",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        super().__init__(title, code=self.code, details=details, status=self.status, **kwargs)
 
 
 class ServerException(HttpCodeException): ...

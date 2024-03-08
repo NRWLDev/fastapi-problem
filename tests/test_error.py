@@ -21,7 +21,7 @@ class ServerExceptionError(error.ServerException):
 
 class ALegacyError(error.ServerException):
     code = "E500"
-    title = "a 500 message"
+    message = "a 500 message"
 
 
 @pytest.mark.parametrize(
