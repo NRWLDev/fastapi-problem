@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.7 - 2024-03-11
+
+### Bug fixes
+
+- Cleanup legacy warning detection [[9c54796](https://github.com/EdgyEdgemond/web-error/commit/9c54796458082a1a9f7b265c33348335f65f5e44)]
+
 ## v0.6.6 - 2024-03-08
 
 ### Bug fixes
