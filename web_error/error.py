@@ -6,7 +6,8 @@ https://www.rfc-editor.org/rfc/rfc9457.html
 from __future__ import annotations
 
 import re
-import typing
+import typing as t
+from collections import UserString
 from warnings import warn
 
 CONVERT_RE = re.compile(r"(?<!^)(?=[A-Z])")
@@ -20,7 +21,7 @@ class HttpException(Exception):  # noqa: N818
     """
 
     def __init__(
-        self: typing.Self,
+        self: t.Self,
         title: str | None = None,  # legacy support for message/debug_message in kwargs
         code: str | None = None,
         details: str | None = None,
@@ -45,32 +46,34 @@ class HttpException(Exception):  # noqa: N818
         self.details = details
         self.status = status
         self.extras = kwargs
+        self.warn = True
 
     @property
-    def message(self: typing.Self) -> str:
-        warn(
-            "HttpException.message attribute deprecated, please convert to HttpException.title",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return self.title
+    def message(self: t.Self) -> str:
+        if self.warn:
+            warn(
+                "HttpException.message attribute deprecated, please convert to HttpException.title",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+        return UserString(self.title)
 
     @property
-    def debug_message(self: typing.Self) -> str | None:
+    def debug_message(self: t.Self) -> str | None:
         warn(
-            "HttpException.debug_message attribute deprecated, please convert to HttpException.debug_message",
+            "HttpException.debug_message attribute deprecated, please convert to HttpException.details",
             DeprecationWarning,
             stacklevel=2,
         )
         return self.details
 
     @property
-    def type(self: typing.Self) -> str:
+    def type(self: t.Self) -> str:
         type_ = self.__class__.__name__.replace("Error", "")
         type_ = CONVERT_RE.sub("-", type_).lower()
         return self._code if self._code else type_
 
-    def marshal(self: typing.Self, *, strip_debug: bool = False, legacy: bool = False) -> dict[str, typing.Any]:
+    def marshal(self: t.Self, *, strip_debug: bool = False, legacy: bool = False) -> dict[str, t.Any]:
         """Generate a JSON compatible representation.
 
         Args:
@@ -112,10 +115,12 @@ class HttpCodeException(HttpException):
     title = "Base http exception."
     status = 500
 
-    def __init__(self: typing.Self, details: str | None = None, **kwargs) -> None:
+    def __init__(self: t.Self, details: str | None = None, **kwargs) -> None:
+        self.warn = False
         title = self.title
-        if title == "Base http exception." and self.message != self.title:
-            title = self.message
+        if not isinstance(self.message, UserString):
+            kwargs["message"] =  self.message
+            title = None
             warn(
                 "message attribute deprecated, please convert to 'title=...'",
                 DeprecationWarning,
