@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.8 - 2024-03-12
+
+### Bug fixes
+
+- Only replace last instance of Error in class name [eff6b14](https://github.com/EdgyEdgemond/web-error/commit/eff6b149f1d72a58fa4ec0340f0a9511a88d85e1)
+
 ## v0.6.7 - 2024-03-11
 
 ### Bug fixes
