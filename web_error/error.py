@@ -69,7 +69,7 @@ class HttpException(Exception):  # noqa: N818
 
     @property
     def type(self: t.Self) -> str:
-        type_ = self.__class__.__name__.replace("Error", "")
+        type_ = "".join(self.__class__.__name__.rreplace("Error", 1))
         type_ = CONVERT_RE.sub("-", type_).lower()
         return self._code if self._code else type_
 
