@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.9 - 2024-03-12
+
+### Bug fixes
+
+- Fix incorrect string method used in type generation [01f2c1b](https://github.com/EdgyEdgemond/web-error/commit/01f2c1b26ee296ef723d4c852dbe162e0218174f)
+
 ## v0.6.8 - 2024-03-12
 
 ### Bug fixes
