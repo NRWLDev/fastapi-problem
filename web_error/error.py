@@ -119,7 +119,7 @@ class HttpCodeException(HttpException):
         self.warn = False
         title = self.title
         if not isinstance(self.message, UserString):
-            kwargs["message"] =  self.message
+            kwargs["message"] = self.message
             title = None
             warn(
                 "message attribute deprecated, please convert to 'title=...'",
