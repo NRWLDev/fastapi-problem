@@ -76,9 +76,11 @@ def exception_handler_factory(
     unhandled_wrappers: dict[str, type[HttpCodeException]],
     *,
     strip_debug: bool = False,
+    strip_debug_codes: list[int] | None = None,
     legacy: bool = False,
 ) -> typing.Callable[[Exception], JSONResponse]:
     unhandled_wrappers = unhandled_wrappers or {}
+    strip_debug_codes = strip_debug_codes or []
 
     def exception_handler(_request: Request, exc: Exception) -> JSONResponse:
         wrapper = unhandled_wrappers.get("default")
@@ -115,7 +117,9 @@ def exception_handler_factory(
         if ret.status >= http.HTTPStatus.INTERNAL_SERVER_ERROR:
             logger.exception(ret.title, exc_info=(type(exc), exc, exc.__traceback__))
 
-        if strip_debug and (ret.details or ret.extras):
+        strip_debug_ = strip_debug or ret.status in strip_debug_codes
+
+        if strip_debug_ and (ret.details or ret.extras):
             msg = "Stripping debug information from exception."
             logger.debug(msg)
 
@@ -131,19 +135,20 @@ def exception_handler_factory(
 
         return JSONResponse(
             status_code=ret.status,
-            content=ret.marshal(strip_debug=strip_debug, legacy=legacy),
+            content=ret.marshal(strip_debug=strip_debug_, legacy=legacy),
             headers=headers,
         )
 
     return exception_handler
 
 
-def generate_handler(
+def generate_handler(  # noqa: PLR0913
     logger: logging.Logger = logger_,
     cors: CorsConfiguration | None = None,
     unhandled_wrappers: dict[str, type[HttpCodeException]] | None = None,
     *,
     strip_debug: bool = False,
+    strip_debug_codes: list[int] | None = None,
     legacy: bool = False,
 ) -> typing.Callable:
     if legacy:
@@ -156,6 +161,7 @@ def generate_handler(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
         strip_debug=strip_debug,
+        strip_debug_codes=strip_debug_codes,
         legacy=legacy,
     )
     return cors_wrapper_factory(cors, handler) if cors else handler
@@ -168,8 +174,16 @@ def add_exception_handler(  # noqa: PLR0913
     unhandled_wrappers: dict[str, type[HttpCodeException]] | None = None,
     *,
     strip_debug: bool = False,
+    strip_debug_codes: list[int] | None = None,
     legacy: bool = False,
 ) -> None:
-    eh = generate_handler(logger, cors, unhandled_wrappers, strip_debug=strip_debug, legacy=legacy)
+    eh = generate_handler(
+        logger,
+        cors,
+        unhandled_wrappers,
+        strip_debug=strip_debug,
+        strip_debug_codes=strip_debug_codes,
+        legacy=legacy,
+    )
     app.exception_handler(Exception)(eh)
     app.exception_handler(HTTPException)(eh)

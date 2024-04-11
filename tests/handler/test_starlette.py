@@ -124,6 +124,47 @@ class TestExceptionHandler:
             "status": 500,
         }
 
+    def test_strip_debug_with_code(self):
+        request = mock.Mock()
+        exc = Exception("Something went bad")
+
+        eh = starlette.generate_handler(
+            strip_debug=False,
+            strip_debug_codes=[500],
+            unhandled_wrappers={
+                "default": CustomUnhandledException,
+            },
+        )
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
+        assert json.loads(response.body) == {
+            "title": "Unhandled exception occurred.",
+            "type": "custom-unhandled-exception",
+            "status": 500,
+        }
+
+    def test_strip_debug_with_allowed_code(self):
+        request = mock.Mock()
+        exc = SomethingWrongError("something bad")
+
+        eh = starlette.generate_handler(
+            strip_debug=False,
+            strip_debug_codes=[400],
+            unhandled_wrappers={
+                "default": CustomUnhandledException,
+            },
+        )
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
+        assert json.loads(response.body) == {
+            "title": "This is an error.",
+            "type": "something-wrong",
+            "details": "something bad",
+            "status": 500,
+        }
+
     @pytest.mark.backwards_compat()
     def test_strip_debug_legacy(self):
         request = mock.Mock()
