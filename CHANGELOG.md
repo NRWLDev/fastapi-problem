@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.10 - 2024-04-11
+
+### Features and Improvements
+
+- Support stripping debug by status code, rather than flag. [#1](https://github.com/EdgyEdgemond/web-error/issues/1) [4d76e1e](https://github.com/EdgyEdgemond/web-error/commit/4d76e1eb65efa004d62812e64d40fcc8a224405a)
+
 ## v0.6.9 - 2024-03-12
 
 ### Bug fixes
