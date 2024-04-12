@@ -82,21 +82,21 @@ files = [
 
 [[package]]
 name = "changelog-gen"
-version = "0.9.3"
+version = "0.9.8"
 description = "Changelog generation tool"
 optional = false
-python-versions = ">=3.9,<4.0"
+python-versions = "<4.0,>=3.9"
 files = [
-    {file = "changelog_gen-0.9.3-py3-none-any.whl", hash = "sha256:05610011a0cf9dd799efdaa80d138408a6af13ae0878320cff3c9f5f46349b89"},
-    {file = "changelog_gen-0.9.3.tar.gz", hash = "sha256:9b6a67836232050be361fa6faa91a6923a33514de7f7e64ea68bf99990968576"},
+    {file = "changelog_gen-0.9.8-py3-none-any.whl", hash = "sha256:d35cbac774a59d56b42a06a6e8dc57e7c708b5e0ac7c8416f2b45da400dd5f07"},
+    {file = "changelog_gen-0.9.8.tar.gz", hash = "sha256:f4e467b3d016e26a95940fb61f3860b55985088e02c28fa43244bd21c2271cb0"},
 ]
 
 [package.dependencies]
 bump-my-version = {version = ">=0.18.3,<0.19.0", optional = true, markers = "extra == \"bump-my-version\""}
-httpx = ">=0.25.0,<0.26.0"
+httpx = ">=0.25,<0.26"
 rich = ">=13.7.1,<14.0.0"
-rtoml = ">=0.10.0,<0.11.0"
-typer = ">=0.9.0,<0.10.0"
+rtoml = ">=0.9"
+typer = ">=0,<1"
 
 [package.extras]
 bump-my-version = ["bump-my-version (>=0.18.3,<0.19.0)"]
