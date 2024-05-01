@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.1 - 2024-05-01
+
+### Bug fixes
+
+- Remove unused legacy warning [[f4f51f0](https://github.com/NRWLDev/fastapi-problem/commit/f4f51f087e1ed1de30d7dfbcd2a3f80181883044)]
+
 ## v0.7.0 - 2024-05-01
 
 ### Features and Improvements
