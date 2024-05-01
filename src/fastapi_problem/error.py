@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import re
 import typing as t
-from warnings import warn
 
 CONVERT_RE = re.compile(r"(?<!^)(?=[A-Z])")
 
@@ -27,18 +26,6 @@ class HttpException(Exception):  # noqa: N818
         status: int = 500,
         **kwargs,
     ) -> None:
-        if title is None:
-            if "message" not in kwargs:
-                warn(
-                    "message attribute deprecated, please convert to 'title=...'",
-                    DeprecationWarning,
-                    stacklevel=2,
-                )
-                msg = "HttpException.__init__() missing 1 required positional argument: 'title'"
-                raise TypeError(msg)
-            title = kwargs.pop("message")
-            details = kwargs.pop("debug_message", details)
-
         super().__init__(title)
         self._code = code
         self.title = title
