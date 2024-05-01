@@ -78,33 +78,6 @@ class TestExceptionHandler:
             exc_info=(type(exc), exc, None),
         )
 
-    @pytest.mark.backwards_compat()
-    def test_unexpected_error_replaced_legacy(self):
-        logger = mock.Mock()
-
-        request = mock.Mock()
-        exc = Exception("Something went bad")
-
-        eh = starlette.generate_handler(
-            logger=logger,
-            unhandled_wrappers={
-                "default": LegacyUnhandledException,
-            },
-            legacy=True,
-        )
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
-        assert json.loads(response.body) == {
-            "message": "Unhandled exception occurred.",
-            "debug_message": "Something went bad",
-            "code": "E000",
-        }
-        assert logger.exception.call_args == mock.call(
-            "Unhandled exception occurred.",
-            exc_info=(type(exc), exc, None),
-        )
-
     def test_strip_debug(self):
         request = mock.Mock()
         exc = Exception("Something went bad")
@@ -165,26 +138,6 @@ class TestExceptionHandler:
             "status": 500,
         }
 
-    @pytest.mark.backwards_compat()
-    def test_strip_debug_legacy(self):
-        request = mock.Mock()
-        exc = Exception("Something went bad")
-
-        eh = starlette.generate_handler(
-            strip_debug=True,
-            unhandled_wrappers={
-                "default": LegacyUnhandledException,
-            },
-            legacy=True,
-        )
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
-        assert json.loads(response.body) == {
-            "message": "Unhandled exception occurred.",
-            "code": "E000",
-        }
-
     def test_unexpected_error(self):
         logger = mock.Mock()
 
@@ -219,21 +172,6 @@ class TestExceptionHandler:
             "details": "something bad",
             "type": "something-wrong",
             "status": 500,
-        }
-
-    @pytest.mark.backwards_compat()
-    def test_known_error_legacy(self):
-        request = mock.Mock()
-        exc = ALegacyError("something bad")
-
-        eh = starlette.generate_handler(legacy=True)
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
-        assert json.loads(response.body) == {
-            "message": "This is an error.",
-            "debug_message": "something bad",
-            "code": "E123",
         }
 
     def test_starlette_error(self):

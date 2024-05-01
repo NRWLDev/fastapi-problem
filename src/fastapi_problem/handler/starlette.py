@@ -3,7 +3,6 @@ from __future__ import annotations
 import http
 import logging
 import typing
-from warnings import warn
 
 from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
@@ -77,7 +76,6 @@ def exception_handler_factory(
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
-    legacy: bool = False,
 ) -> typing.Callable[[Exception], JSONResponse]:
     unhandled_wrappers = unhandled_wrappers or {}
     strip_debug_codes = strip_debug_codes or []
@@ -130,39 +128,30 @@ def exception_handler_factory(
                 msg = f"Removed {k}: {v}"
                 logger.debug(msg)
 
-        if not legacy:
-            headers["content-type"] = "application/problem+json"
+        headers["content-type"] = "application/problem+json"
 
         return JSONResponse(
             status_code=ret.status,
-            content=ret.marshal(strip_debug=strip_debug_, legacy=legacy),
+            content=ret.marshal(strip_debug=strip_debug_),
             headers=headers,
         )
 
     return exception_handler
 
 
-def generate_handler(  # noqa: PLR0913
+def generate_handler(
     logger: logging.Logger = logger_,
     cors: CorsConfiguration | None = None,
     unhandled_wrappers: dict[str, type[HttpCodeException]] | None = None,
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
-    legacy: bool = False,
 ) -> typing.Callable:
-    if legacy:
-        warn(
-            "legacy format is deprecated, please convert errors to RFC9547",
-            DeprecationWarning,
-            stacklevel=2,
-        )
     handler = exception_handler_factory(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
-        legacy=legacy,
     )
     return cors_wrapper_factory(cors, handler) if cors else handler
 
@@ -175,7 +164,6 @@ def add_exception_handler(  # noqa: PLR0913
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
-    legacy: bool = False,
 ) -> None:
     eh = generate_handler(
         logger,
@@ -183,7 +171,6 @@ def add_exception_handler(  # noqa: PLR0913
         unhandled_wrappers,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
-        legacy=legacy,
     )
     app.exception_handler(Exception)(eh)
     app.exception_handler(HTTPException)(eh)
