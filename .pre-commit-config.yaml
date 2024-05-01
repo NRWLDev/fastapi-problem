@@ -3,7 +3,6 @@ repos:
     rev: v4.4.0
     hooks:
       - id: trailing-whitespace
-        exclude: setup.cfg
       - id: check-added-large-files
       - id: check-ast
       - id: check-json
@@ -30,5 +29,6 @@ repos:
     rev: v1.3.1
     hooks:
       - id: remove-crlf
+        exclude: docs/favicon.svg
       - id: remove-tabs
-        exclude: setup.cfg|Makefile
+        exclude: docs/favicon.svg
