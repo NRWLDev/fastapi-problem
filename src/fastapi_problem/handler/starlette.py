@@ -9,14 +9,14 @@ from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
-from web_error.error import HttpCodeException, HttpException
-from web_error.handler.util import convert_status_code
+from fastapi_problem.error import HttpCodeException, HttpException
+from fastapi_problem.handler.util import convert_status_code
 
 if typing.TYPE_CHECKING:
     from starlette.applications import Starlette
     from starlette.requests import Request
 
-    from web_error.cors import CorsConfiguration
+    from fastapi_problem.cors import CorsConfiguration
 
 logger_ = logging.getLogger(__name__)
 

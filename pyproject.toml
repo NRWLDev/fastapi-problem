@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "web_error"
+name = "fastapi-problem"
 version = "0.6.10"
-description = "Web based error utils"
+description = "FastAPI support for RFC9457 problems."
 authors = ["Daniel Edgecombe <edgy.edgemond@gmail.com>"]
 license = "Apache-2.0"
-repository="https://github.com/EdgyEdgemond/web-error/"
-homepage="https://github.com/EdgyEdgemond/web-error/"
+repository="https://github.com/EdgyEdgemond/fastapi-problem/"
+homepage="https://github.com/EdgyEdgemond/fastapi-problem/"
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -47,8 +47,8 @@ allowed_branches = [
     "main",
 ]
 date_format = "- %Y-%m-%d"
-issue_link = "https://github.com/EdgyEdgemond/web-error/issues/::issue_ref::"
-commit_link = "https://github.com/EdgyEdgemond/web-error/commit/::commit_hash::"
+issue_link = "https://github.com/NRWLDev/fastapi-problem/issues/::issue_ref::"
+commit_link = "https://github.com/NRWLDev/fastapi-problem/commit/::commit_hash::"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -69,7 +69,7 @@ exclude_lines = [
 
 [tool.coverage.run]
 branch = true
-source = ["web_error"]
+source = ["src/fastapi_problem"]
 
 [tool.ruff]
 line-length = 120
@@ -85,8 +85,11 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"tasks.py" = ["ANN", "E501", "INP001"]
+"tasks.py" = ["ANN", "E501", "INP001", "S"]
 "tests/*" = ["ANN", "D", "S101", "S105", "S106", "SLF001"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["fastapi_problem"]
 
 [tool.ruff.lint.flake8-quotes]
 docstring-quotes = "double"

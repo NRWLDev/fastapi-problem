@@ -7,9 +7,9 @@ import pytest
 from starlette.applications import Starlette
 from starlette.exceptions import HTTPException
 
-from web_error import error
-from web_error.cors import CorsConfiguration
-from web_error.handler import starlette
+from fastapi_problem import error
+from fastapi_problem.cors import CorsConfiguration
+from fastapi_problem.handler import starlette
 
 
 class SomethingWrongError(error.ServerException):

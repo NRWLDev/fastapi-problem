@@ -8,9 +8,9 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 
-from web_error import error
-from web_error.cors import CorsConfiguration
-from web_error.handler import fastapi
+from fastapi_problem import error
+from fastapi_problem.cors import CorsConfiguration
+from fastapi_problem.handler import fastapi
 
 
 class SomethingWrongError(error.ServerException):

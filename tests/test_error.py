@@ -1,6 +1,6 @@
 import pytest
 
-from web_error import error
+from fastapi_problem import error
 
 
 class NotFoundError(error.NotFoundException):

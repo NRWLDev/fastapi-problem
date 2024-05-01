@@ -10,15 +10,15 @@ from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 from starlette.responses import JSONResponse
 
-from web_error.error import HttpCodeException, HttpException
-from web_error.handler.starlette import cors_wrapper_factory
-from web_error.handler.util import convert_status_code
+from fastapi_problem.error import HttpCodeException, HttpException
+from fastapi_problem.handler.starlette import cors_wrapper_factory
+from fastapi_problem.handler.util import convert_status_code
 
 if typing.TYPE_CHECKING:
     from fastapi import FastAPI
     from starlette.requests import Request
 
-    from web_error.cors import CorsConfiguration
+    from fastapi_problem.cors import CorsConfiguration
 
 logger_ = logging.getLogger(__name__)
 
