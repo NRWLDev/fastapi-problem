@@ -1,27 +1,21 @@
-# Web Errors v0.6.10
-[![image](https://img.shields.io/pypi/v/web_error.svg)](https://pypi.org/project/web_error/)
-[![image](https://img.shields.io/pypi/l/web_error.svg)](https://pypi.org/project/web_error/)
-[![image](https://img.shields.io/pypi/pyversions/web_error.svg)](https://pypi.org/project/web_error/)
-![style](https://github.com/NRWLDev/web-error/actions/workflows/style.yml/badge.svg)
-![tests](https://github.com/NRWLDev/web-error/actions/workflows/tests.yml/badge.svg)
-[![codecov](https://codecov.io/gh/NRWLDev/web-error/branch/main/graph/badge.svg)](https://codecov.io/gh/NRWLDev/web-error)
+# FastAPI Problems v0.6.10
+[![image](https://img.shields.io/pypi/v/fastapi_problem.svg)](https://pypi.org/project/fastapi-problem/)
+[![image](https://img.shields.io/pypi/l/fastapi_problem.svg)](https://pypi.org/project/fastapi-problem/)
+[![image](https://img.shields.io/pypi/pyversions/fastapi_problem.svg)](https://pypi.org/project/fastapi-problem/)
+![style](https://github.com/NRWLDev/fastapi-problem/actions/workflows/style.yml/badge.svg)
+![tests](https://github.com/NRWLDev/fastapi-problem/actions/workflows/tests.yml/badge.svg)
+[![codecov](https://codecov.io/gh/NRWLDev/fastapi-problem/branch/main/graph/badge.svg)](https://codecov.io/gh/NRWLDev/fastapi-problem)
 
-`web_error` is a set of exceptions and handlers for use in starlette/fastapi
+`fastapi_problem` is a set of exceptions and handlers for use in starlette/fastapi
 applications to support easy error management and responses
 
 Each exception easily marshals to JSON based on the
 [RFC9457](https://www.rfc-editor.org/rfc/rfc9457.html) spec for use in api
 errors.
 
-## Migrating to 0.6 (RFC9457 support)
-
-Check the discussion [here](github.com/EdgyEdgemond/web-error/discussions/22)
-for details on how to update usage to maintain legacy functionality or move over
-to problem details support.
-
 ## Errors
 
-The base `web_error.error.HttpException` accepts a `title`, `details`, `status`
+The base `fastapi_problem.error.HttpException` accepts a `title`, `details`, `status`
 (default 500) and optional `**kwargs`. An additional `code` can be passed in,
 which will be used as the `type`, if not provided the `type` is derived from
 the class name.
@@ -48,10 +42,10 @@ field.
 Some convenience Exceptions are provided with predefined `status` attributes.
 To create custom errors subclasss these and define the `title` attribute.
 
-* `web_error.error.ServerException` provides status 500 errors
-* `web_error.error.BadRequestException` provides status 400 errors
-* `web_error.error.UnauthorisedException` provides status 401 errors
-* `web_error.error.NotFoundException` provides status 404 errors
+* `fastapi_problem.error.ServerException` provides status 500 errors
+* `fastapi_problem.error.BadRequestException` provides status 400 errors
+* `fastapi_problem.error.UnauthorisedException` provides status 401 errors
+* `fastapi_problem.error.NotFoundException` provides status 404 errors
 
 ### Custom Errors
 
@@ -59,7 +53,7 @@ Subclassing the convenience classes provide a simple way to consistently raise t
 with details/extras changing based on the raised context.
 
 ```python
-from web_error.error import NotFoundException
+from fastapi_problem.error import NotFoundException
 
 
 class UserNotFoundError(NotFoundException):
@@ -118,16 +112,16 @@ raise UserNotFoundError(details="details", user_id="1234", metadata={"hello": "w
 
 ```python
     import starlette.applications
-    import web_error.handler.starlette
+    import fastapi_problem.handler.starlette
 
     app = starlette.applications.Starlette()
 
-    web_error.handler.starlette.add_exception_handler(app)
+    fastapi_problem.handler.starlette.add_exception_handler(app)
 ```
 
 A custom logger can be provided to `add_exception_handler(app, logger=...)`.
 
-If you require cors headers, you can pass a `web_error.cors.CorsConfiguration`
+If you require cors headers, you can pass a `fastapi_problem.cors.CorsConfiguration`
 instance to `add_exception_handler(cors=...)`.
 
 ```python
@@ -150,13 +144,13 @@ If you wish to hide debug messaging from external users, `strip_debug=True`
 will log the debug message and remove it from the response.
 
 ```python
-    from web_error.error import HttpCodeException
+    from fastapi_problem.error import HttpCodeException
 
     class NotFoundError(HttpCodeException):
         status = 404
         message = "Endpoint not found."
 
-    web_error.handler.starlette.add_exception_handler(
+    fastapi_problem.handler.starlette.add_exception_handler(
         app,
         unhandled_wrappers={
             "404": NotFoundError,
@@ -171,9 +165,9 @@ handling of `RequestValidationError`.
 
 ```python
     import fastapi
-    import web_error.handler.fastapi
+    import fastapi_problem.handler.fastapi
 
 
     app = fastapi.FastAPI()
-    web_error.handler.fastapi.add_exception_handler(app)
+    fastapi_problem.handler.fastapi.add_exception_handler(app)
 ```
