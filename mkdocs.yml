@@ -5,6 +5,7 @@ repo_name: fastapi-problem
 repo_url: https://github.com/NRWLDev/fastapi-problem
 nav:
   - index.md
+  - usage.md
   - error.md
 theme:
   name: material
