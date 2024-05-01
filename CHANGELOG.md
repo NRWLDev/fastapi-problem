@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.0 - 2024-05-01
+
+### Features and Improvements
+
+- **Breaking:** Drop support for legacy modes from web_error [[89bff61](https://github.com/NRWLDev/fastapi-problem/commit/89bff61eddcb6d068c7e8a7a8cf4a231cb4bd7dc)]
+
 ## v0.6.10 - 2024-04-11
 
 ### Features and Improvements
