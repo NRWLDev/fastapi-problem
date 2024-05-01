@@ -13,6 +13,8 @@ Each exception easily marshals to JSON based on the
 [RFC9457](https://www.rfc-editor.org/rfc/rfc9457.html) spec for use in api
 errors.
 
+Check the [docs](https://nrwldev.github.io/fastapi-problem) for more details.
+
 # Custom Errors
 
 Subclassing the convenience classes provide a simple way to consistently raise the same error
@@ -47,5 +49,3 @@ from fastapi_problem.handler.fastapi import add_exception_handler
 app = fastapi.FastAPI()
 add_exception_handler(app)
 ```
-
-[Docs](https://nrwldev.github.io/fastapi-problem)
