@@ -4,8 +4,8 @@ version = "0.7.1"
 description = "FastAPI support for RFC9457 problems."
 authors = ["Daniel Edgecombe <edgy.edgemond@gmail.com>"]
 license = "Apache-2.0"
-repository="https://github.com/EdgyEdgemond/fastapi-problem/"
-homepage="https://github.com/EdgyEdgemond/fastapi-problem/"
+repository="https://github.com/NRWLDev/fastapi-problem/"
+homepage="https://github.com/NRWLDev/fastapi-problem/"
 readme = "README.md"
 
 [tool.poetry.dependencies]
