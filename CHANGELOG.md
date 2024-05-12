@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.7.2 - 2024-05-12
+
+### Features and Improvements
+
+- Add support for pre/post hooks. [[#1](https://github.com/NRWLDev/fastapi-problem/issues/1)] [[a02b7cf](https://github.com/NRWLDev/fastapi-problem/commit/a02b7cf70b77feb7d300a979d27fcb9a6a0288d8)]
+- Support custom exception handler functions [[#2](https://github.com/NRWLDev/fastapi-problem/issues/2)] [[95e56d1](https://github.com/NRWLDev/fastapi-problem/commit/95e56d1ca78bf11aa95c29970ba155e8e418be18)]
+- Implement base error class Problem [[#3](https://github.com/NRWLDev/fastapi-problem/issues/3)] [[e35bfcf](https://github.com/NRWLDev/fastapi-problem/commit/e35bfcffccdf9b9564b4ec3dad6059c01e5680e5)]
+
 ## v0.7.1 - 2024-05-01
 
 ### Bug fixes
