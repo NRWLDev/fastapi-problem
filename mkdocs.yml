@@ -6,6 +6,7 @@ repo_url: https://github.com/NRWLDev/fastapi-problem
 nav:
   - index.md
   - usage.md
+  - handlers.md
   - error.md
   - handlers.md
   - hooks.md
