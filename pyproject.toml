@@ -64,7 +64,7 @@ fail_under = 95
 show_missing = true
 skip_covered = true
 exclude_lines = [
-    "if typing.TYPE_CHECKING:",
+    "if t.TYPE_CHECKING:",
 ]
 
 [tool.coverage.run]
