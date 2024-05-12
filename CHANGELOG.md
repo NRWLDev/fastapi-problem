@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.7.1 - 2024-05-01
+
+### Bug fixes
+
+- Remove unused legacy warning [[f4f51f0](https://github.com/NRWLDev/fastapi-problem/commit/f4f51f087e1ed1de30d7dfbcd2a3f80181883044)]
+
+## v0.7.0 - 2024-05-01
+
+### Features and Improvements
+
+- **Breaking:** Drop support for legacy modes from web_error [[89bff61](https://github.com/NRWLDev/fastapi-problem/commit/89bff61eddcb6d068c7e8a7a8cf4a231cb4bd7dc)]
+
+## v0.6.10 - 2024-04-11
+
+### Features and Improvements
+
+- Support stripping debug by status code, rather than flag. [#1](https://github.com/EdgyEdgemond/web-error/issues/1) [4d76e1e](https://github.com/EdgyEdgemond/web-error/commit/4d76e1eb65efa004d62812e64d40fcc8a224405a)
+
 ## v0.6.9 - 2024-03-12
 
 ### Bug fixes

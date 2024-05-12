@@ -1,6 +1,6 @@
 import pytest
 
-from web_error.handler import util
+from fastapi_problem.handler import util
 
 
 @pytest.mark.parametrize(

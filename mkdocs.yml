@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+site_name: FastAPI Problem
+site_url: https://nrwldev.github.io/fastapi-problem/
+repo_name: fastapi-problem
+repo_url: https://github.com/NRWLDev/fastapi-problem
+nav:
+  - index.md
+  - usage.md
+  - handlers.md
+  - error.md
+theme:
+  name: material
+  favicon: favicon.svg
+  icon:
+    logo: fontawesome/solid/shield-halved
+    repo: fontawesome/brands/git-alt
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.sections
+    - navigation.tracking
+    - toc.follow
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+extra:
+  social:
+    - icon: fontawesome/solid/envelope
+      link: mailto:admin@nrwl.co
