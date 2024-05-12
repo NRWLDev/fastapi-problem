@@ -8,7 +8,7 @@ from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 
-from fastapi_problem.error import HttpCodeException, HttpException
+from fastapi_problem.error import Problem, StatusProblem
 from fastapi_problem.handler.util import convert_status_code
 
 if typing.TYPE_CHECKING:
@@ -72,7 +72,7 @@ def cors_wrapper_factory(
 
 def exception_handler_factory(
     logger: logging.Logger,
-    unhandled_wrappers: dict[str, type[HttpCodeException]],
+    unhandled_wrappers: dict[str, type[StatusProblem]],
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
@@ -85,7 +85,7 @@ def exception_handler_factory(
         ret = (
             wrapper(str(exc))
             if wrapper
-            else HttpException(
+            else Problem(
                 title="Unhandled exception occurred.",
                 details=str(exc),
                 code="unhandled-exception",
@@ -100,7 +100,7 @@ def exception_handler_factory(
             ret = (
                 wrapper(details)
                 if wrapper
-                else HttpException(
+                else Problem(
                     title=title,
                     code=code,
                     details=details,
@@ -109,7 +109,7 @@ def exception_handler_factory(
             )
             headers = exc.headers or headers
 
-        if isinstance(exc, HttpException):
+        if isinstance(exc, Problem):
             ret = exc
 
         if ret.status >= http.HTTPStatus.INTERNAL_SERVER_ERROR:
@@ -142,7 +142,7 @@ def exception_handler_factory(
 def generate_handler(
     logger: logging.Logger = logger_,
     cors: CorsConfiguration | None = None,
-    unhandled_wrappers: dict[str, type[HttpCodeException]] | None = None,
+    unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
@@ -160,7 +160,7 @@ def add_exception_handler(  # noqa: PLR0913
     app: Starlette,
     logger: logging.Logger = logger_,
     cors: CorsConfiguration | None = None,
-    unhandled_wrappers: dict[str, type[HttpCodeException]] | None = None,
+    unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
