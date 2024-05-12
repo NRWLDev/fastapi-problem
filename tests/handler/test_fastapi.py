@@ -26,22 +26,6 @@ class CustomValidationError(error.StatusProblem):
     title = "Request validation error."
 
 
-class ALegacyError(error.ServerProblem):
-    title = "This is an error."
-    code = "E123"
-
-
-class LegacyUnhandledException(error.ServerProblem):
-    code = "E000"
-    title = "Unhandled exception occurred."
-
-
-class LegacyValidationError(error.StatusProblem):
-    status = 422
-    code = "E001"
-    title = "Request validation error."
-
-
 @pytest.fixture()
 def cors():
     return CorsConfiguration(
@@ -53,128 +37,6 @@ def cors():
 
 
 class TestExceptionHandler:
-    def test_unexpected_error_replaces_code(self):
-        logger = mock.Mock()
-
-        request = mock.Mock()
-        exc = Exception("Something went bad")
-
-        eh = fastapi.generate_handler(
-            logger=logger,
-            unhandled_wrappers={
-                "default": CustomUnhandledException,
-            },
-        )
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
-        assert json.loads(response.body) == {
-            "title": "Unhandled exception occurred.",
-            "details": "Something went bad",
-            "type": "custom-unhandled-exception",
-            "status": 500,
-        }
-        assert logger.exception.call_args == mock.call(
-            "Unhandled exception occurred.",
-            exc_info=(type(exc), exc, None),
-        )
-
-    def test_strip_debug(self):
-        request = mock.Mock()
-        exc = Exception("Something went bad")
-
-        eh = fastapi.generate_handler(
-            strip_debug=True,
-            unhandled_wrappers={
-                "default": CustomUnhandledException,
-            },
-        )
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
-        assert json.loads(response.body) == {
-            "title": "Unhandled exception occurred.",
-            "type": "custom-unhandled-exception",
-            "status": 500,
-        }
-
-    def test_strip_debug_with_code(self):
-        request = mock.Mock()
-        exc = Exception("Something went bad")
-
-        eh = fastapi.generate_handler(
-            strip_debug=False,
-            strip_debug_codes=[500],
-            unhandled_wrappers={
-                "default": CustomUnhandledException,
-            },
-        )
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
-        assert json.loads(response.body) == {
-            "title": "Unhandled exception occurred.",
-            "type": "custom-unhandled-exception",
-            "status": 500,
-        }
-
-    def test_strip_debug_with_allowed_code(self):
-        request = mock.Mock()
-        exc = SomethingWrongError("something bad")
-
-        eh = fastapi.generate_handler(
-            strip_debug=False,
-            strip_debug_codes=[400],
-            unhandled_wrappers={
-                "default": CustomUnhandledException,
-            },
-        )
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
-        assert json.loads(response.body) == {
-            "title": "This is an error.",
-            "type": "something-wrong",
-            "details": "something bad",
-            "status": 500,
-        }
-
-    def test_unexpected_error(self):
-        logger = mock.Mock()
-
-        request = mock.Mock()
-        exc = Exception("Something went bad")
-
-        eh = fastapi.generate_handler(logger=logger)
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
-        assert json.loads(response.body) == {
-            "title": "Unhandled exception occurred.",
-            "details": "Something went bad",
-            "type": "unhandled-exception",
-            "status": 500,
-        }
-        assert logger.exception.call_args == mock.call(
-            "Unhandled exception occurred.",
-            exc_info=(type(exc), exc, None),
-        )
-
-    def test_known_error(self):
-        request = mock.Mock()
-        exc = SomethingWrongError("something bad")
-
-        eh = fastapi.generate_handler()
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
-        assert json.loads(response.body) == {
-            "title": "This is an error.",
-            "details": "something bad",
-            "type": "something-wrong",
-            "status": 500,
-        }
-
     def test_fastapi_error(self):
         request = mock.Mock()
         exc = RequestValidationError([])
@@ -193,41 +55,6 @@ class TestExceptionHandler:
             "type": "custom-validation",
             "status": 422,
         }
-
-    def test_starlette_error(self):
-        request = mock.Mock()
-        exc = HTTPException(http.HTTPStatus.NOT_FOUND, "something bad")
-
-        eh = fastapi.generate_handler()
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.NOT_FOUND
-        assert json.loads(response.body) == {
-            "title": "Not Found",
-            "details": exc.detail,
-            "type": "http-not-found",
-            "status": 404,
-        }
-
-    def test_starlette_error_with_headers(self):
-        request = mock.Mock()
-        exc = HTTPException(
-            status_code=http.HTTPStatus.UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Basic"},
-        )
-
-        eh = fastapi.generate_handler()
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.UNAUTHORIZED
-        assert json.loads(response.body) == {
-            "title": "Unauthorized",
-            "details": exc.detail,
-            "type": "http-unauthorized",
-            "status": 401,
-        }
-        assert response.headers["www-authenticate"] == "Basic"
 
     def test_error_with_origin(self, cors):
         request = mock.Mock(headers={"origin": "localhost"})

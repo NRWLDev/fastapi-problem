@@ -15,6 +15,7 @@ if t.TYPE_CHECKING:
     from starlette.requests import Request
 
     from fastapi_problem.cors import CorsConfiguration
+    from fastapi_problem.handler.base import Handler
 
 logger_ = logging.getLogger(__name__)
 
@@ -41,14 +42,21 @@ def request_validation_handler(
     return {}, ret
 
 
-def generate_handler(
+def generate_handler(  # noqa: PLR0913
     logger: logging.Logger = logger_,
     cors: CorsConfiguration | None = None,
     unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
+    handlers: dict[Exception, Handler] | None = None,
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
 ) -> t.Callable:
+    handlers = handlers or {}
+    handlers.update({
+        HTTPException: http_exception_handler,
+        RequestValidationError: request_validation_handler,
+    })
+
     handler = ExceptionHandler(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
@@ -59,6 +67,7 @@ def generate_handler(
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
     )
+
     return cors_wrapper_factory(cors, handler) if cors else handler
 
 
@@ -67,6 +76,7 @@ def add_exception_handler(  # noqa: PLR0913
     logger: logging.Logger = logger_,
     cors: CorsConfiguration | None = None,
     unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
+    handlers: dict[Exception, Handler] | None = None,
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
@@ -75,6 +85,7 @@ def add_exception_handler(  # noqa: PLR0913
         logger,
         cors,
         unhandled_wrappers,
+        handlers,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
     )

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import http
+import logging
 import typing as t
 
 from starlette.middleware.cors import CORSMiddleware
@@ -11,12 +12,12 @@ from fastapi_problem.error import Problem, StatusProblem
 from fastapi_problem.handler.util import convert_status_code
 
 if t.TYPE_CHECKING:
-    import logging
-
     from starlette.exceptions import HTTPException
 
     from fastapi_problem.cors import CorsConfiguration
 
+
+logger_ = logging.getLogger(__name__)
 
 Handler = t.Callable[["ExceptionHandler", Request, Exception], tuple[dict, Problem]]
 
@@ -43,7 +44,7 @@ def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPExc
 class ExceptionHandler:
     def __init__(  # noqa: PLR0913
         self: t.Self,
-        logger: logging.Logger,
+        logger: logging.Logger = logger_,
         unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
         handlers: dict[Exception, Handler] | None = None,
         *,
