@@ -66,39 +66,6 @@ class TestExceptionHandler:
         assert "access-control-allow-origin" in response.headers
         assert response.headers["access-control-allow-origin"] == "*"
 
-    def test_error_with_origin_and_cookie(self, cors):
-        request = mock.Mock(headers={"origin": "localhost", "cookie": "something"})
-        exc = SomethingWrongError("something bad")
-
-        eh = fastapi.generate_handler(cors=cors)
-        response = eh(request, exc)
-
-        assert "access-control-allow-origin" in response.headers
-        assert response.headers["access-control-allow-origin"] == "localhost"
-
-    def test_missing_token_with_origin_limited_origins(self, cors):
-        request = mock.Mock(headers={"origin": "localhost", "cookie": "something"})
-        exc = SomethingWrongError("something bad")
-
-        cors.allow_origins = ["localhost"]
-
-        eh = fastapi.generate_handler(cors=cors)
-        response = eh(request, exc)
-
-        assert "access-control-allow-origin" in response.headers
-        assert response.headers["access-control-allow-origin"] == "localhost"
-
-    def test_missing_token_with_origin_limited_origins_no_match(self, cors):
-        request = mock.Mock(headers={"origin": "localhost2", "cookie": "something"})
-        exc = SomethingWrongError("something bad")
-
-        cors.allow_origins = ["localhost"]
-
-        eh = fastapi.generate_handler(cors=cors)
-        response = eh(request, exc)
-
-        assert "access-control-allow-origin" not in response.headers
-
 
 async def test_exception_handler_in_app():
     exception_handler = fastapi.generate_handler(

@@ -6,6 +6,7 @@ error class into a `Problem`. Custom handlers can also inject headers into the
 response.
 
 ```python
+import fastapi
 from fastapi_problem.error import Problem
 from fastapi_problem.handler.base import ExceptionHandler
 from fastapi_problem.handler.fastapi import add_exception_handler
@@ -23,7 +24,7 @@ def my_custom_handler(eh: ExceptionHandler, request: Request, exc: CustomBaseErr
     return {"x-custom-header": "value"}, p
 
 app = fastapi.FastAPI()
-fastapi_problem.handler.fastapi.add_exception_handler(
+add_exception_handler(
     app,
     handlers={
         CustomBaseError: my_custom_handler,

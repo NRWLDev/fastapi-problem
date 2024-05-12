@@ -20,6 +20,8 @@ if t.TYPE_CHECKING:
 logger_ = logging.getLogger(__name__)
 
 Handler = t.Callable[["ExceptionHandler", Request, Exception], tuple[dict, Problem]]
+PreHook = t.Callable[[Request, JSONResponse], JSONResponse]
+PostHook = t.Callable[[Request, Exception], None]
 
 
 def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> tuple[dict, Problem]:
@@ -47,6 +49,8 @@ class ExceptionHandler:
         logger: logging.Logger = logger_,
         unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
         handlers: dict[Exception, Handler] | None = None,
+        pre_hooks: list | None = None,
+        post_hooks: list[PostHook] | None = None,
         *,
         strip_debug: bool = False,
         strip_debug_codes: list[int] | None = None,
@@ -54,10 +58,15 @@ class ExceptionHandler:
         self.logger = logger
         self.unhandled_wrappers = unhandled_wrappers or {}
         self.handlers = handlers or {}
+        self.pre_hooks = pre_hooks or []
+        self.post_hooks = post_hooks or []
         self.strip_debug = strip_debug
         self.strip_debug_codes = strip_debug_codes or []
 
     def __call__(self: t.Self, request: Request, exc: Exception) -> JSONResponse:
+        for pre_hook in self.pre_hooks:
+            pre_hook(request, exc)
+
         wrapper = self.unhandled_wrappers.get("default", self.unhandled_wrappers.get("500"))
         ret = (
             wrapper(str(exc))
@@ -97,20 +106,23 @@ class ExceptionHandler:
 
         headers["content-type"] = "application/problem+json"
 
-        return JSONResponse(
+        response = JSONResponse(
             status_code=ret.status,
             content=ret.marshal(strip_debug=strip_debug_),
             headers=headers,
         )
 
+        for post_hook in self.post_hooks:
+            response = post_hook(request, response)
 
-def cors_wrapper_factory(
-    cors: CorsConfiguration,
-    handler: t.Callable[[Request, Exception], JSONResponse],
-) -> t.Callable[[Request, Exception], JSONResponse]:
-    def wrapper(request: Request, exc: Exception) -> JSONResponse:
-        response = handler(request, exc)
+        return response
 
+
+class CorsPostHook:
+    def __init__(self: t.Self, config: CorsConfiguration) -> None:
+        self.config = config
+
+    def __call__(self: t.Self, request: Request, response: JSONResponse) -> JSONResponse:
         # Since the CORSMiddleware is not executed when an unhandled server exception
         # occurs, we need to manually set the CORS headers ourselves if we want the FE
         # to receive a proper JSON 500, opposed to a CORS error.
@@ -126,10 +138,10 @@ def cors_wrapper_factory(
             # all the config, then update our response headers
             mw = CORSMiddleware(
                 app=None,
-                allow_origins=cors.allow_origins,
-                allow_credentials=cors.allow_credentials,
-                allow_methods=cors.allow_methods,
-                allow_headers=cors.allow_headers,
+                allow_origins=self.config.allow_origins,
+                allow_credentials=self.config.allow_credentials,
+                allow_methods=self.config.allow_methods,
+                allow_headers=self.config.allow_headers,
             )
 
             # Logic directly from Starlette"s CORSMiddleware:
@@ -150,5 +162,3 @@ def cors_wrapper_factory(
                 response.headers.add_vary_header("Origin")
 
         return response
-
-    return wrapper

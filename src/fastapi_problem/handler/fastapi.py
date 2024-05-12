@@ -8,14 +8,14 @@ from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 
 from fastapi_problem.error import Problem, StatusProblem
-from fastapi_problem.handler.base import ExceptionHandler, cors_wrapper_factory, http_exception_handler
+from fastapi_problem.handler.base import CorsPostHook, ExceptionHandler, http_exception_handler
 
 if t.TYPE_CHECKING:
     from fastapi import FastAPI
     from starlette.requests import Request
 
     from fastapi_problem.cors import CorsConfiguration
-    from fastapi_problem.handler.base import Handler
+    from fastapi_problem.handler.base import Handler, PostHook, PreHook
 
 logger_ = logging.getLogger(__name__)
 
@@ -47,6 +47,8 @@ def generate_handler(  # noqa: PLR0913
     cors: CorsConfiguration | None = None,
     unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
     handlers: dict[Exception, Handler] | None = None,
+    pre_hooks: list[PreHook] | None = None,
+    post_hooks: list[PostHook] | None = None,
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
@@ -56,19 +58,24 @@ def generate_handler(  # noqa: PLR0913
         HTTPException: http_exception_handler,
         RequestValidationError: request_validation_handler,
     })
+    pre_hooks = pre_hooks or []
+    post_hooks = post_hooks or []
 
-    handler = ExceptionHandler(
+    if cors:
+        post_hooks.append(CorsPostHook(cors))
+
+    return ExceptionHandler(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
         handlers={
             HTTPException: http_exception_handler,
             RequestValidationError: request_validation_handler,
         },
+        pre_hooks=pre_hooks,
+        post_hooks=post_hooks,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
     )
-
-    return cors_wrapper_factory(cors, handler) if cors else handler
 
 
 def add_exception_handler(  # noqa: PLR0913
@@ -77,6 +84,8 @@ def add_exception_handler(  # noqa: PLR0913
     cors: CorsConfiguration | None = None,
     unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
     handlers: dict[Exception, Handler] | None = None,
+    pre_hooks: list[PreHook] | None = None,
+    post_hooks: list[PostHook] | None = None,
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
@@ -86,6 +95,8 @@ def add_exception_handler(  # noqa: PLR0913
         cors,
         unhandled_wrappers,
         handlers,
+        pre_hooks,
+        post_hooks,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
     )
