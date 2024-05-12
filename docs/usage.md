@@ -34,14 +34,14 @@ add_exception_handler(
 ```
 
 To handle unexpected errors provide `unhandled_wrappers`, a dict mapping http
-status code to `HttpCodeException`, the system key `default` is also accepted
+status code to `StatusProblem`, the system key `default` is also accepted
 as the root wrapper for all unhandled exceptions.
 
 ```python
-from fastapi_problem.error import HttpCodeException
+from fastapi_problem.error import StatusProblem
 from fastapi_problem.handler.fastapi import add_exception_handler
 
-class NotFoundError(HttpCodeException):
+class NotFoundError(StatusProblem):
     status = 404
     message = "Endpoint not found."
 

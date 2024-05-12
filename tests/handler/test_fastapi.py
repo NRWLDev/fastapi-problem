@@ -13,30 +13,30 @@ from fastapi_problem.cors import CorsConfiguration
 from fastapi_problem.handler import fastapi
 
 
-class SomethingWrongError(error.ServerException):
+class SomethingWrongError(error.ServerProblem):
     title = "This is an error."
 
 
-class CustomUnhandledException(error.ServerException):
+class CustomUnhandledException(error.ServerProblem):
     title = "Unhandled exception occurred."
 
 
-class CustomValidationError(error.HttpCodeException):
+class CustomValidationError(error.StatusProblem):
     status = 422
     title = "Request validation error."
 
 
-class ALegacyError(error.ServerException):
+class ALegacyError(error.ServerProblem):
     title = "This is an error."
     code = "E123"
 
 
-class LegacyUnhandledException(error.ServerException):
+class LegacyUnhandledException(error.ServerProblem):
     code = "E000"
     title = "Unhandled exception occurred."
 
 
-class LegacyValidationError(error.HttpCodeException):
+class LegacyValidationError(error.StatusProblem):
     status = 422
     code = "E001"
     title = "Request validation error."

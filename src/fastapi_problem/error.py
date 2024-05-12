@@ -7,11 +7,12 @@ from __future__ import annotations
 
 import re
 import typing as t
+from warnings import warn
 
 CONVERT_RE = re.compile(r"(?<!^)(?=[A-Z])")
 
 
-class HttpException(Exception):  # noqa: N818
+class Problem(Exception):  # noqa: N818
     """
     A base exception designed to support all API error handling.
     All exceptions should inherit from this or a subclass of it (depending on the usage),
@@ -32,7 +33,6 @@ class HttpException(Exception):  # noqa: N818
         self.details = details
         self.status = status
         self.extras = kwargs
-        self.warn = True
 
     @property
     def type(self: t.Self) -> str:
@@ -65,26 +65,71 @@ class HttpException(Exception):  # noqa: N818
         return ret
 
 
-class HttpCodeException(HttpException):
+class HttpException(Problem):
+    def __init__(
+        self: t.Self,
+        title: str,
+        code: str | None = None,
+        details: str | None = None,
+        status: int = 500,
+        **kwargs,
+    ) -> None:
+        warn(
+            "HttpException use is deprecated, use `Problem` subclasses instead.",
+            FutureWarning,
+            stacklevel=2,
+        )
+        super().__init__(title, core=code, details=details, status=status, **kwargs)
+
+
+class StatusProblem(Problem):
     code = None
     title = "Base http exception."
     status = 500
 
     def __init__(self: t.Self, details: str | None = None, **kwargs) -> None:
-        self.warn = False
         super().__init__(self.title, code=self.code, details=details, status=self.status, **kwargs)
 
 
+class HttpCodeException(StatusProblem):
+    def __init__(self: t.Self, details: str | None = None, **kwargs) -> None:
+        warn(
+            "HttpCodeException use is deprecated, use `StatusProblem` subclasses instead.",
+            FutureWarning,
+            stacklevel=2,
+        )
+        super().__init__(details=details, **kwargs)
+
+
+class ServerProblem(StatusProblem): ...
+
+
 class ServerException(HttpCodeException): ...
+
+
+class BadRequestProblem(StatusProblem):
+    status = 400
 
 
 class BadRequestException(HttpCodeException):
     status = 400
 
 
+class UnauthorisedProblem(StatusProblem):
+    status = 401
+
+
 class UnauthorisedException(HttpCodeException):
     status = 401
 
 
+class NotFoundProblem(StatusProblem):
+    status = 404
+
+
 class NotFoundException(HttpCodeException):
     status = 404
+
+
+class ConflictProblem(StatusProblem):
+    status = 409
