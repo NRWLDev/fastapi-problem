@@ -8,6 +8,8 @@ nav:
   - usage.md
   - handlers.md
   - error.md
+  - handlers.md
+  - hooks.md
 theme:
   name: material
   favicon: favicon.svg
