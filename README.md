@@ -48,4 +48,19 @@ from fastapi_problem.handler.fastapi import add_exception_handler
 
 app = fastapi.FastAPI()
 add_exception_handler(app)
+
+@app.get("/user")
+async def get_user():
+    raise UserNotFoundError("No user found.")
+```
+
+```bash
+$ curl localhost:8000/user
+{
+
+    "type": "user-not-found",
+    "title": "User not found",
+    "details": "No user found.",
+    "status": 404,
+}
 ```
