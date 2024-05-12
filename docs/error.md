@@ -1,6 +1,6 @@
 # Errors
 
-The base `fastapi_problem.error.HttpException` accepts a `title`, `details`, `status`
+The base `fastapi_problem.error.Problem` accepts a `title`, `details`, `status`
 (default 500) and optional `**kwargs`. An additional `code` can be passed in,
 which will be used as the `type`, if not provided the `type` is derived from
 the class name.
@@ -24,13 +24,14 @@ type `pascal-case`. If the class name doesn't suit your purposes, an optional
 `code` attribute can be set with the desired value of there response `type`
 field.
 
-Some convenience Exceptions are provided with predefined `status` attributes.
+Some convenience Problems are provided with predefined `status` attributes.
 To create custom errors subclasss these and define the `title` attribute.
 
-* `fastapi_problem.error.ServerException` provides status 500 errors
-* `fastapi_problem.error.BadRequestException` provides status 400 errors
-* `fastapi_problem.error.UnauthorisedException` provides status 401 errors
-* `fastapi_problem.error.NotFoundException` provides status 404 errors
+* `fastapi_problem.error.ServerProblem` provides status 500 errors
+* `fastapi_problem.error.BadRequestProblem` provides status 400 errors
+* `fastapi_problem.error.UnauthorisedProblem` provides status 401 errors
+* `fastapi_problem.error.NotFoundProblem` provides status 404 errors
+* `fastapi_problem.error.ConflictProblem` provides status 409 errors
 
 ## Custom Errors
 
@@ -38,10 +39,10 @@ Subclassing the convenience classes provide a simple way to consistently raise t
 with details/extras changing based on the raised context.
 
 ```python
-from fastapi_problem.error import NotFoundException
+from fastapi_problem.error import NotFoundProblem
 
 
-class UserNotFoundError(NotFoundException):
+class UserNotFoundError(NotFoundProblem):
     title = "User not found."
 
 raise UserNotFoundError(details="details")
@@ -59,7 +60,7 @@ raise UserNotFoundError(details="details")
 Whereas a defined `code` will be used in the output.
 
 ```python
-class UserNotFoundError(NotFoundException):
+class UserNotFoundError(NotFoundProblem):
     title = "User not found."
     code = "cant-find-user"
 

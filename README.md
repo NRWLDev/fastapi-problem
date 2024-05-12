@@ -21,10 +21,10 @@ Subclassing the convenience classes provide a simple way to consistently raise t
 with details/extras changing based on the raised context.
 
 ```python
-from fastapi_problem.error import NotFoundException
+from fastapi_problem.error import NotFoundProblem
 
 
-class UserNotFoundError(NotFoundException):
+class UserNotFoundError(NotFoundProblem):
     title = "User not found."
 
 raise UserNotFoundError(details="details")
