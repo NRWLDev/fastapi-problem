@@ -89,6 +89,6 @@ def add_exception_handler(  # noqa: PLR0913
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
     )
-    app.exception_handler(Exception)(eh)
-    app.exception_handler(HTTPException)(eh)
-    app.exception_handler(RequestValidationError)(eh)
+    app.add_exception_handler(Exception, eh)
+    app.add_exception_handler(HTTPException, eh)
+    app.add_exception_handler(RequestValidationError, eh)
