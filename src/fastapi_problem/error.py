@@ -123,6 +123,10 @@ class UnauthorisedException(HttpCodeException):
     status = 401
 
 
+class ForbiddenProblem(StatusProblem):
+    status = 403
+
+
 class NotFoundProblem(StatusProblem):
     status = 404
 

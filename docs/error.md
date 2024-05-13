@@ -30,6 +30,7 @@ To create custom errors subclasss these and define the `title` attribute.
 * `fastapi_problem.error.ServerProblem` provides status 500 errors
 * `fastapi_problem.error.BadRequestProblem` provides status 400 errors
 * `fastapi_problem.error.UnauthorisedProblem` provides status 401 errors
+* `fastapi_problem.error.ForbiddenProblem` provides status 403 errors
 * `fastapi_problem.error.NotFoundProblem` provides status 404 errors
 * `fastapi_problem.error.ConflictProblem` provides status 409 errors
 
