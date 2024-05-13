@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.5 - 2024-05-13
+
+### Bug fixes
+
+- Fix issue where custom handlers were ignored. [[34898e7](https://github.com/NRWLDev/fastapi-problem/commit/34898e79f436847145428114bd0ca7aebde83bab)]
+
 ## v0.7.4 - 2024-05-13
 
 ### Bug fixes
