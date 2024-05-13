@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.3 - 2024-05-13
+
+### Bug fixes
+
+- Add missed ForbiddenProblem 403 convenience class. [[1c756ee](https://github.com/NRWLDev/fastapi-problem/commit/1c756eec1c9203e219eed29a10f7359c5dbcbc35)]
+
 ## v0.7.2 - 2024-05-12
 
 ### Features and Improvements
