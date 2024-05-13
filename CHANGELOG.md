@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.4 - 2024-05-13
+
+### Bug fixes
+
+- Fix typo in HttpException init. [[1c7fcf9](https://github.com/NRWLDev/fastapi-problem/commit/1c7fcf970cce7e208e0f74102e88a1574d2db2ad)]
+
 ## v0.7.3 - 2024-05-13
 
 ### Bug fixes
