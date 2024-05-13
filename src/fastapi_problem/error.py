@@ -79,7 +79,7 @@ class HttpException(Problem):
             FutureWarning,
             stacklevel=2,
         )
-        super().__init__(title, core=code, details=details, status=status, **kwargs)
+        super().__init__(title, code=code, details=details, status=status, **kwargs)
 
 
 class StatusProblem(Problem):
