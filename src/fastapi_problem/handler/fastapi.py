@@ -67,10 +67,7 @@ def generate_handler(  # noqa: PLR0913
     return ExceptionHandler(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
-        handlers={
-            HTTPException: http_exception_handler,
-            RequestValidationError: request_validation_handler,
-        },
+        handlers=handlers,
         pre_hooks=pre_hooks,
         post_hooks=post_hooks,
         strip_debug=strip_debug,
