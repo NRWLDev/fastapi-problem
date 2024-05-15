@@ -68,18 +68,3 @@ add_exception_handler(
     strip_debug_dodes=[500],
 )
 ```
-
-## Starlette
-
-As FastAPI is written on top of starlette, an additional handler is available
-which does not handle FastAPI's RequestValidationErrors. All configuration is
-the same as above.
-
-```python
-import starlette.applications
-from fastapi_problem.handler.starlette add_exception_handler
-
-app = starlette.applications.Starlette()
-
-add_exception_handler(app)
-```

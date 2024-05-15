@@ -6,7 +6,7 @@
 ![tests](https://github.com/NRWLDev/fastapi-problem/actions/workflows/tests.yml/badge.svg)
 [![codecov](https://codecov.io/gh/NRWLDev/fastapi-problem/branch/main/graph/badge.svg)](https://codecov.io/gh/NRWLDev/fastapi-problem)
 
-`fastapi_problem` is a set of exceptions and handlers for use in starlette/fastapi
+`fastapi_problem` is a set of exceptions and handlers for use in fastapi
 applications to support easy error management and responses
 
 Each exception easily marshals to JSON based on the
