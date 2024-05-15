@@ -1,15 +1,10 @@
 # Changelog
 
-
-
 ## v0.7.6 - 2024-05-15
 
 ### Miscellaneous
 
 - Deprecate code in favour of type_ on base class implementations. [[fa828a2](https://github.com/NRWLDev/fastapi-problem/commit/fa828a2cf42b826018bb09769ff587bca92d146a)]
-- Drop starlette handler, anyone using starlette won't want fastapi installed over the top. [[112631e](https://github.com/NRWLDev/fastapi-problem/commit/112631efdc0b8358126777283ca12bdfbeb307d5)]
-
-
 
 ## v0.7.5 - 2024-05-13
 
