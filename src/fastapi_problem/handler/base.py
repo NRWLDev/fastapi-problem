@@ -26,14 +26,14 @@ PostHook = t.Callable[[Request, Exception], None]
 
 def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> tuple[dict, Problem]:
     wrapper = eh.unhandled_wrappers.get(str(exc.status_code))
-    title, code = convert_status_code(exc.status_code)
+    title, type_ = convert_status_code(exc.status_code)
     details = exc.detail
     ret = (
         wrapper(details)
         if wrapper
         else Problem(
             title=title,
-            code=code,
+            type_=type_,
             details=details,
             status=exc.status_code,
         )
@@ -74,7 +74,7 @@ class ExceptionHandler:
             else Problem(
                 title="Unhandled exception occurred.",
                 details=str(exc),
-                code="unhandled-exception",
+                type_="unhandled-exception",
             )
         )
         headers = {}

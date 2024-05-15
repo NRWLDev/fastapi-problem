@@ -33,7 +33,7 @@ def request_validation_handler(
         if wrapper
         else Problem(
             title="Request validation error.",
-            code="request-validation-failed",
+            type_="request-validation-failed",
             status=422,
             **kwargs,
         )

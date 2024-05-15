@@ -63,7 +63,7 @@ Whereas a defined `code` will be used in the output.
 ```python
 class UserNotFoundError(NotFoundProblem):
     title = "User not found."
-    code = "cant-find-user"
+    type_ = "cant-find-user"
 
 raise UserNotFoundError(details="details")
 ```

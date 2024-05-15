@@ -18,7 +18,8 @@ def my_custom_handler(eh: ExceptionHandler, request: Request, exc: CustomBaseErr
     p = Problem(
         title=str(exc),
         details=exc.debug,
-        code=500,
+        type_="custom-problem",
+        status=500,
     )
 
     return {"x-custom-header": "value"}, p

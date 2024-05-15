@@ -22,13 +22,13 @@ class Problem(Exception):  # noqa: N818
     def __init__(
         self: t.Self,
         title: str,
-        code: str | None = None,
+        type_: str | None = None,
         details: str | None = None,
         status: int = 500,
         **kwargs,
     ) -> None:
         super().__init__(title)
-        self._code = code
+        self._type = type_
         self.title = title
         self.details = details
         self.status = status
@@ -38,7 +38,7 @@ class Problem(Exception):  # noqa: N818
     def type(self: t.Self) -> str:
         type_ = "".join(self.__class__.__name__.rsplit("Error", 1))
         type_ = CONVERT_RE.sub("-", type_).lower()
-        return self._code if self._code else type_
+        return self._type if self._type else type_
 
     def marshal(self: t.Self, *, strip_debug: bool = False) -> dict[str, t.Any]:
         """Generate a JSON compatible representation.
@@ -69,7 +69,7 @@ class HttpException(Problem):
     def __init__(
         self: t.Self,
         title: str,
-        code: str | None = None,
+        type_: str | None = None,
         details: str | None = None,
         status: int = 500,
         **kwargs,
@@ -79,16 +79,17 @@ class HttpException(Problem):
             FutureWarning,
             stacklevel=2,
         )
-        super().__init__(title, code=code, details=details, status=status, **kwargs)
+        super().__init__(title, type_=type_, details=details, status=status, **kwargs)
 
 
 class StatusProblem(Problem):
     code = None
+    type_ = None
     title = "Base http exception."
     status = 500
 
     def __init__(self: t.Self, details: str | None = None, **kwargs) -> None:
-        super().__init__(self.title, code=self.code, details=details, status=self.status, **kwargs)
+        super().__init__(self.title, type_=self.type_ or self.code, details=details, status=self.status, **kwargs)
 
 
 class HttpCodeException(StatusProblem):
