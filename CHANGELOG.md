@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.7 - 2024-05-16
+
+### Features and Improvements
+
+- Use rfc9457 library for base Problem implementation. [[a9cf622](https://github.com/NRWLDev/fastapi-problem/commit/a9cf62209155da132a98dd8a88ac59f5a14b1028)]
+
 ## v0.7.6 - 2024-05-15
 
 ### Miscellaneous
