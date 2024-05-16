@@ -792,6 +792,17 @@ files = [
 prompt_toolkit = ">=2.0,<=3.0.36"
 
 [[package]]
+name = "rfc9457"
+version = "0.0.2"
+description = "Implementation of RFC9457 problems."
+optional = false
+python-versions = "<4.0,>=3.9"
+files = [
+    {file = "rfc9457-0.0.2-py3-none-any.whl", hash = "sha256:efc8c4c04067b961bf98c2b742ab2e62a1c6c923d661ff336f1a11c9e5919341"},
+    {file = "rfc9457-0.0.2.tar.gz", hash = "sha256:b1aee57700a368eadce32f9f2cfcb291e1358f4127ef5f65bdc3e230be3e324a"},
+]
+
+[[package]]
 name = "rich"
 version = "13.7.1"
 description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
@@ -1065,4 +1076,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "b0716852a2a7e3c0cebc6821c7d574c0d07b57df4b3e44486b5e219e5424cc5a"
+content-hash = "0a7229c5383dfe36b04ee5cdaabf99b389c2cb9c92fe0dc8a5e6d5df62ac6052"

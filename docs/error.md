@@ -33,6 +33,10 @@ To create custom errors subclasss these and define the `title` attribute.
 * `fastapi_problem.error.ForbiddenProblem` provides status 403 errors
 * `fastapi_problem.error.NotFoundProblem` provides status 404 errors
 * `fastapi_problem.error.ConflictProblem` provides status 409 errors
+* `fastapi_problem.error.UnprocessableProblem` provides status 422 errors
+
+These are all reimported from the `rfc9457` library, you can also access them
+directly from there.
 
 ## Custom Errors
 

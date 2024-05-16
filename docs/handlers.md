@@ -1,24 +1,42 @@
 # Custom Handler
 
-In the event that you have custom error classes, a handler specifically a
-common base class can be provided, allowing for conversion from the custom
-error class into a `Problem`. Custom handlers can also inject headers into the
-response.
+In the event that you are using a third party library with a custom error
+class, a handler specifically a common base class can be provided.
+
+Providing a custom handler allows for conversion from the custom error class
+into a `Problem`, when the exception handler catches it, rather than converting
+each raised instance into a `Problem` at the time it is raised.
+
+Custom handlers can also inject headers into the response.
+
+## Usage
+
+Given a `third_party` library with a `error.py` module.
+
+```python
+class CustomBaseError(Exception):
+    def __init__(reason: str, debug: str):
+        self.reason = reason
+        self.debug = debug
+```
+
+A custom handler can then be defined in your application.
 
 ```python
 import fastapi
+from rfc9457 import error_class_to_type
 from fastapi_problem.error import Problem
 from fastapi_problem.handler.base import ExceptionHandler
 from fastapi_problem.handler.fastapi import add_exception_handler
 from starlette.requests import Request
 
-from my_module.error import CustomBaseError
+from third_party.error import CustomBaseError
 
 def my_custom_handler(eh: ExceptionHandler, request: Request, exc: CustomBaseError) -> tuple[dict, Problem]:
     p = Problem(
-        title=str(exc),
+        title=exc.reason,
         details=exc.debug,
-        type_="custom-problem",
+        type_=error_class_to_type(exc),
         status=500,
     )
 

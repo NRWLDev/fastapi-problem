@@ -54,10 +54,12 @@ def generate_handler(  # noqa: PLR0913
     strip_debug_codes: list[int] | None = None,
 ) -> t.Callable:
     handlers = handlers or {}
-    handlers.update({
-        HTTPException: http_exception_handler,
-        RequestValidationError: request_validation_handler,
-    })
+    handlers.update(
+        {
+            HTTPException: http_exception_handler,
+            RequestValidationError: request_validation_handler,
+        },
+    )
     pre_hooks = pre_hooks or []
     post_hooks = post_hooks or []
 

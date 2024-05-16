@@ -10,6 +10,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
+rfc9457 = "^0.0.2"
 
 [tool.poetry.dev-dependencies]
 

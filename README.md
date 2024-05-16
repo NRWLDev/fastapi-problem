@@ -7,7 +7,7 @@
 [![codecov](https://codecov.io/gh/NRWLDev/fastapi-problem/branch/main/graph/badge.svg)](https://codecov.io/gh/NRWLDev/fastapi-problem)
 
 `fastapi_problem` is a set of exceptions and handlers for use in fastapi
-applications to support easy error management and responses
+applications to support easy error management and responses.
 
 Each exception easily marshals to JSON based on the
 [RFC9457](https://www.rfc-editor.org/rfc/rfc9457.html) spec for use in api
@@ -15,7 +15,7 @@ errors.
 
 Check the [docs](https://nrwldev.github.io/fastapi-problem) for more details.
 
-# Custom Errors
+## Custom Errors
 
 Subclassing the convenience classes provide a simple way to consistently raise the same error
 with details/extras changing based on the raised context.
@@ -39,7 +39,7 @@ raise UserNotFoundError(details="details")
 }
 ```
 
-# Usage
+## Usage
 
 ```python
 import fastapi
