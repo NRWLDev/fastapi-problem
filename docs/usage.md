@@ -33,9 +33,10 @@ add_exception_handler(
 )
 ```
 
-To handle unexpected errors provide `unhandled_wrappers`, a dict mapping http
-status code to `StatusProblem`, the system key `default` is also accepted
-as the root wrapper for all unhandled exceptions.
+To customise the way that errors, that are not a subclass of Problem, are
+handled provide `unhandled_wrappers`, a dict mapping an http status code to
+a `StatusProblem`, the system key `default` is also accepted as the root wrapper
+for all unhandled exceptions.
 
 ```python
 from fastapi_problem.error import StatusProblem

@@ -3,6 +3,7 @@ import json
 from unittest import mock
 
 import pytest
+from starlette.exceptions import HTTPException
 
 from fastapi_problem import error
 from fastapi_problem.cors import CorsConfiguration
@@ -139,6 +140,21 @@ class TestExceptionHandler:
             "Unhandled exception occurred.",
             exc_info=(type(exc), exc, None),
         )
+
+    def test_starlette_error(self):
+        request = mock.Mock()
+        exc = HTTPException(404)
+
+        eh = base.ExceptionHandler(handlers={HTTPException: base.http_exception_handler})
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.NOT_FOUND
+        assert json.loads(response.body) == {
+            "title": "Not Found",
+            "details": "Not Found",
+            "type": "http-not-found",
+            "status": 404,
+        }
 
     def test_known_error(self):
         request = mock.Mock()

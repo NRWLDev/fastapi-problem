@@ -49,7 +49,7 @@ class ExceptionHandler:
         self: t.Self,
         logger: logging.Logger | None = None,
         unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
-        handlers: dict[Exception, Handler] | None = None,
+        handlers: dict[type[Exception], Handler] | None = None,
         pre_hooks: list | None = None,
         post_hooks: list[PostHook] | None = None,
         *,
