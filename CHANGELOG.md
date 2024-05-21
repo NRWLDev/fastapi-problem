@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.10 - 2024-05-21
+
+### Bug fixes
+
+- Make logger optional with no base logger, allow disabling logging on exceptions. [[9da8d50](https://github.com/NRWLDev/fastapi-problem/commit/9da8d50a51cc3c6d0e184ec4e374bef67936c808)]
+
 ## v0.7.9 - 2024-05-21
 
 ### Bug fixes
