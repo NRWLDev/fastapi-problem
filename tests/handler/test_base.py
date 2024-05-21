@@ -80,10 +80,12 @@ class TestExceptionHandler:
         }
 
     def test_strip_debug_with_code(self):
+        logger = mock.Mock()
         request = mock.Mock()
         exc = Exception("Something went bad")
 
         eh = base.ExceptionHandler(
+            logger=logger,
             strip_debug=False,
             strip_debug_codes=[500],
             unhandled_wrappers={
@@ -98,6 +100,10 @@ class TestExceptionHandler:
             "type": "custom-unhandled-exception",
             "status": 500,
         }
+        assert logger.debug.call_args_list == [
+            mock.call("Stripping debug information from exception."),
+            mock.call("Removed details: Something went bad"),
+        ]
 
     def test_strip_debug_with_allowed_code(self):
         request = mock.Mock()

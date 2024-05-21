@@ -26,9 +26,6 @@ class Problem(rfc9457.Problem, HTTPException):
         self.detail = details
         self.headers = None
 
-    def __str__(self: t.Self) -> str:
-        return self.details
-
 
 class StatusProblem(rfc9457.StatusProblem, HTTPException):
     code = None
@@ -41,9 +38,6 @@ class StatusProblem(rfc9457.StatusProblem, HTTPException):
         self.status_code = self.status
         self.detail = details
         self.headers = None
-
-    def __str__(self: t.Self) -> str:
-        return self.details
 
 
 class ServerProblem(StatusProblem): ...
