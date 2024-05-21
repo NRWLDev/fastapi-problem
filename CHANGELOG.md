@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.11 - 2024-05-21
+
+### Bug fixes
+
+- Pin rfc9457 [[50bb647](https://github.com/NRWLDev/fastapi-problem/commit/50bb647e6130abe8e118a9f4156d5537ae8ccdcc)]
+
 ## v0.7.10 - 2024-05-21
 
 ### Bug fixes
