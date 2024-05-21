@@ -8,17 +8,69 @@ from __future__ import annotations
 import typing as t
 from warnings import warn
 
-from rfc9457 import (
-    BadRequestProblem,
-    ConflictProblem,
-    ForbiddenProblem,
-    NotFoundProblem,
-    Problem,
-    ServerProblem,
-    StatusProblem,
-    UnauthorisedProblem,
-    UnprocessableProblem,
-)
+import rfc9457
+from starlette.exceptions import HTTPException
+
+
+class Problem(rfc9457.Problem, HTTPException):
+    def __init__(
+        self: t.Self,
+        title: str,
+        type_: str | None = None,
+        details: str | None = None,
+        status: int = 500,
+        **kwargs,
+    ) -> None:
+        super().__init__(title, type_, details, status, **kwargs)
+        self.status_code = status
+        self.detail = details
+        self.headers = None
+
+    def __str__(self: t.Self) -> str:
+        return self.details
+
+
+class StatusProblem(rfc9457.StatusProblem, HTTPException):
+    code = None
+    type_ = None
+    title = "Base http exception."
+    status = 500
+
+    def __init__(self: t.Self, details: str | None = None, **kwargs) -> None:
+        super().__init__(details, **kwargs)
+        self.status_code = self.status
+        self.detail = details
+        self.headers = None
+
+    def __str__(self: t.Self) -> str:
+        return self.details
+
+
+class ServerProblem(StatusProblem): ...
+
+
+class BadRequestProblem(StatusProblem):
+    status = 400
+
+
+class UnauthorisedProblem(StatusProblem):
+    status = 401
+
+
+class ForbiddenProblem(StatusProblem):
+    status = 403
+
+
+class NotFoundProblem(StatusProblem):
+    status = 404
+
+
+class ConflictProblem(StatusProblem):
+    status = 409
+
+
+class UnprocessableProblem(StatusProblem):
+    status = 422
 
 
 class HttpException(Problem):

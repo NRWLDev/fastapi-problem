@@ -5,9 +5,9 @@ import logging
 import typing as t
 
 from fastapi.exceptions import RequestValidationError
-from rfc9457 import Problem, StatusProblem
 from starlette.exceptions import HTTPException
 
+from fastapi_problem.error import Problem, StatusProblem
 from fastapi_problem.handler.base import CorsPostHook, ExceptionHandler, http_exception_handler
 
 if t.TYPE_CHECKING:

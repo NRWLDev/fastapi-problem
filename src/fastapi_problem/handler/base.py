@@ -4,11 +4,13 @@ import http
 import logging
 import typing as t
 
-from rfc9457 import Problem, StatusProblem
+import rfc9457
+from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
+from fastapi_problem.error import Problem, StatusProblem
 from fastapi_problem.handler.util import convert_status_code
 
 if t.TYPE_CHECKING:
@@ -85,7 +87,7 @@ class ExceptionHandler:
                 headers.update(headers_)
                 break
 
-        if isinstance(exc, Problem):
+        if isinstance(exc, rfc9457.Problem):
             ret = exc
 
         if ret.status >= http.HTTPStatus.INTERNAL_SERVER_ERROR:
