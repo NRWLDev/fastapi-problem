@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import logging
 import typing as t
 
 from fastapi.exceptions import RequestValidationError
@@ -11,13 +10,13 @@ from fastapi_problem.error import Problem, StatusProblem
 from fastapi_problem.handler.base import CorsPostHook, ExceptionHandler, http_exception_handler
 
 if t.TYPE_CHECKING:
+    import logging
+
     from fastapi import FastAPI
     from starlette.requests import Request
 
     from fastapi_problem.cors import CorsConfiguration
     from fastapi_problem.handler.base import Handler, PostHook, PreHook
-
-logger_ = logging.getLogger(__name__)
 
 
 def request_validation_handler(
@@ -43,7 +42,7 @@ def request_validation_handler(
 
 
 def generate_handler(  # noqa: PLR0913
-    logger: logging.Logger = logger_,
+    logger: logging.Logger | None = None,
     cors: CorsConfiguration | None = None,
     unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
     handlers: dict[Exception, Handler] | None = None,
@@ -79,7 +78,7 @@ def generate_handler(  # noqa: PLR0913
 
 def add_exception_handler(  # noqa: PLR0913
     app: FastAPI,
-    logger: logging.Logger = logger_,
+    logger: logging.Logger | None = None,
     cors: CorsConfiguration | None = None,
     unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
     handlers: dict[Exception, Handler] | None = None,

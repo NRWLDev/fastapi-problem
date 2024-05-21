@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import http
-import logging
 import typing as t
 
 import rfc9457
@@ -14,12 +13,12 @@ from fastapi_problem.error import Problem, StatusProblem
 from fastapi_problem.handler.util import convert_status_code
 
 if t.TYPE_CHECKING:
+    import logging
+
     from starlette.exceptions import HTTPException
 
     from fastapi_problem.cors import CorsConfiguration
 
-
-logger_ = logging.getLogger(__name__)
 
 Handler = t.Callable[["ExceptionHandler", Request, Exception], tuple[dict, Problem]]
 PreHook = t.Callable[[Request, JSONResponse], JSONResponse]
@@ -48,7 +47,7 @@ def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPExc
 class ExceptionHandler:
     def __init__(  # noqa: PLR0913
         self: t.Self,
-        logger: logging.Logger = logger_,
+        logger: logging.Logger | None = None,
         unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
         handlers: dict[Exception, Handler] | None = None,
         pre_hooks: list | None = None,
@@ -90,12 +89,12 @@ class ExceptionHandler:
         if isinstance(exc, rfc9457.Problem):
             ret = exc
 
-        if ret.status >= http.HTTPStatus.INTERNAL_SERVER_ERROR:
+        if ret.status >= http.HTTPStatus.INTERNAL_SERVER_ERROR and self.logger:
             self.logger.exception(ret.title, exc_info=(type(exc), exc, exc.__traceback__))
 
         strip_debug_ = self.strip_debug or ret.status in self.strip_debug_codes
 
-        if strip_debug_ and (ret.details or ret.extras):
+        if strip_debug_ and (ret.details or ret.extras) and self.logger:
             msg = "Stripping debug information from exception."
             self.logger.debug(msg)
 
