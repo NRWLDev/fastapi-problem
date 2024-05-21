@@ -85,6 +85,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tasks.py" = ["ANN", "E501", "INP001", "S"]
 "tests/*" = ["ANN", "D", "S101", "S105", "S106", "SLF001"]
+"examples/*" = ["ALL"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["fastapi_problem"]
