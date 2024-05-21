@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.7.9 - 2024-05-21
+
+### Bug fixes
+
+- Subclass rfc9457 Problems with HTTPException to support sentry_sdk starlette integrations. [[#11](https://github.com/NRWLDev/fastapi-problem/issues/11)] [[8b43192](https://github.com/NRWLDev/fastapi-problem/commit/8b43192b8336b9d94164f0d1cfad9d396a6af08c)]
+- Add in py.typed file so mypy/pyright acknowledge type hints. [[#12](https://github.com/NRWLDev/fastapi-problem/issues/12)] [[010f6da](https://github.com/NRWLDev/fastapi-problem/commit/010f6da1b718d9397187fd8a71a225f8f155ad72)]
+
 ## v0.7.7 - 2024-05-16
 
 ### Features and Improvements
