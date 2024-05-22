@@ -2,7 +2,7 @@
 
 ## v0.7.12 - 2024-05-22
 
-# Bug fixes
+### Bug fixes
 
 - Remove __str__ implementation overrides, rely on rfc9457 implementation [[fc90194](https://github.com/NRWLDev/fastapi-problem/commit/fc901947bea38386240afea09731754bd1002191)]
 
