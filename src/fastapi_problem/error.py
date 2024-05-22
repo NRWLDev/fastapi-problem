@@ -9,10 +9,9 @@ import typing as t
 from warnings import warn
 
 import rfc9457
-from starlette.exceptions import HTTPException
 
 
-class Problem(rfc9457.Problem, HTTPException):
+class Problem(rfc9457.Problem):
     def __init__(
         self: t.Self,
         title: str,
@@ -22,12 +21,13 @@ class Problem(rfc9457.Problem, HTTPException):
         **kwargs,
     ) -> None:
         super().__init__(title, type_, details, status, **kwargs)
+        # Mimic HTTPExceptions
         self.status_code = status
         self.detail = details
         self.headers = None
 
 
-class StatusProblem(rfc9457.StatusProblem, HTTPException):
+class StatusProblem(rfc9457.StatusProblem, Problem):
     code = None
     type_ = None
     title = "Base http exception."
@@ -35,6 +35,7 @@ class StatusProblem(rfc9457.StatusProblem, HTTPException):
 
     def __init__(self: t.Self, details: str | None = None, **kwargs) -> None:
         super().__init__(details, **kwargs)
+        # Mimic HTTPExceptions
         self.status_code = self.status
         self.detail = details
         self.headers = None
