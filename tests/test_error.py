@@ -1,4 +1,5 @@
 import pytest
+from starlette.exceptions import HTTPException
 
 from fastapi_problem import error
 
@@ -37,3 +38,7 @@ def test_marshal(exc, type_):
         "details": "details",
         "status": e.status,
     }
+
+
+def test_starlette_subclass():
+    assert isinstance(NotFoundError("details"), HTTPException)
