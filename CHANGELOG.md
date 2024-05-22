@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.14 - 2024-05-22
+
+### Bug fixes
+
+- Remove HTTPException subclassing, and notify starlette of Problem in exception handlers to have them properly handled in sentry integration. [[b8324fa](https://github.com/NRWLDev/fastapi-problem/commit/b8324faf5c792692ad1971137a6a837b11a14010)]
+
 ## v0.7.13 - 2024-05-22
 
 ### Miscellaneous
