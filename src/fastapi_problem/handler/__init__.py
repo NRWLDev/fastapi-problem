@@ -23,8 +23,8 @@ if t.TYPE_CHECKING:
 
 
 Handler = t.Callable[["ExceptionHandler", Request, Exception], tuple[dict, Problem]]
-PreHook = t.Callable[[Request, JSONResponse], JSONResponse]
-PostHook = t.Callable[[Request, Exception], None]
+PreHook = t.Callable[[Request, Exception], None]
+PostHook = t.Callable[[Request, JSONResponse], JSONResponse]
 
 
 def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> tuple[dict, Problem]:
