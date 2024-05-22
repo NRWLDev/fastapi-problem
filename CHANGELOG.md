@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.13 - 2024-05-22
+
+### Miscellaneous
+
+- Multiclass inheritance from starlette.HTTPException introduces unexpected side effects in testing and middleware. [[c8b0f3d](https://github.com/NRWLDev/fastapi-problem/commit/c8b0f3d291622fccf630284e57737b006ab2a7dd)]
+
 ## v0.7.12 - 2024-05-22
 
 ### Bug fixes
