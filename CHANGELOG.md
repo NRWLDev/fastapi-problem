@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.16 - 2024-05-23
+
+### Bug fixes
+
+- Include Problem.headers in the JSONResponse. [[95bce0c](https://github.com/NRWLDev/fastapi-problem/commit/95bce0ca81b71eba6b7dd5dd18776f1ba8169f0f)]
+
 ## v0.7.15 - 2024-05-23
 
 ### Bug fixes
