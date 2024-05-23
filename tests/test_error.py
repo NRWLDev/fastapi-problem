@@ -41,4 +41,6 @@ def test_marshal(exc, type_):
 
 def test_subclass_chain():
     assert isinstance(NotFoundError("details"), error.Problem)
-    assert isinstance(NotFoundError("details"), error.rfc9457.Problem)
+    assert isinstance(NotFoundError("details"), error.StatusProblem)
+    assert isinstance(NotFoundError("details"), error.HttpException)
+    assert isinstance(NotFoundError("details"), error.HttpCodeException)
