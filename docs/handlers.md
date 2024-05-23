@@ -31,15 +31,14 @@ from starlette.requests import Request
 
 from third_party.error import CustomBaseError
 
-def my_custom_handler(eh: ExceptionHandler, request: Request, exc: CustomBaseError) -> tuple[dict, Problem]:
-    p = Problem(
+def my_custom_handler(eh: ExceptionHandler, request: Request, exc: CustomBaseError) -> Problem:
+    return Problem(
         title=exc.reason,
         details=exc.debug,
         type_=error_class_to_type(exc),
         status=500,
+        headers={"x-custom-header": "value"},
     )
-
-    return {"x-custom-header": "value"}, p
 
 app = fastapi.FastAPI()
 add_exception_handler(

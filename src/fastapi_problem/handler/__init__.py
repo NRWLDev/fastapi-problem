@@ -22,28 +22,46 @@ if t.TYPE_CHECKING:
     from fastapi_problem.cors import CorsConfiguration
 
 
-Handler = t.Callable[["ExceptionHandler", Request, Exception], tuple[dict, Problem]]
+Handler = t.Callable[["ExceptionHandler", Request, Exception], Problem]
 PreHook = t.Callable[[Request, Exception], None]
 PostHook = t.Callable[[Request, JSONResponse], JSONResponse]
 
 
-def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> tuple[dict, Problem]:
+def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> Problem:
     wrapper = eh.unhandled_wrappers.get(str(exc.status_code))
     title, type_ = convert_status_code(exc.status_code)
     details = exc.detail
-    ret = (
-        wrapper(details)
+    return (
+        wrapper(details, headers=exc.headers)
         if wrapper
         else Problem(
             title=title,
             type_=type_,
             details=details,
             status=exc.status_code,
+            headers=exc.headers,
         )
     )
-    headers = exc.headers or {}
 
-    return headers, ret
+
+def request_validation_handler(
+    eh: ExceptionHandler,
+    _request: Request,
+    exc: RequestValidationError,
+) -> Problem:
+    wrapper = eh.unhandled_wrappers.get("422")
+    errors = json.loads(json.dumps(exc.errors(), default=str))
+    kwargs = {"errors": errors}
+    return (
+        wrapper(**kwargs)
+        if wrapper
+        else Problem(
+            title="Request validation error.",
+            type_="request-validation-failed",
+            status=422,
+            **kwargs,
+        )
+    )
 
 
 class ExceptionHandler:
@@ -80,12 +98,10 @@ class ExceptionHandler:
                 type_="unhandled-exception",
             )
         )
-        headers = {}
 
         for exc_type, handler in self.handlers.items():
             if isinstance(exc, exc_type):
-                headers_, ret = handler(self, request, exc)
-                headers.update(headers_)
+                ret = handler(self, request, exc)
                 break
 
         if isinstance(exc, rfc9457.Problem):
@@ -107,7 +123,8 @@ class ExceptionHandler:
                 msg = f"Removed {k}: {v}"
                 self.logger.debug(msg)
 
-        headers["content-type"] = "application/problem+json"
+        headers = {"content-type": "application/problem+json"}
+        headers.update(ret.headers or {})
 
         response = JSONResponse(
             status_code=ret.status,
@@ -165,28 +182,6 @@ class CorsPostHook:
                 response.headers.add_vary_header("Origin")
 
         return response
-
-
-def request_validation_handler(
-    eh: ExceptionHandler,
-    _request: Request,
-    exc: RequestValidationError,
-) -> tuple[dict, Problem]:
-    wrapper = eh.unhandled_wrappers.get("422")
-    errors = json.loads(json.dumps(exc.errors(), default=str))
-    kwargs = {"errors": errors}
-    ret = (
-        wrapper(**kwargs)
-        if wrapper
-        else Problem(
-            title="Request validation error.",
-            type_="request-validation-failed",
-            status=422,
-            **kwargs,
-        )
-    )
-
-    return {}, ret
 
 
 def generate_handler(  # noqa: PLR0913
