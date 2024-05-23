@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.15 - 2024-05-23
+
+### Bug fixes
+
+- rfc9457 now supports headers and status_code, no need to reimplement base classes. [[089c65f](https://github.com/NRWLDev/fastapi-problem/commit/089c65fdeacd589a3db5ff4e6a095b3732054a08)]
+
 ## v0.7.14 - 2024-05-22
 
 ### Bug fixes
