@@ -43,7 +43,7 @@ raise UserNotFoundError(details="details")
 
 ```python
 import fastapi
-from fastapi_problem.handler.fastapi import add_exception_handler
+from fastapi_problem.handler import add_exception_handler
 
 
 app = fastapi.FastAPI()

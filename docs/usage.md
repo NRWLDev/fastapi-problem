@@ -2,11 +2,11 @@
 
 ```python
 import fastapi
-import fastapi_problem.handler.fastapi
+import fastapi_problem.handler
 
 
 app = fastapi.FastAPI()
-fastapi_problem.handler.fastapi.add_exception_handler(app)
+fastapi_problem.handler.add_exception_handler(app)
 ```
 
 A custom logger can be provided using:
@@ -40,7 +40,7 @@ for all unhandled exceptions.
 
 ```python
 from fastapi_problem.error import StatusProblem
-from fastapi_problem.handler.fastapi import add_exception_handler
+from fastapi_problem.handler import add_exception_handler
 
 class NotFoundError(StatusProblem):
     status = 404
@@ -62,7 +62,7 @@ strip debug messaging from specific status codes. Allowing expected debug
 messages to reach the user, while suppressing unexpected server errors etc.
 
 ```python
-from fastapi_problem.handler.fastapi import add_exception_handler
+from fastapi_problem.handler import add_exception_handler
 
 add_exception_handler(
     app,

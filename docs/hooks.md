@@ -12,7 +12,7 @@ for informational purposes such as logging or debugging.
 import logging
 
 import fastapi
-from fastapi_problem.handler.fastapi import add_exception_handler
+from fastapi_problem.handler import add_exception_handler
 from starlette.requests import Request
 
 logger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ hook.
 
 ```python
 import fastapi
-from fastapi_problem.handler.fastapi import add_exception_handler
+from fastapi_problem.handler import add_exception_handler
 from starlette.requests import Request
 
 logger = logging.getLogger(__name__)

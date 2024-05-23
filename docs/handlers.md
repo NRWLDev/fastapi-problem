@@ -26,8 +26,7 @@ A custom handler can then be defined in your application.
 import fastapi
 from rfc9457 import error_class_to_type
 from fastapi_problem.error import Problem
-from fastapi_problem.handler.base import ExceptionHandler
-from fastapi_problem.handler.fastapi import add_exception_handler
+from fastapi_problem.handler import ExceptionHandler, add_exception_handler
 from starlette.requests import Request
 
 from third_party.error import CustomBaseError
