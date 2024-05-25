@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.17 - 2024-05-25
+
+### Bug fixes
+
+- Add deprecation warnings to deprecated modules. [[#15](https://github.com/NRWLDev/fastapi-problem/issues/15)] [[a23747f](https://github.com/NRWLDev/fastapi-problem/commit/a23747f82fcdbcbf35a12effc977651c0c2be936)]
+
 ## v0.7.16 - 2024-05-23
 
 ### Bug fixes
