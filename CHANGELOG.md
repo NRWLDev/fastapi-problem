@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.18 - 2024-05-28
+
+### Features and Improvements
+
+- Allow handlers to return None to delegate handling of the exception to the next handler in the chain. [[dd3a252](https://github.com/NRWLDev/fastapi-problem/commit/dd3a25255d5d7b4a782f30e4dbb86937778227e6)]
+
 ## v0.7.17 - 2024-05-25
 
 ### Bug fixes
