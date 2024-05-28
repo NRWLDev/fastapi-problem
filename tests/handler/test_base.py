@@ -147,6 +147,54 @@ class TestExceptionHandler:
             exc_info=(type(exc), exc, None),
         )
 
+    def test_error_handler(self):
+        def pass_handler(_eh, _request, _exc):
+            return None
+
+        def handler(_eh, _request, exc):
+            return error.Problem(
+                title="Handled",
+                type_="handled-error",
+                details=str(exc),
+                status=500,
+                headers=None,
+            )
+
+        request = mock.Mock()
+        exc = RuntimeError("Something went bad")
+
+        eh = base.ExceptionHandler(handlers={RuntimeError: pass_handler, Exception: handler})
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
+        assert json.loads(response.body) == {
+            "title": "Handled",
+            "details": "Something went bad",
+            "type": "handled-error",
+            "status": 500,
+        }
+
+    def test_error_handler_pass(self):
+        logger = mock.Mock()
+
+        request = mock.Mock()
+        exc = Exception("Something went bad")
+
+        eh = base.ExceptionHandler(logger=logger)
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
+        assert json.loads(response.body) == {
+            "title": "Unhandled exception occurred.",
+            "details": "Something went bad",
+            "type": "unhandled-exception",
+            "status": 500,
+        }
+        assert logger.exception.call_args == mock.call(
+            "Unhandled exception occurred.",
+            exc_info=(type(exc), exc, None),
+        )
+
     def test_starlette_error(self):
         request = mock.Mock()
         exc = HTTPException(404)

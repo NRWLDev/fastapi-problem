@@ -52,3 +52,48 @@ add_exception_handler(
 Any instance of CustomBaseError, or any subclasses, that reach the exception
 handler will then be converted into a Problem response, as opposed to an
 unhandled error response.
+
+### Optional handling
+
+In some cases you may want to handle specific cases for a type of exception. In
+these scenarios, a custom handler can return None rather than a Problem. If a
+handler returns None the exception will be pass to the next defined handler.
+
+```python
+import fastapi
+from rfc9457 import error_class_to_type
+from fastapi_problem.error import Problem
+from fastapi_problem.handler import ExceptionHandler, add_exception_handler
+from starlette.requests import Request
+
+from third_party.error import CustomBaseError
+
+def my_custom_handler(eh: ExceptionHandler, request: Request, exc: CustomBaseError) -> Problem | None:
+    if "user error" in exc.reason:
+        return Problem(
+            title=exc.reason,
+            details=exc.debug,
+            type_=error_class_to_type(exc),
+            status=400,
+            headers={"x-custom-header": "handled"},
+        )
+    return None
+
+def base_handler(eh: ExceptionHandler, request: Request, exc: Exception) -> Problem:
+    return Problem(
+        title=exc.reason,
+        details=exc.debug,
+        type_=error_class_to_type(exc),
+        status=500,
+        headers={"x-custom-header": "unhandled"},
+    )
+
+app = fastapi.FastAPI()
+add_exception_handler(
+    app,
+    handlers={
+        CustomBaseError: my_custom_handler,
+        Exception: base_handler,
+    },
+)
+```
