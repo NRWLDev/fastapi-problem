@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.20 - 2024-05-31
+
+### Features and Improvements
+
+- Add support for fully qualified documentation links in type. [[0d7e353](https://github.com/NRWLDev/fastapi-problem/commit/0d7e35326d1269af980d81b28545cb35a5c4cf83)]
+
 ## v0.7.19 - 2024-05-31
 
 ### Bug fixes
