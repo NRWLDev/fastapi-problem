@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.7.19 - 2024-05-31
+
+### Bug fixes
+
+- Update rfc9457 and include redirect support. [[f9fe241](https://github.com/NRWLDev/fastapi-problem/commit/f9fe2411aa6d1fea0397794f318503b0cc33c005)]
+
+### Documentation
+
+- Expand documentation to include headers and sentry information. [[555e657](https://github.com/NRWLDev/fastapi-problem/commit/555e6578dc16c5895226bb36839b74cc0e34f537)]
+
 ## v0.7.18 - 2024-05-28
 
 ### Features and Improvements
