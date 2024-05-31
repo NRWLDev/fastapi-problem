@@ -1154,13 +1154,13 @@ prompt_toolkit = ">=2.0,<=3.0.36"
 
 [[package]]
 name = "rfc9457"
-version = "0.0.9"
+version = "0.0.10"
 description = "Implementation of RFC9457 problems."
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "rfc9457-0.0.9-py3-none-any.whl", hash = "sha256:f924870ad87465ca16c0ab009489dc32111f9b4c88c401464f51127c07cba7de"},
-    {file = "rfc9457-0.0.9.tar.gz", hash = "sha256:fb4f038fcec1e796c927e90fa61d7159321a4dc53f85dcd06be4fa39eb7a0b5f"},
+    {file = "rfc9457-0.0.10-py3-none-any.whl", hash = "sha256:8db8d84d2151a8f13d3a8f20afa6894f13c0b0563de0759a45d3c12206a450e4"},
+    {file = "rfc9457-0.0.10.tar.gz", hash = "sha256:4d1db0d611afb1cb4641e259eb76f40998ae9a0bb1c9433eb0afa2e456ebb399"},
 ]
 
 [package.dependencies]
@@ -1764,4 +1764,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "91c0cb75129f37452684acb3a4bb0dfef85c2a717f10db40460b0ec4e248694a"
+content-hash = "9031beabe2912535a9e8c09b775c14f2f7b68573b68f6c781c0e0747f7ea527a"

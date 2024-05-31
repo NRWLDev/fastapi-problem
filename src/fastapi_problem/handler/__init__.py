@@ -72,6 +72,7 @@ class ExceptionHandler:
         handlers: dict[type[Exception], Handler] | None = None,
         pre_hooks: list | None = None,
         post_hooks: list[PostHook] | None = None,
+        documentation_base_url: str | None = None,
         *,
         strip_debug: bool = False,
         strip_debug_codes: list[int] | None = None,
@@ -81,6 +82,7 @@ class ExceptionHandler:
         self.handlers = handlers or {}
         self.pre_hooks = pre_hooks or []
         self.post_hooks = post_hooks or []
+        self.documentation_base_url = documentation_base_url
         self.strip_debug = strip_debug
         self.strip_debug_codes = strip_debug_codes or []
 
@@ -130,7 +132,7 @@ class ExceptionHandler:
 
         response = JSONResponse(
             status_code=ret.status,
-            content=ret.marshal(strip_debug=strip_debug_),
+            content=ret.marshal(type_base_url=self.documentation_base_url, strip_debug=strip_debug_),
             headers=headers,
         )
 
@@ -193,6 +195,7 @@ def generate_handler(  # noqa: PLR0913
     handlers: dict[type[Exception], Handler] | None = None,
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
+    documentation_base_url: str | None = None,
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
@@ -216,6 +219,7 @@ def generate_handler(  # noqa: PLR0913
         handlers=handlers,
         pre_hooks=pre_hooks,
         post_hooks=post_hooks,
+        documentation_base_url=documentation_base_url,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
     )
@@ -229,6 +233,7 @@ def add_exception_handler(  # noqa: PLR0913
     handlers: dict[type[Exception], Handler] | None = None,
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
+    documentation_base_url: str | None = None,
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
@@ -240,6 +245,7 @@ def add_exception_handler(  # noqa: PLR0913
         handlers,
         pre_hooks,
         post_hooks,
+        documentation_base_url,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
     )

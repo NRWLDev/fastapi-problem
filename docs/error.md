@@ -104,7 +104,7 @@ returned as part of the response.
 
 Headers provided when raising will overwrite any matching headers defined on the class.
 
-```
+```python
 class HeaderProblem(StatusProblem):
     status = 400
     headers = {"x-define-header": "value"}
@@ -124,7 +124,7 @@ An additional helper class `RedirectProblem` is provided for handling 3XX
 problems with a `Location` header. This subclass takes an additional required
 init argument `location`.
 
-```
+```python
 class PermanentRedirect(RedirectProblem):
     status = 308
     title = "Permanent redirect"
@@ -135,3 +135,27 @@ raise PermanentRedirect("https://location", "details of move")
 e.headers == {
     "Location": "https://location",
 }
+```
+
+## Error Documentation
+
+The RFC-9457 spec defines that the `type` field should link to documentation
+about the error type that has occurred. By default the Problem class provides a
+unique identifier for the type, rather than a full url. If your service/project
+provides documentation on error types, the documentation url can be provided to
+the handler which will result in response `type` fields being converted to a
+full link.
+
+```python
+add_exception_handler(
+    app,
+    documentation_base_url="https://link-to/my/errors/",
+)
+```
+
+```json
+{
+    "type": "https://link-to/my/errors/an-exception",
+    ...
+}
+```
