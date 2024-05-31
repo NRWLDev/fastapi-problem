@@ -106,7 +106,7 @@ Headers provided when raising will overwrite any matching headers defined on the
 ```
 class HeaderProblem(StatusProblem):
     status = 400
-    headers_ = {"x-define-header": "value"}
+    headers = {"x-define-header": "value"}
 
 
 raise HeaderProblem(headers={"x-instance-header": "value2"})
