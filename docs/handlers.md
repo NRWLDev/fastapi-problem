@@ -7,8 +7,6 @@ Providing a custom handler allows for conversion from the custom error class
 into a `Problem`, when the exception handler catches it, rather than converting
 each raised instance into a `Problem` at the time it is raised.
 
-Custom handlers can also inject headers into the response.
-
 ## Usage
 
 Given a `third_party` library with a `error.py` module.
@@ -55,9 +53,10 @@ unhandled error response.
 
 ### Optional handling
 
-In some cases you may want to handle specific cases for a type of exception. In
-these scenarios, a custom handler can return None rather than a Problem. If a
-handler returns None the exception will be pass to the next defined handler.
+In some cases you may want to handle specific cases for a type of exception,
+but let others defer to another handler. In these scenarios, a custom handler
+can return None rather than a Problem. If a handler returns None the exception
+will be pass to the next defined handler.
 
 ```python
 import fastapi
@@ -66,16 +65,13 @@ from fastapi_problem.error import Problem
 from fastapi_problem.handler import ExceptionHandler, add_exception_handler
 from starlette.requests import Request
 
-from third_party.error import CustomBaseError
-
-def my_custom_handler(eh: ExceptionHandler, request: Request, exc: CustomBaseError) -> Problem | None:
-    if "user error" in exc.reason:
+def no_response_handler(eh: ExceptionHandler, request: Request, exc: RuntimeError) -> Problem | None:
+    if str(exc) == "No response returned.":
         return Problem(
-            title=exc.reason,
-            details=exc.debug,
-            type_=error_class_to_type(exc),
-            status=400,
-            headers={"x-custom-header": "handled"},
+            title="No response returned.",
+            details="starlette bug",
+            type_="no-response",
+            status=409,
         )
     return None
 
@@ -85,15 +81,19 @@ def base_handler(eh: ExceptionHandler, request: Request, exc: Exception) -> Prob
         details=exc.debug,
         type_=error_class_to_type(exc),
         status=500,
-        headers={"x-custom-header": "unhandled"},
     )
 
 app = fastapi.FastAPI()
 add_exception_handler(
     app,
     handlers={
-        CustomBaseError: my_custom_handler,
+        RuntimeError: no_response_handler,
         Exception: base_handler,
     },
 )
 ```
+
+At the time of writing there was (is?) a
+[bug](https://github.com/encode/starlette/issues/2516) in starlette that would
+cause middlewares to error.  To prevent these from reaching Sentry, a deferred
+handler was implemented in the impacted project.

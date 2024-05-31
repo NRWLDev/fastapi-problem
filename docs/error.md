@@ -94,3 +94,25 @@ raise UserNotFoundError(details="details", user_id="1234", metadata={"hello": "w
     "metadata": {"hello": "world"},
 }
 ```
+
+### Headers
+
+Problem subclasses can define specific headers at definition, or provide
+instance specific headers at raise. These headers will be extracted and
+returned as part of the response.
+
+Headers provided when raising will overwrite any matching headers defined on the class.
+
+```
+class HeaderProblem(StatusProblem):
+    status = 400
+    headers_ = {"x-define-header": "value"}
+
+
+raise HeaderProblem(headers={"x-instance-header": "value2"})
+
+response.headers == {
+    "x-define-header": "value",
+    "x-instance-header": "value2",
+}
+```

@@ -69,3 +69,13 @@ add_exception_handler(
     strip_debug_dodes=[500],
 )
 ```
+
+## Sentry
+
+`fastapi_problem` is designed to play nicely with [Sentry](https://sentry.io),
+there is no need to do anything special to integrate with sentry other than
+initializing the sdk. The Starlette and Fastapi integrations paired with the
+Logging integration will take care of everything.
+
+To prevent duplicated entries, ignoing the `uvicorn.error` logger in sentry can
+be handy.
