@@ -18,7 +18,7 @@ from fastapi_problem.error import (
     ForbiddenProblem,
     UnauthorisedProblem,
 )
-from fastapi_problem.handler.fastapi import add_exception_handler
+from fastapi_problem.handler import add_exception_handler
 
 
 class AuthorizationRequiredError(UnauthorisedProblem):

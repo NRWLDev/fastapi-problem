@@ -15,10 +15,14 @@ To see a custom starlette 404 error response.
 $ curl http://localhost:8000/not-found
 """
 
+import logging
+
 import fastapi
 
 from fastapi_problem.handler.fastapi import add_exception_handler
 from fastapi_problem.error import NotFoundProblem, ServerProblem, StatusProblem, UnprocessableProblem
+
+logging.getLogger("uvicorn.error").disabled = True
 
 
 class CustomNotFound(NotFoundProblem):

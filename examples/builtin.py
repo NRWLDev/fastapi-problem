@@ -15,9 +15,13 @@ To see a standard starlette 404 error response.
 $ curl http://localhost:8000/not-found
 """
 
+import logging
+
 import fastapi
 
 from fastapi_problem.handler.fastapi import add_exception_handler
+
+logging.getLogger("uvicorn.error").disabled = True
 
 app = fastapi.FastAPI()
 
