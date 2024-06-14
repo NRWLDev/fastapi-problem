@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.8.0 - 2024-06-14
+
+### Features and Improvements
+
+- **Breaking:** Drop deprecated features from 0.7 release. [[79f1026](https://github.com/NRWLDev/fastapi-problem/commit/79f1026e4519dd8fc7ff9091060dbf595e42f3a4)]
+
 ## v0.7.20 - 2024-05-31
 
 ### Features and Improvements
