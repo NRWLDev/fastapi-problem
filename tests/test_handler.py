@@ -2,12 +2,14 @@ import http
 import json
 from unittest import mock
 
+import httpx
 import pytest
+from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 
-from fastapi_problem import error
+from fastapi_problem import error, handler
 from fastapi_problem.cors import CorsConfiguration
-from fastapi_problem.handler import base
 
 
 class SomethingWrongError(error.ServerProblem):
@@ -40,7 +42,7 @@ class TestExceptionHandler:
         request = mock.Mock()
         exc = Exception("Something went bad")
 
-        eh = base.ExceptionHandler(
+        eh = handler.ExceptionHandler(
             logger=logger,
             unhandled_wrappers={
                 "default": CustomUnhandledException,
@@ -64,7 +66,7 @@ class TestExceptionHandler:
         request = mock.Mock()
         exc = Exception("Something went bad")
 
-        eh = base.ExceptionHandler(
+        eh = handler.ExceptionHandler(
             unhandled_wrappers={
                 "default": CustomUnhandledException,
             },
@@ -84,7 +86,7 @@ class TestExceptionHandler:
         request = mock.Mock()
         exc = Exception("Something went bad")
 
-        eh = base.ExceptionHandler(
+        eh = handler.ExceptionHandler(
             strip_debug=True,
             unhandled_wrappers={
                 "default": CustomUnhandledException,
@@ -104,7 +106,7 @@ class TestExceptionHandler:
         request = mock.Mock()
         exc = Exception("Something went bad")
 
-        eh = base.ExceptionHandler(
+        eh = handler.ExceptionHandler(
             logger=logger,
             strip_debug=False,
             strip_debug_codes=[500],
@@ -129,7 +131,7 @@ class TestExceptionHandler:
         request = mock.Mock()
         exc = SomethingWrongError("something bad")
 
-        eh = base.ExceptionHandler(
+        eh = handler.ExceptionHandler(
             strip_debug=False,
             strip_debug_codes=[400],
             unhandled_wrappers={
@@ -152,7 +154,7 @@ class TestExceptionHandler:
         request = mock.Mock()
         exc = Exception("Something went bad")
 
-        eh = base.ExceptionHandler(logger=logger)
+        eh = handler.ExceptionHandler(logger=logger)
         response = eh(request, exc)
 
         assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
@@ -171,7 +173,7 @@ class TestExceptionHandler:
         def pass_handler(_eh, _request, _exc):
             return None
 
-        def handler(_eh, _request, exc):
+        def handler_(_eh, _request, exc):
             return error.Problem(
                 title="Handled",
                 type_="handled-error",
@@ -183,7 +185,7 @@ class TestExceptionHandler:
         request = mock.Mock()
         exc = RuntimeError("Something went bad")
 
-        eh = base.ExceptionHandler(handlers={RuntimeError: pass_handler, Exception: handler})
+        eh = handler.ExceptionHandler(handlers={RuntimeError: pass_handler, Exception: handler_})
         response = eh(request, exc)
 
         assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
@@ -200,7 +202,7 @@ class TestExceptionHandler:
         request = mock.Mock()
         exc = Exception("Something went bad")
 
-        eh = base.ExceptionHandler(logger=logger)
+        eh = handler.ExceptionHandler(logger=logger)
         response = eh(request, exc)
 
         assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
@@ -219,7 +221,7 @@ class TestExceptionHandler:
         request = mock.Mock()
         exc = HTTPException(404)
 
-        eh = base.ExceptionHandler(handlers={HTTPException: base.http_exception_handler})
+        eh = handler.ExceptionHandler(handlers={HTTPException: handler.http_exception_handler})
         response = eh(request, exc)
 
         assert response.status_code == http.HTTPStatus.NOT_FOUND
@@ -234,7 +236,7 @@ class TestExceptionHandler:
         request = mock.Mock()
         exc = SomethingWrongError("something bad")
 
-        eh = base.ExceptionHandler()
+        eh = handler.ExceptionHandler()
         response = eh(request, exc)
 
         assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
@@ -249,7 +251,7 @@ class TestExceptionHandler:
         request = mock.Mock(headers={})
         exc = SomethingWrongError("something bad")
 
-        eh = base.ExceptionHandler(post_hooks=[base.CorsPostHook(cors)])
+        eh = handler.generate_handler(cors=cors)
         response = eh(request, exc)
 
         assert "access-control-allow-origin" not in response.headers
@@ -258,7 +260,7 @@ class TestExceptionHandler:
         request = mock.Mock(headers={"origin": "localhost"})
         exc = SomethingWrongError("something bad")
 
-        eh = base.ExceptionHandler(post_hooks=[base.CorsPostHook(cors)])
+        eh = handler.generate_handler(cors=cors)
         response = eh(request, exc)
 
         assert "access-control-allow-origin" in response.headers
@@ -268,7 +270,7 @@ class TestExceptionHandler:
         request = mock.Mock(headers={"origin": "localhost", "cookie": "something"})
         exc = SomethingWrongError("something bad")
 
-        eh = base.ExceptionHandler(post_hooks=[base.CorsPostHook(cors)])
+        eh = handler.generate_handler(cors=cors)
         response = eh(request, exc)
 
         assert "access-control-allow-origin" in response.headers
@@ -280,7 +282,7 @@ class TestExceptionHandler:
 
         cors.allow_origins = ["localhost"]
 
-        eh = base.ExceptionHandler(post_hooks=[base.CorsPostHook(cors)])
+        eh = handler.generate_handler(cors=cors)
         response = eh(request, exc)
 
         assert "access-control-allow-origin" in response.headers
@@ -292,7 +294,90 @@ class TestExceptionHandler:
 
         cors.allow_origins = ["localhost"]
 
-        eh = base.ExceptionHandler(post_hooks=[base.CorsPostHook(cors)])
+        eh = handler.generate_handler(cors=cors)
         response = eh(request, exc)
 
         assert "access-control-allow-origin" not in response.headers
+
+    def test_fastapi_error(self):
+        request = mock.Mock()
+        exc = RequestValidationError([])
+
+        eh = handler.generate_handler(
+            unhandled_wrappers={
+                "422": CustomValidationError,
+            },
+        )
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.UNPROCESSABLE_ENTITY
+        assert json.loads(response.body) == {
+            "title": "Request validation error.",
+            "errors": [],
+            "type": "custom-validation",
+            "status": 422,
+        }
+
+    def test_pre_hook(self):
+        logger = mock.Mock()
+
+        request = mock.Mock()
+        exc = ValueError("Something went bad")
+
+        def hook(_request, exc) -> None:
+            logger.debug(str(type(exc)))
+
+        eh = handler.ExceptionHandler(logger=logger, pre_hooks=[hook])
+        eh(request, exc)
+
+        assert logger.debug.call_args == mock.call("<class 'ValueError'>")
+
+
+async def test_exception_handler_in_app():
+    exception_handler = handler.generate_handler(
+        unhandled_wrappers={
+            "422": CustomValidationError,
+            "default": CustomUnhandledException,
+        },
+    )
+
+    app = FastAPI(
+        exception_handlers={
+            Exception: exception_handler,
+            RequestValidationError: exception_handler,
+            HTTPException: exception_handler,
+        },
+    )
+    transport = httpx.ASGITransport(app=app, raise_app_exceptions=False, client=("1.2.3.4", 123))
+    client = httpx.AsyncClient(transport=transport, app=app, base_url="https://test")
+
+    r = await client.get("/endpoint")
+    assert r.json() == {
+        "type": "http-not-found",
+        "title": "Not Found",
+        "details": "Not Found",
+        "status": 404,
+    }
+
+
+async def test_exception_handler_in_app_post_register():
+    app = FastAPI()
+
+    handler.add_exception_handler(
+        app,
+        unhandled_wrappers={
+            "422": CustomValidationError,
+            "default": CustomUnhandledException,
+        },
+    )
+
+    transport = httpx.ASGITransport(app=app, raise_app_exceptions=False, client=("1.2.3.4", 123))
+    client = httpx.AsyncClient(transport=transport, app=app, base_url="https://test")
+
+    r = await client.get("/endpoint")
+    assert r.json() == {
+        "type": "http-not-found",
+        "title": "Not Found",
+        "details": "Not Found",
+        "status": 404,
+    }

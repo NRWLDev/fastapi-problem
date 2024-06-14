@@ -3,19 +3,19 @@ import pytest
 from fastapi_problem import error
 
 
-class NotFoundError(error.NotFoundException):
+class NotFoundError(error.NotFoundProblem):
     title = "a 404 message"
 
 
-class InvalidAuthError(error.UnauthorisedException):
+class InvalidAuthError(error.UnauthorisedProblem):
     title = "a 401 message"
 
 
-class BadRequestError(error.BadRequestException):
+class BadRequestError(error.BadRequestProblem):
     title = "a 400 message"
 
 
-class ServerExceptionError(error.ServerException):
+class ServerExceptionError(error.ServerProblem):
     title = "a 500 message"
 
 
@@ -42,5 +42,3 @@ def test_marshal(exc, type_):
 def test_subclass_chain():
     assert isinstance(NotFoundError("details"), error.Problem)
     assert isinstance(NotFoundError("details"), error.StatusProblem)
-    assert isinstance(NotFoundError("details"), error.HttpException)
-    assert isinstance(NotFoundError("details"), error.HttpCodeException)

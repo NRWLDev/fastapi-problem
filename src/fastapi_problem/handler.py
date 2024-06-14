@@ -70,7 +70,7 @@ class ExceptionHandler:
         logger: logging.Logger | None = None,
         unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
         handlers: dict[type[Exception], Handler] | None = None,
-        pre_hooks: list | None = None,
+        pre_hooks: list[PreHook] | None = None,
         post_hooks: list[PostHook] | None = None,
         documentation_base_url: str | None = None,
         *,
