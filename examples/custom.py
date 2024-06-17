@@ -19,7 +19,7 @@ import logging
 
 import fastapi
 
-from fastapi_problem.handler.fastapi import add_exception_handler
+from fastapi_problem.handler import add_exception_handler
 from fastapi_problem.error import NotFoundProblem, ServerProblem, StatusProblem, UnprocessableProblem
 
 logging.getLogger("uvicorn.error").disabled = True

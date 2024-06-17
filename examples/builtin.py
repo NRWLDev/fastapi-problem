@@ -5,6 +5,9 @@ $ fastapi dev examples/builtin.py
 To see a standard 422, fastapi RequestValidationError response.
 $ curl http://localhost:8000/validation-error
 
+To see a standard 422, fastapi RequestValidationError form validation response.
+$ curl http://localhost:8000/validation-error -X POST -H "Content-Type: application/json" --data '{"other": [{"inner_required": "provided"}, {}]}'
+
 To see a standard unhandled server error response.
 $ curl http://localhost:8000/unexpected-error
 
@@ -18,8 +21,9 @@ $ curl http://localhost:8000/not-found
 import logging
 
 import fastapi
+import pydantic
 
-from fastapi_problem.handler.fastapi import add_exception_handler
+from fastapi_problem.handler import add_exception_handler
 
 logging.getLogger("uvicorn.error").disabled = True
 
@@ -32,6 +36,22 @@ add_exception_handler(
 
 @app.get("/validation-error")
 async def validation_error(required: str) -> dict:
+    return {}
+
+
+class Other(pydantic.BaseModel):
+    inner_required: str
+
+
+class NestedBody(pydantic.BaseModel):
+    required: str
+    other: list[Other]
+
+
+@app.post("/validation-error")
+async def validation_error(
+    data: NestedBody,
+) -> dict:
     return {}
 
 
