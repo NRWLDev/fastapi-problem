@@ -36,7 +36,8 @@ def cors():
 
 
 class TestExceptionHandler:
-    def test_unexpected_error_replaces_code(self):
+    @pytest.mark.parametrize("default_key", ["default", "500"])
+    def test_unexpected_error_replaces_code(self, default_key):
         logger = mock.Mock()
 
         request = mock.Mock()
@@ -45,7 +46,7 @@ class TestExceptionHandler:
         eh = handler.ExceptionHandler(
             logger=logger,
             unhandled_wrappers={
-                "default": CustomUnhandledException,
+                default_key: CustomUnhandledException,
             },
         )
         response = eh(request, exc)
@@ -169,7 +170,7 @@ class TestExceptionHandler:
             exc_info=(type(exc), exc, None),
         )
 
-    def test_error_handler(self):
+    def test_error_handler_can_pass(self):
         def pass_handler(_eh, _request, _exc):
             return None
 
@@ -196,6 +197,39 @@ class TestExceptionHandler:
             "status": 500,
         }
 
+    def test_error_handler_breaks_at_first_bite(self):
+        def handler_(_eh, _request, exc):
+            return error.Problem(
+                title="Handled",
+                type_="handled-error",
+                details=str(exc),
+                status=400,
+                headers=None,
+            )
+
+        def unused_handler(_eh, _request, _exc):
+            return error.Problem(
+                title="Handled",
+                type_="handled-error",
+                details=str(exc),
+                status=500,
+                headers=None,
+            )
+
+        request = mock.Mock()
+        exc = RuntimeError("Something went bad")
+
+        eh = handler.ExceptionHandler(handlers={RuntimeError: handler_, Exception: unused_handler})
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.BAD_REQUEST
+        assert json.loads(response.body) == {
+            "title": "Handled",
+            "details": "Something went bad",
+            "type": "handled-error",
+            "status": 400,
+        }
+
     def test_error_handler_pass(self):
         logger = mock.Mock()
 
@@ -206,6 +240,7 @@ class TestExceptionHandler:
         response = eh(request, exc)
 
         assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
+        assert response.headers["content-type"] == "application/problem+json"
         assert json.loads(response.body) == {
             "title": "Unhandled exception occurred.",
             "details": "Something went bad",
@@ -230,6 +265,26 @@ class TestExceptionHandler:
             "details": "Not Found",
             "type": "http-not-found",
             "status": 404,
+        }
+
+    def test_starlette_error_custom_wrapper(self):
+        request = mock.Mock()
+        exc = HTTPException(404)
+
+        eh = handler.ExceptionHandler(
+            handlers={HTTPException: handler.http_exception_handler},
+            unhandled_wrappers={
+                "404": SomethingWrongError,
+            },
+        )
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
+        assert json.loads(response.body) == {
+            "title": "This is an error.",
+            "details": "Not Found",
+            "type": "something-wrong",
+            "status": 500,
         }
 
     def test_known_error(self):
@@ -286,6 +341,7 @@ class TestExceptionHandler:
         response = eh(request, exc)
 
         assert "access-control-allow-origin" in response.headers
+        assert response.headers["vary"] == "Origin"
         assert response.headers["access-control-allow-origin"] == "localhost"
 
     def test_missing_token_with_origin_limited_origins_no_match(self, cors):
@@ -300,6 +356,21 @@ class TestExceptionHandler:
         assert "access-control-allow-origin" not in response.headers
 
     def test_fastapi_error(self):
+        request = mock.Mock()
+        exc = RequestValidationError([])
+
+        eh = handler.generate_handler()
+        response = eh(request, exc)
+
+        assert response.status_code == http.HTTPStatus.UNPROCESSABLE_ENTITY
+        assert json.loads(response.body) == {
+            "title": "Request validation error.",
+            "errors": [],
+            "type": "request-validation-failed",
+            "status": 422,
+        }
+
+    def test_fastapi_error_custom_wrapper(self):
         request = mock.Mock()
         exc = RequestValidationError([])
 
@@ -334,7 +405,13 @@ class TestExceptionHandler:
 
 
 async def test_exception_handler_in_app():
+    m = mock.Mock()
+
+    def pre_hook(_req, _exc):
+        m.call("pre-hook")
+
     exception_handler = handler.generate_handler(
+        pre_hooks=[pre_hook],
         unhandled_wrappers={
             "422": CustomValidationError,
             "default": CustomUnhandledException,
@@ -358,6 +435,7 @@ async def test_exception_handler_in_app():
         "details": "Not Found",
         "status": 404,
     }
+    assert m.call.call_args == mock.call("pre-hook")
 
 
 async def test_exception_handler_in_app_post_register():

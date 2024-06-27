@@ -22,9 +22,9 @@ if t.TYPE_CHECKING:
     from fastapi_problem.cors import CorsConfiguration
 
 
-Handler = t.Callable[["ExceptionHandler", Request, Exception], t.Optional[Problem]]
-PreHook = t.Callable[[Request, Exception], None]
-PostHook = t.Callable[[Request, JSONResponse], JSONResponse]
+Handler = t.Callable[["ExceptionHandler", Request, Exception], t.Optional[Problem]]  # nomut
+PreHook = t.Callable[[Request, Exception], None]  # nomut
+PostHook = t.Callable[[Request, JSONResponse], JSONResponse]  # nomut
 
 
 def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPException) -> Problem:

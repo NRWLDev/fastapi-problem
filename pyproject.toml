@@ -27,6 +27,9 @@ pytest-random-order = "^1.0"
 ruff = "^0.3.0"
 pre-commit = "^3.0.2"
 
+[tool.poetry.group.dev.dependencies]
+mutmut = "^2.5.0"
+
 [tool.bumpversion]
 current_version = "0.8.0"
 commit = true
