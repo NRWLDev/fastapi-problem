@@ -4,8 +4,7 @@ from unittest import mock
 
 import httpx
 import pytest
-from fastapi import FastAPI
-from fastapi.exceptions import RequestValidationError
+from starlette.applications import Starlette
 from starlette.exceptions import HTTPException
 
 from fastapi_problem import error, handler
@@ -355,40 +354,6 @@ class TestExceptionHandler:
 
         assert "access-control-allow-origin" not in response.headers
 
-    def test_fastapi_error(self):
-        request = mock.Mock()
-        exc = RequestValidationError([])
-
-        eh = handler.generate_handler()
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.UNPROCESSABLE_ENTITY
-        assert json.loads(response.body) == {
-            "title": "Request validation error.",
-            "errors": [],
-            "type": "request-validation-failed",
-            "status": 422,
-        }
-
-    def test_fastapi_error_custom_wrapper(self):
-        request = mock.Mock()
-        exc = RequestValidationError([])
-
-        eh = handler.generate_handler(
-            unhandled_wrappers={
-                "422": CustomValidationError,
-            },
-        )
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.UNPROCESSABLE_ENTITY
-        assert json.loads(response.body) == {
-            "title": "Request validation error.",
-            "errors": [],
-            "type": "custom-validation",
-            "status": 422,
-        }
-
     def test_pre_hook(self):
         logger = mock.Mock()
 
@@ -418,10 +383,9 @@ async def test_exception_handler_in_app():
         },
     )
 
-    app = FastAPI(
+    app = Starlette(
         exception_handlers={
             Exception: exception_handler,
-            RequestValidationError: exception_handler,
             HTTPException: exception_handler,
         },
     )
@@ -439,7 +403,7 @@ async def test_exception_handler_in_app():
 
 
 async def test_exception_handler_in_app_post_register():
-    app = FastAPI()
+    app = Starlette()
 
     handler.add_exception_handler(
         app,

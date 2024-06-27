@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 import http
-import json
 import typing as t
 
 import rfc9457
-from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
@@ -17,7 +15,7 @@ from fastapi_problem.util import convert_status_code
 if t.TYPE_CHECKING:
     import logging
 
-    from fastapi import FastAPI
+    from starlette.applications import Starlette
 
     from fastapi_problem.cors import CorsConfiguration
 
@@ -40,26 +38,6 @@ def http_exception_handler(eh: ExceptionHandler, _request: Request, exc: HTTPExc
             details=details,
             status=exc.status_code,
             headers=exc.headers,
-        )
-    )
-
-
-def request_validation_handler(
-    eh: ExceptionHandler,
-    _request: Request,
-    exc: RequestValidationError,
-) -> Problem:
-    wrapper = eh.unhandled_wrappers.get("422")
-    errors = json.loads(json.dumps(exc.errors(), default=str))
-    kwargs = {"errors": errors}
-    return (
-        wrapper(**kwargs)
-        if wrapper
-        else Problem(
-            title="Request validation error.",
-            type_="request-validation-failed",
-            status=422,
-            **kwargs,
         )
     )
 
@@ -204,7 +182,6 @@ def generate_handler(  # noqa: PLR0913
     handlers.update(
         {
             HTTPException: http_exception_handler,
-            RequestValidationError: request_validation_handler,
         },
     )
     pre_hooks = pre_hooks or []
@@ -226,7 +203,7 @@ def generate_handler(  # noqa: PLR0913
 
 
 def add_exception_handler(  # noqa: PLR0913
-    app: FastAPI,
+    app: Starlette,
     logger: logging.Logger | None = None,
     cors: CorsConfiguration | None = None,
     unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
@@ -253,4 +230,3 @@ def add_exception_handler(  # noqa: PLR0913
     app.add_exception_handler(Exception, eh)
     app.add_exception_handler(rfc9457.Problem, eh)
     app.add_exception_handler(HTTPException, eh)
-    app.add_exception_handler(RequestValidationError, eh)

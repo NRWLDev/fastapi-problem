@@ -14,7 +14,7 @@ rfc9457 = ">=0.0.10"
 
 [tool.poetry.dev-dependencies]
 
-fastapi = "*"
+starlette = "*"
 
 changelog-gen = { version="^0.9", extras=["bump-my-version"]}
 pytest = "~7.4.3"
