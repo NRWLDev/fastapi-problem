@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.8.1 - 2024-06-28
+
+### Features and Improvements
+
+- Use underlying starlette-problem library to reduce code duplication. [[9a4165e](https://github.com/NRWLDev/fastapi-problem/commit/9a4165e3ce1e06ae3731b4529643d57c80b2e706)]
+
+### Miscellaneous
+
 ## v0.8.0 - 2024-06-14
 
 ### Features and Improvements
