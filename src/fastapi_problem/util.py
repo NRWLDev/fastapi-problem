@@ -1,11 +1,3 @@
-from __future__ import annotations
+from starlette_problem.util import convert_status_code
 
-import http
-
-
-def convert_status_code(status_code: int) -> tuple[str, str]:
-    """Convert an HTTP status code into a (title, type)."""
-    title = http.HTTPStatus(status_code).phrase
-    type_ = "-".join(title.lower().split())
-
-    return title, f"http-{type_}"
+__all__ = ["convert_status_code"]

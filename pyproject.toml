@@ -11,8 +11,10 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.9"
 rfc9457 = ">=0.0.10"
+starlette_problem = ">=0.9"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
+mutmut = "^2.5.0"
 
 fastapi = "*"
 
@@ -26,9 +28,6 @@ pytest-random-order = "^1.0"
 # Style
 ruff = "^0.3.0"
 pre-commit = "^3.0.2"
-
-[tool.poetry.group.dev.dependencies]
-mutmut = "^2.5.0"
 
 [tool.bumpversion]
 current_version = "0.8.0"
