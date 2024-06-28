@@ -14,7 +14,6 @@ rfc9457 = ">=0.0.10"
 starlette_problem = ">=0.9"
 
 [tool.poetry.group.dev.dependencies]
-mutmut = "^2.5.0"
 
 fastapi = "*"
 
