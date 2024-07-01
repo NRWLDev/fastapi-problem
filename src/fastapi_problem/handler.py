@@ -62,7 +62,8 @@ def generate_handler(  # noqa: PLR0913
     post_hooks = post_hooks or []
 
     if cors:
-        post_hooks.append(CorsPostHook(cors))
+        # Ensure it runs first before any custom modifications
+        post_hooks.insert(0, CorsPostHook(cors))
 
     return ExceptionHandler(
         logger=logger,

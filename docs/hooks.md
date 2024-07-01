@@ -32,20 +32,22 @@ add_exception_handler(
 
 ## Post Hooks
 
-A post hook will be provided with the incoming request, and the current
-response object. Post hooks can mutate the response object to provide
-additional headers etc. The CORS header implementation is done using a post
-hook.
+A post hook will be provided with the raw content object, the incoming request,
+and the current response object. Post hooks can mutate the response object to
+provide additional headers etc. The CORS header implementation is done using a
+post hook. In the case the response format should be changed (if you have an
+xml api etc, the raw content can be reprocessed.)
 
 ```python
 import fastapi
 from fastapi_problem.handler import add_exception_handler
 from starlette.requests import Request
+from starlette.responses import Response
 
 logger = logging.getLogger(__name__)
 
 
-def custom_hook(request: Request, response: JSONResponse) -> JSONResponse:
+def custom_hook(request: Request, response: Response) -> Response:
     if "x-custom-header" in request.headers:
         response.headers["x-custom-response"] = "set"
 
