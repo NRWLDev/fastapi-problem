@@ -17,8 +17,8 @@ Check the [docs](https://nrwldev.github.io/fastapi-problem) for more details.
 
 ## Custom Errors
 
-Subclassing the convenience classes provide a simple way to consistently raise the same error
-with details/extras changing based on the raised context.
+Subclassing the convenience classes provide a simple way to consistently raise
+the same error with details/extras changing based on the raised context.
 
 ```python
 from fastapi_problem.error import NotFoundProblem
