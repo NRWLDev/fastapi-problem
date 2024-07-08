@@ -47,7 +47,7 @@ from starlette.responses import Response
 logger = logging.getLogger(__name__)
 
 
-def custom_hook(request: Request, response: Response) -> Response:
+def custom_hook(_content: dict, request: Request, response: Response) -> Response:
     if "x-custom-header" in request.headers:
         response.headers["x-custom-response"] = "set"
 
