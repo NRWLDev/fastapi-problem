@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.9.0 - 2024-07-23
+
+### Miscellaneous
+
+- **Breaking:** Update rfc9457 with fix for correct response format per spec. [[8401bc7](https://github.com/NRWLDev/fastapi-problem/commit/8401bc738c7fb61bc57d738777d8b6f5c8290240)]
+
 ## v0.8.1 - 2024-06-28
 
 ### Features and Improvements
