@@ -1,6 +1,6 @@
 # Errors
 
-The base `fastapi_problem.error.Problem` accepts a `title`, `details`, `status`
+The base `fastapi_problem.error.Problem` accepts a `title`, `detail`, `status`
 (default 500) and optional `**kwargs`. An additional `code` can be passed in,
 which will be used as the `type`, if not provided the `type` is derived from
 the class name.
@@ -11,7 +11,7 @@ And will return a JSON response with `exc.status` as the status code and respons
 {
     "type": "an-exception",
     "title": "title",
-    "details": "details",
+    "detail": "detail",
     "status": 500,
     "extra-key": "extra-value",
     ...
@@ -39,7 +39,7 @@ To create custom errors subclasss these and define the `title` attribute.
 ## Custom Errors
 
 Subclassing the convenience classes provide a simple way to consistently raise the same error
-with details/extras changing based on the raised context.
+with detail/extras changing based on the raised context.
 
 ```python
 from fastapi_problem.error import NotFoundProblem
@@ -48,14 +48,14 @@ from fastapi_problem.error import NotFoundProblem
 class UserNotFoundError(NotFoundProblem):
     title = "User not found."
 
-raise UserNotFoundError(details="details")
+raise UserNotFoundError(detail="detail")
 ```
 
 ```json
 {
     "type": "user-not-found",
     "title": "User not found",
-    "details": "details",
+    "detail": "detail",
     "status": 404,
 }
 ```
@@ -67,14 +67,14 @@ class UserNotFoundError(NotFoundProblem):
     title = "User not found."
     type_ = "cant-find-user"
 
-raise UserNotFoundError(details="details")
+raise UserNotFoundError(detail="detail")
 ```
 
 ```json
 {
     "type": "cant-find-user",
     "title": "User not found",
-    "details": "details",
+    "detail": "detail",
     "status": 404,
 }
 ```
@@ -84,13 +84,13 @@ included in the output (ensure the provided values are json seriablizable.
 
 
 ```python
-raise UserNotFoundError(details="details", user_id="1234", metadata={"hello": "world"})
+raise UserNotFoundError(detail="detail", user_id="1234", metadata={"hello": "world"})
 ```
 
 ```json
 {
     ...
-    "details": "details",
+    "detail": "detail",
     "user_id": "1234",
     "metadata": {"hello": "world"},
 }
@@ -130,7 +130,7 @@ class PermanentRedirect(RedirectProblem):
     title = "Permanent redirect"
 
 
-raise PermanentRedirect("https://location", "details of move")
+raise PermanentRedirect("https://location", "detail of move")
 
 e.headers == {
     "Location": "https://location",

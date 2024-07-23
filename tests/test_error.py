@@ -29,16 +29,16 @@ class ServerExceptionError(error.ServerProblem):
     ],
 )
 def test_marshal(exc, type_):
-    e = exc("details")
+    e = exc("detail")
 
     assert e.marshal() == {
         "type": type_,
         "title": e.title,
-        "details": "details",
+        "detail": "detail",
         "status": e.status,
     }
 
 
 def test_subclass_chain():
-    assert isinstance(NotFoundError("details"), error.Problem)
-    assert isinstance(NotFoundError("details"), error.StatusProblem)
+    assert isinstance(NotFoundError("detail"), error.Problem)
+    assert isinstance(NotFoundError("detail"), error.StatusProblem)

@@ -18,7 +18,7 @@ Check the [docs](https://nrwldev.github.io/fastapi-problem) for more details.
 ## Custom Errors
 
 Subclassing the convenience classes provide a simple way to consistently raise
-the same error with details/extras changing based on the raised context.
+the same error with detail/extras changing based on the raised context.
 
 ```python
 from fastapi_problem.error import NotFoundProblem
@@ -27,14 +27,14 @@ from fastapi_problem.error import NotFoundProblem
 class UserNotFoundError(NotFoundProblem):
     title = "User not found."
 
-raise UserNotFoundError(details="details")
+raise UserNotFoundError(detail="detail")
 ```
 
 ```json
 {
     "type": "user-not-found",
     "title": "User not found",
-    "details": "details",
+    "detail": "detail",
     "status": 404,
 }
 ```
@@ -60,7 +60,7 @@ $ curl localhost:8000/user
 
     "type": "user-not-found",
     "title": "User not found",
-    "details": "No user found.",
+    "detail": "No user found.",
     "status": 404,
 }
 ```

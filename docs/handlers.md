@@ -32,7 +32,7 @@ from third_party.error import CustomBaseError
 def my_custom_handler(eh: ExceptionHandler, request: Request, exc: CustomBaseError) -> Problem:
     return Problem(
         title=exc.reason,
-        details=exc.debug,
+        detail=exc.debug,
         type_=error_class_to_type(exc),
         status=500,
         headers={"x-custom-header": "value"},
@@ -69,7 +69,7 @@ def no_response_handler(eh: ExceptionHandler, request: Request, exc: RuntimeErro
     if str(exc) == "No response returned.":
         return Problem(
             title="No response returned.",
-            details="starlette bug",
+            detail="starlette bug",
             type_="no-response",
             status=409,
         )
@@ -78,7 +78,7 @@ def no_response_handler(eh: ExceptionHandler, request: Request, exc: RuntimeErro
 def base_handler(eh: ExceptionHandler, request: Request, exc: Exception) -> Problem:
     return Problem(
         title=exc.reason,
-        details=exc.debug,
+        detail=exc.debug,
         type_=error_class_to_type(exc),
         status=500,
     )

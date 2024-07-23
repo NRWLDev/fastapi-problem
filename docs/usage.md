@@ -55,7 +55,7 @@ add_exception_handler(
 ```
 
 If you wish to hide debug messaging from external users, `strip_debug=True`
-will log the details and remove it from the response.
+will log the detail and remove it from the response.
 
 For more fine-grained control, `strip_debug_codes=[500, ...]` can be used to
 strip debug messaging from specific status codes. Allowing expected debug

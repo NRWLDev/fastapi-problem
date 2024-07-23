@@ -10,14 +10,14 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-rfc9457 = ">=0.0.10"
-starlette_problem = ">=0.9"
+rfc9457 = ">=0.1.0"
+starlette_problem = ">=0.10"
 
 [tool.poetry.group.dev.dependencies]
 
 fastapi = "*"
 
-changelog-gen = { version="^0.9", extras=["bump-my-version"]}
+changelog-gen = "^0.11"
 pytest = "~7.4.3"
 pytest-asyncio = "^0.21"
 pytest-cov = "^4.1.0"
