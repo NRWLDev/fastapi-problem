@@ -47,9 +47,11 @@ def generate_handler(  # noqa: PLR0913
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
     documentation_base_url: str | None = None,
+    documentation_base_uri: str = "",
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
+    strict_rfc9457: bool = False,
 ) -> t.Callable:
     handlers = handlers or {}
     handlers.update(
@@ -72,8 +74,10 @@ def generate_handler(  # noqa: PLR0913
         pre_hooks=pre_hooks,
         post_hooks=post_hooks,
         documentation_base_url=documentation_base_url,
+        documentation_base_uri=documentation_base_uri,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
+        strict_rfc9457=strict_rfc9457,
     )
 
 
@@ -86,9 +90,11 @@ def add_exception_handler(  # noqa: PLR0913
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
     documentation_base_url: str | None = None,
+    documentation_base_uri: str = "",
     *,
     strip_debug: bool = False,
     strip_debug_codes: list[int] | None = None,
+    strict_rfc9457: bool = False,
 ) -> None:
     eh = generate_handler(
         logger,
@@ -98,8 +104,10 @@ def add_exception_handler(  # noqa: PLR0913
         pre_hooks,
         post_hooks,
         documentation_base_url,
+        documentation_base_uri,
         strip_debug=strip_debug,
         strip_debug_codes=strip_debug_codes,
+        strict_rfc9457=strict_rfc9457,
     )
 
     app.add_exception_handler(Exception, eh)

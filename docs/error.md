@@ -139,23 +139,48 @@ e.headers == {
 
 ## Error Documentation
 
-The RFC-9457 spec defines that the `type` field should link to documentation
-about the error type that has occurred. By default the Problem class provides a
-unique identifier for the type, rather than a full url. If your service/project
-provides documentation on error types, the documentation url can be provided to
-the handler which will result in response `type` fields being converted to a
-full link.
+The RFC-9457 spec defines that the `type` field should provide a URI that can
+link to documentation about the error type that has occurred. By default the
+Problem class provides a unique identifier for the type, rather than a full
+url. If your service/project provides documentation on error types, the
+documentation uri can be provided to the handler which will result in response
+`type` fields being converted to a full link. The uri `.format()` will be
+called with the type, title, status and any additional extras provided when the
+error is raised.
 
 ```python
 add_exception_handler(
     app,
-    documentation_base_url="https://link-to/my/errors/",
+    documentation_base_uri="https://link-to/my/errors/{type}",
 )
 ```
 
 ```json
 {
     "type": "https://link-to/my/errors/an-exception",
+    ...
+}
+```
+
+### Strict mode
+
+The RFC-9457 spec defines the type as requiring a URI format, when no reference
+is provided, it should default to `about:blank`. Initializing the handler in
+`strict_rfc9457` more requires the `documentation_base_uri` to be defined, and
+in cases where the Problem doesn't explicitly define a `type_` attribute, the
+type will default to `about:blank`.
+
+```python
+add_exception_handler(
+    app,
+    documentation_base_uri="https://link-to/my/errors/{type}",
+    strict_rfc9457=True,
+)
+```
+
+```json
+{
+    "type": "about:blank",
     ...
 }
 ```
