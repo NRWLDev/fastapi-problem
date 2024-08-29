@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.9.2 - 2024-08-29
+
+### Miscellaneous
+
+- Rename documentation_base_uri to documentation_uri_template [[cff46af](https://github.com/NRWLDev/fastapi-problem/commit/cff46afacffc5e44bcb0636f93fedb77352645ec)]
+
 ## v0.9.1 - 2024-08-29
 
 ### Bug fixes
