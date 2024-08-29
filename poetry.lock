@@ -1293,13 +1293,13 @@ full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7
 
 [[package]]
 name = "starlette-problem"
-version = "0.10.2"
+version = "0.10.3"
 description = "Starlette support for RFC9457 problems."
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "starlette_problem-0.10.2-py3-none-any.whl", hash = "sha256:1db807b08e25a77c66051c22156541b4040472d8225dac26cf186bc4819462e4"},
-    {file = "starlette_problem-0.10.2.tar.gz", hash = "sha256:b4d71b1cbde2eaef7bcdcd42801c0ac51b3181024254b6242d6a7952dddf54b6"},
+    {file = "starlette_problem-0.10.3-py3-none-any.whl", hash = "sha256:adabe5223d82956755822e92d919dc54d5c10478a6d4a4d0ef2dbb2c26702634"},
+    {file = "starlette_problem-0.10.3.tar.gz", hash = "sha256:13c015b4169402c549baeba9832350bf547c043b9217b6a44dcfc88140d7ab21"},
 ]
 
 [package.dependencies]
@@ -1710,4 +1710,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "3cfb9f07c4e77de36600ca602ecca6d4568dbc20af6d9186d70703675374d0fc"
+content-hash = "84086c14b5eeb31c69ba937248f9b196e2cbd19b9b270c5af1d485365faaa456"

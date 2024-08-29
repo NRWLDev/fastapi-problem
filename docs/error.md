@@ -151,7 +151,7 @@ error is raised.
 ```python
 add_exception_handler(
     app,
-    documentation_base_uri="https://link-to/my/errors/{type}",
+    documentation_uri_template="https://link-to/my/errors/{type}",
 )
 ```
 
@@ -168,7 +168,7 @@ Where a full resolvable documentation uri does not exist, the rfc allows for a
 ```python
 add_exception_handler(
     app,
-    documentation_base_uri="tag:my-domain.com,2024-01-01:{type}",
+    documentation_uri_template="tag:my-domain.com,2024-01-01:{type}",
 )
 ```
 
@@ -183,14 +183,14 @@ add_exception_handler(
 
 The RFC-9457 spec defines the type as requiring a URI format, when no reference
 is provided, it should default to `about:blank`. Initializing the handler in
-`strict_rfc9457` more requires the `documentation_base_uri` to be defined, and
+`strict_rfc9457` more requires the `documentation_uri_template` to be defined, and
 in cases where the Problem doesn't explicitly define a `type_` attribute, the
 type will default to `about:blank`.
 
 ```python
 add_exception_handler(
     app,
-    documentation_base_uri="https://link-to/my/errors/{type}",
+    documentation_uri_template="https://link-to/my/errors/{type}",
     strict_rfc9457=True,
 )
 ```
