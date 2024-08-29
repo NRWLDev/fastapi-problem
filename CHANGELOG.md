@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.9.1 - 2024-08-29
+
+### Bug fixes
+
+- Update rfc9457 library and document strict mode and new uri support. [[1369d62](https://github.com/NRWLDev/fastapi-problem/commit/1369d6225a119a1f9a7020ea3862f0e64f88c156)]
+
 ## v0.9.0 - 2024-07-23
 
 ### Miscellaneous
