@@ -162,6 +162,23 @@ add_exception_handler(
 }
 ```
 
+Where a full resolvable documentation uri does not exist, the rfc allows for a
+[tag uri](https://en.wikipedia.org/wiki/Tag_URI_scheme#Format).
+
+```python
+add_exception_handler(
+    app,
+    documentation_base_uri="tag:my-domain.com,2024-01-01:{type}",
+)
+```
+
+```json
+{
+    "type": "tag:my-domain.com,2024-01-01:an-exception",
+    ...
+}
+```
+
 ### Strict mode
 
 The RFC-9457 spec defines the type as requiring a URI format, when no reference
