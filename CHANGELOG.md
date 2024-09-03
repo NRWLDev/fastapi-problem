@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.9.3 - 2024-09-03
+
+### Miscellaneous
+
+- Update starlette-problem minimum supported version. [[c4db645](https://github.com/NRWLDev/fastapi-problem/commit/c4db64579358316942a134295a35a2e383473a36)]
+- Update changelog-gen and related configuration. [[bc5f88d](https://github.com/NRWLDev/fastapi-problem/commit/bc5f88daf10c98821a9e24178e1ec5a9345ee19b)]
+
 ## v0.9.2 - 2024-08-29
 
 ### Miscellaneous

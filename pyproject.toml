@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastapi-problem"
-version = "0.9.2"
+version = "0.9.3"
 description = "FastAPI support for RFC9457 problems."
 authors = ["Daniel Edgecombe <edgy.edgemond@gmail.com>"]
 license = "Apache-2.0"
@@ -29,7 +29,7 @@ ruff = "^0.3.0"
 pre-commit = "^3.0.2"
 
 [tool.changelog_gen]
-current_version = "0.9.2"
+current_version = "0.9.3"
 reject_empty = true
 statistics = true
 allowed_branches = [
