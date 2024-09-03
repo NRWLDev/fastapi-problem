@@ -1112,13 +1112,13 @@ files = [
 
 [[package]]
 name = "rfc9457"
-version = "0.1.1"
+version = "0.2.0"
 description = "Implementation of RFC9457 problems."
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "rfc9457-0.1.1-py3-none-any.whl", hash = "sha256:6556c4366f68f55dd7727c5c2f6ae3b05c84230a5ccc26f608b3c690bd658945"},
-    {file = "rfc9457-0.1.1.tar.gz", hash = "sha256:5b9d036128694f586f3b57992189af602f79d822944265f6f8e6596e6d529aa7"},
+    {file = "rfc9457-0.2.0-py3-none-any.whl", hash = "sha256:fb8c7d808e2732d8df85ae291477784a1ceaa724f5ff10323dd3129f1dead746"},
+    {file = "rfc9457-0.2.0.tar.gz", hash = "sha256:d1f8bb6378aea5c10af04765bf77b7090d5a54acc746f2c562fbc010fb1354a9"},
 ]
 
 [package.dependencies]
@@ -1293,13 +1293,13 @@ full = ["httpx (>=0.22.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.7
 
 [[package]]
 name = "starlette-problem"
-version = "0.10.3"
+version = "0.10.4"
 description = "Starlette support for RFC9457 problems."
 optional = false
 python-versions = "<4.0,>=3.9"
 files = [
-    {file = "starlette_problem-0.10.3-py3-none-any.whl", hash = "sha256:adabe5223d82956755822e92d919dc54d5c10478a6d4a4d0ef2dbb2c26702634"},
-    {file = "starlette_problem-0.10.3.tar.gz", hash = "sha256:13c015b4169402c549baeba9832350bf547c043b9217b6a44dcfc88140d7ab21"},
+    {file = "starlette_problem-0.10.4-py3-none-any.whl", hash = "sha256:c0dbced0f76faddcccffb9ab34eb3c8d76602692ba4b101f5badca71008aaff9"},
+    {file = "starlette_problem-0.10.4.tar.gz", hash = "sha256:1cc289190079f3cde3edd9102dbe0f38d8ab13e70a746d2725a1f6e0a6d1433f"},
 ]
 
 [package.dependencies]
@@ -1710,4 +1710,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9"
-content-hash = "9a5d67a18a6c37f157d88e22a44fbf658fccb17d48ef4cd3daa88dd9653e2a8b"
+content-hash = "bbfcb57ae37b85e0cb6af34bf660a67e1335ca323a0be86bdcecb53c396c4d99"
