@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.9.4 - 2024-09-09
+
+### Miscellaneous
+
+- Migrate from poetry to uv for dependency and build management [[477e369](https://github.com/NRWLDev/fastapi-problem/commit/477e3698ce48bbd79575877ac5339ffde5d01087)]
+
 ## v0.9.3 - 2024-09-03
 
 ### Miscellaneous
