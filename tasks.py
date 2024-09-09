@@ -45,14 +45,14 @@ def enforce_branch(branch_name):
 @invoke.task
 def install(context):
     """Install production requirements."""
-    context.run("poetry install --only main")
+    context.run("uv sync")
 
 
 @invoke.task
 def install_dev(context):
     """Install development requirements."""
-    context.run("poetry install")
-    context.run("poetry run pre-commit install")
+    context.run("uv sync --all-extras")
+    context.run("uv run pre-commit install")
 
 
 @invoke.task
