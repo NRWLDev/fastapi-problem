@@ -10,12 +10,11 @@ repos:
       - id: fix-byte-order-marker
       - id: end-of-file-fixer
 
-  - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.6
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.24.5
     hooks:
-      - id: codespell
-        additional_dependencies:
-          - tomli
+      - id: typos
+        args: [--force-exclude]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.6.4
