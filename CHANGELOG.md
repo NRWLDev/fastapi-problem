@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.9.6 - 2024-10-01
+
+### Bug fixes
+
+- Stop deprecation warnings when flag is not explicitly set. [[aaa8781](https://github.com/NRWLDev/fastapi-problem/commit/aaa8781441ba685633385c6cc2813bc1fc7da423)]
+
 ## v0.9.5 - 2024-10-01
 
 ### Bug fixes
