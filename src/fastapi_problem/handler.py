@@ -57,7 +57,7 @@ def generate_handler(  # noqa: PLR0913
     documentation_base_url: str | None = None,
     documentation_uri_template: str = "",
     *,
-    strip_debug: bool = False,
+    strip_debug: bool | None = None,
     strip_debug_codes: list[int] | None = None,
     strict_rfc9457: bool = False,
 ) -> t.Callable:
@@ -100,7 +100,7 @@ def add_exception_handler(  # noqa: PLR0913
     documentation_base_url: str | None = None,
     documentation_uri_template: str = "",
     *,
-    strip_debug: bool = False,
+    strip_debug: bool | None = None,
     strip_debug_codes: list[int] | None = None,
     strict_rfc9457: bool = False,
 ) -> None:
