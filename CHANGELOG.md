@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.9.5 - 2024-10-01
+
+### Bug fixes
+
+- Update starlette-problem pin to include deprecation for strip_debug fields. [[26](https://github.com/NRWLDev/fastapi-problem/issues/26)] [[e1c5ae1](https://github.com/NRWLDev/fastapi-problem/commit/e1c5ae1aeeb284246f6cced9610460feaa870be5)]
+
 ## v0.9.4 - 2024-09-09
 
 ### Miscellaneous
