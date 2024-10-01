@@ -467,7 +467,7 @@ async def test_exception_handler_in_app():
         },
     )
     transport = httpx.ASGITransport(app=app, raise_app_exceptions=False, client=("1.2.3.4", 123))
-    client = httpx.AsyncClient(transport=transport, app=app, base_url="https://test")
+    client = httpx.AsyncClient(transport=transport, base_url="https://test")
 
     r = await client.get("/endpoint")
     assert r.json() == {
@@ -491,7 +491,7 @@ async def test_exception_handler_in_app_post_register():
     )
 
     transport = httpx.ASGITransport(app=app, raise_app_exceptions=False, client=("1.2.3.4", 123))
-    client = httpx.AsyncClient(transport=transport, app=app, base_url="https://test")
+    client = httpx.AsyncClient(transport=transport, base_url="https://test")
 
     r = await client.get("/endpoint")
     assert r.json() == {

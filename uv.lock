@@ -193,7 +193,7 @@ wheels = [
 
 [[package]]
 name = "fastapi-problem"
-version = "0.9.3"
+version = "0.9.4"
 source = { editable = "." }
 dependencies = [
     { name = "rfc9457" },
@@ -225,7 +225,7 @@ requires-dist = [
     { name = "pytest-random-order", marker = "extra == 'dev'", specifier = ">=1.0" },
     { name = "rfc9457", specifier = ">=0.1.1" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6.4" },
-    { name = "starlette-problem", specifier = ">=0.10.4" },
+    { name = "starlette-problem", specifier = ">=0.10.7" },
 ]
 
 [[package]]
@@ -865,14 +865,14 @@ wheels = [
 
 [[package]]
 name = "starlette-problem"
-version = "0.10.6"
+version = "0.10.7"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "rfc9457" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/62/c8/1d213bf1c8321fd086ef5cd569b9f0e2f202b7b247b6237f521a2e86bdf2/starlette_problem-0.10.6.tar.gz", hash = "sha256:f31dea6bba516afc4a55a8de1db214dffe37b15999528700c7f2e775fb861eec", size = 47016 }
+sdist = { url = "https://files.pythonhosted.org/packages/d6/f0/da4bbd232c6ffbb78f6b631bfe533be8e0c1a2432b43172c9a5b90c71e38/starlette_problem-0.10.7.tar.gz", hash = "sha256:a2559aa37da1c79c4bce055684ce0931070d01f25af91bdb000a4602c5634e07", size = 59756 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ff/d2/ec8b553fe29799a071a0c03ecfaabb807f871c1d1f35921821a41874cdce/starlette_problem-0.10.6-py3-none-any.whl", hash = "sha256:1763370f015e0e745cb8dc276b1a0361ca45b9fc564eb6b535f043898fe8ac69", size = 10239 },
+    { url = "https://files.pythonhosted.org/packages/d8/35/8625718ade243084527b3d86b08ec310eec2a091cace2eb460815ec8129e/starlette_problem-0.10.7-py3-none-any.whl", hash = "sha256:a26a6f9052ba9f078400c6d121c401304de5c5f849ade8725be4a8552eb9bd83", size = 10705 },
 ]
 
 [[package]]

@@ -32,7 +32,7 @@ classifiers = [
 
 dependencies = [
     "rfc9457 >= 0.1.1",
-    "starlette_problem >=0.10.4",
+    "starlette_problem >=0.10.7",
 ]
 
 [project.optional-dependencies]
