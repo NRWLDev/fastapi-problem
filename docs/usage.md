@@ -54,19 +54,27 @@ add_exception_handler(
 )
 ```
 
-If you wish to hide debug messaging from external users, `strip_debug=True`
-will log the detail and remove it from the response.
+If you wish to hide debug messaging from external users, `StripExtrasPostHook`
+allows modifying the response content. `mandatory_fields` supports defining
+fields that should always be returned, default fields are `["type", "title",
+"status", "detail"]`.
 
-For more fine-grained control, `strip_debug_codes=[500, ...]` can be used to
-strip debug messaging from specific status codes. Allowing expected debug
-messages to reach the user, while suppressing unexpected server errors etc.
+For more fine-grained control, `exclude_status_codes=[500, ...]` can be used to
+allow extras for specific status codes. Allowing expected fields to reach the
+user, while suppressing unexpected server errors etc.
 
 ```python
-from fastapi_problem.handler import add_exception_handler
+from fastapi_problem.handler import StripExtrasPostHook, add_exception_handler
 
 add_exception_handler(
     app,
-    strip_debug_dodes=[500],
+    post_hooks=[
+        StripExtrasPostHook(
+            mandatory_fields=["type", "title", "status", "detail", "custom-extra"],
+            exclude_status_codes=[400],
+            enabled=True,
+        )
+    ],
 )
 ```
 
