@@ -47,18 +47,18 @@ def request_validation_handler(
     )
 
 
-def generate_handler(  # noqa: PLR0913
+def add_exception_handler(  # noqa: PLR0913
+    app: FastAPI,
     logger: logging.Logger | None = None,
     cors: CorsConfiguration | None = None,
     unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
     handlers: dict[type[Exception], Handler] | None = None,
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
-    documentation_base_url: str | None = None,
     documentation_uri_template: str = "",
     *,
     strict_rfc9457: bool = False,
-) -> t.Callable:
+) -> ExceptionHandler:
     handlers = handlers or {}
     handlers.update(
         {
@@ -73,40 +73,13 @@ def generate_handler(  # noqa: PLR0913
         # Ensure it runs first before any custom modifications
         post_hooks.insert(0, CorsPostHook(cors))
 
-    return ExceptionHandler(
+    eh = ExceptionHandler(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
         handlers=handlers,
         pre_hooks=pre_hooks,
         post_hooks=post_hooks,
-        documentation_base_url=documentation_base_url,
         documentation_uri_template=documentation_uri_template,
-        strict_rfc9457=strict_rfc9457,
-    )
-
-
-def add_exception_handler(  # noqa: PLR0913
-    app: FastAPI,
-    logger: logging.Logger | None = None,
-    cors: CorsConfiguration | None = None,
-    unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
-    handlers: dict[type[Exception], Handler] | None = None,
-    pre_hooks: list[PreHook] | None = None,
-    post_hooks: list[PostHook] | None = None,
-    documentation_base_url: str | None = None,
-    documentation_uri_template: str = "",
-    *,
-    strict_rfc9457: bool = False,
-) -> None:
-    eh = generate_handler(
-        logger,
-        cors,
-        unhandled_wrappers,
-        handlers,
-        pre_hooks,
-        post_hooks,
-        documentation_base_url,
-        documentation_uri_template,
         strict_rfc9457=strict_rfc9457,
     )
 
@@ -114,6 +87,8 @@ def add_exception_handler(  # noqa: PLR0913
     app.add_exception_handler(rfc9457.Problem, eh)
     app.add_exception_handler(HTTPException, eh)
     app.add_exception_handler(RequestValidationError, eh)
+
+    return eh
 
 
 __all__ = [
@@ -124,6 +99,5 @@ __all__ = [
     "PreHook",
     "StripExtrasPostHook",
     "add_exception_handler",
-    "generate_handler",
     "http_exception_handler",
 ]

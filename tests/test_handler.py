@@ -63,26 +63,6 @@ class TestExceptionHandler:
             exc_info=(type(exc), exc, None),
         )
 
-    def test_documentation_base_url(self):
-        request = mock.Mock()
-        exc = Exception("Something went bad")
-
-        eh = handler.ExceptionHandler(
-            unhandled_wrappers={
-                "default": CustomUnhandledException,
-            },
-            documentation_base_url="https://docs/errors/",
-        )
-        response = eh(request, exc)
-
-        assert response.status_code == http.HTTPStatus.INTERNAL_SERVER_ERROR
-        assert json.loads(response.body) == {
-            "title": "Unhandled exception occurred.",
-            "type": "https://docs/errors/custom-unhandled-exception",
-            "status": 500,
-            "detail": "Something went bad",
-        }
-
     def test_documentation_uri_template(self):
         request = mock.Mock()
         exc = Exception("Something went bad")
@@ -278,41 +258,57 @@ class TestExceptionHandler:
         }
 
     def test_error_with_no_origin(self, cors):
+        app = FastAPI()
         request = mock.Mock(headers={})
         exc = SomethingWrongError("something bad")
 
-        eh = handler.generate_handler(cors=cors)
+        eh = handler.add_exception_handler(
+            app=app,
+            cors=cors,
+        )
         response = eh(request, exc)
 
         assert "access-control-allow-origin" not in response.headers
 
     def test_error_with_origin(self, cors):
+        app = FastAPI()
         request = mock.Mock(headers={"origin": "localhost"})
         exc = SomethingWrongError("something bad")
 
-        eh = handler.generate_handler(cors=cors)
+        eh = handler.add_exception_handler(
+            app=app,
+            cors=cors,
+        )
         response = eh(request, exc)
 
         assert "access-control-allow-origin" in response.headers
         assert response.headers["access-control-allow-origin"] == "*"
 
     def test_error_with_origin_and_cookie(self, cors):
+        app = FastAPI()
         request = mock.Mock(headers={"origin": "localhost", "cookie": "something"})
         exc = SomethingWrongError("something bad")
 
-        eh = handler.generate_handler(cors=cors)
+        eh = handler.add_exception_handler(
+            app=app,
+            cors=cors,
+        )
         response = eh(request, exc)
 
         assert "access-control-allow-origin" in response.headers
         assert response.headers["access-control-allow-origin"] == "localhost"
 
     def test_missing_token_with_origin_limited_origins(self, cors):
+        app = FastAPI()
         request = mock.Mock(headers={"origin": "localhost", "cookie": "something"})
         exc = SomethingWrongError("something bad")
 
         cors.allow_origins = ["localhost"]
 
-        eh = handler.generate_handler(cors=cors)
+        eh = handler.add_exception_handler(
+            app=app,
+            cors=cors,
+        )
         response = eh(request, exc)
 
         assert "access-control-allow-origin" in response.headers
@@ -320,21 +316,28 @@ class TestExceptionHandler:
         assert response.headers["access-control-allow-origin"] == "localhost"
 
     def test_missing_token_with_origin_limited_origins_no_match(self, cors):
+        app = FastAPI()
         request = mock.Mock(headers={"origin": "localhost2", "cookie": "something"})
         exc = SomethingWrongError("something bad")
 
         cors.allow_origins = ["localhost"]
 
-        eh = handler.generate_handler(cors=cors)
+        eh = handler.add_exception_handler(
+            app=app,
+            cors=cors,
+        )
         response = eh(request, exc)
 
         assert "access-control-allow-origin" not in response.headers
 
     def test_fastapi_error(self):
+        app = FastAPI()
         request = mock.Mock()
         exc = RequestValidationError([])
 
-        eh = handler.generate_handler()
+        eh = handler.add_exception_handler(
+            app=app,
+        )
         response = eh(request, exc)
 
         assert response.status_code == http.HTTPStatus.UNPROCESSABLE_ENTITY
@@ -346,10 +349,12 @@ class TestExceptionHandler:
         }
 
     def test_fastapi_error_custom_wrapper(self):
+        app = FastAPI()
         request = mock.Mock()
         exc = RequestValidationError([])
 
-        eh = handler.generate_handler(
+        eh = handler.add_exception_handler(
+            app=app,
             unhandled_wrappers={
                 "422": CustomValidationError,
             },
@@ -365,6 +370,7 @@ class TestExceptionHandler:
         }
 
     def test_pre_hook(self):
+        app = FastAPI()
         logger = mock.Mock()
 
         request = mock.Mock()
@@ -373,7 +379,11 @@ class TestExceptionHandler:
         def hook(_request, exc) -> None:
             logger.debug(str(type(exc)))
 
-        eh = handler.ExceptionHandler(logger=logger, pre_hooks=[hook])
+        eh = handler.add_exception_handler(
+            app=app,
+            logger=logger,
+            pre_hooks=[hook],
+        )
         eh(request, exc)
 
         assert logger.debug.call_args == mock.call("<class 'ValueError'>")
@@ -385,7 +395,9 @@ async def test_exception_handler_in_app():
     def pre_hook(_req, _exc):
         m.call("pre-hook")
 
-    exception_handler = handler.generate_handler(
+    app = FastAPI()
+    handler.add_exception_handler(
+        app=app,
         pre_hooks=[pre_hook],
         unhandled_wrappers={
             "422": CustomValidationError,
@@ -393,13 +405,6 @@ async def test_exception_handler_in_app():
         },
     )
 
-    app = FastAPI(
-        exception_handlers={
-            Exception: exception_handler,
-            RequestValidationError: exception_handler,
-            HTTPException: exception_handler,
-        },
-    )
     transport = httpx.ASGITransport(app=app, raise_app_exceptions=False, client=("1.2.3.4", 123))
     client = httpx.AsyncClient(transport=transport, base_url="https://test")
 
