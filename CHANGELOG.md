@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.0 - 2024-11-14
+
+### Bug fixes
+
+- **Breaking** Remove deprecated strip_debug flags. [[908a80b](https://github.com/NRWLDev/fastapi-problem/commit/908a80b5fae7123f4a8cc5d353b0dbb8c9e4c368)]
+
 ## v0.9.6 - 2024-10-01
 
 ### Bug fixes
