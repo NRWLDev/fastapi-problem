@@ -57,8 +57,6 @@ def generate_handler(  # noqa: PLR0913
     documentation_base_url: str | None = None,
     documentation_uri_template: str = "",
     *,
-    strip_debug: bool | None = None,
-    strip_debug_codes: list[int] | None = None,
     strict_rfc9457: bool = False,
 ) -> t.Callable:
     handlers = handlers or {}
@@ -83,8 +81,6 @@ def generate_handler(  # noqa: PLR0913
         post_hooks=post_hooks,
         documentation_base_url=documentation_base_url,
         documentation_uri_template=documentation_uri_template,
-        strip_debug=strip_debug,
-        strip_debug_codes=strip_debug_codes,
         strict_rfc9457=strict_rfc9457,
     )
 
@@ -100,8 +96,6 @@ def add_exception_handler(  # noqa: PLR0913
     documentation_base_url: str | None = None,
     documentation_uri_template: str = "",
     *,
-    strip_debug: bool | None = None,
-    strip_debug_codes: list[int] | None = None,
     strict_rfc9457: bool = False,
 ) -> None:
     eh = generate_handler(
@@ -113,8 +107,6 @@ def add_exception_handler(  # noqa: PLR0913
         post_hooks,
         documentation_base_url,
         documentation_uri_template,
-        strip_debug=strip_debug,
-        strip_debug_codes=strip_debug_codes,
         strict_rfc9457=strict_rfc9457,
     )
 
