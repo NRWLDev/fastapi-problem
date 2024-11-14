@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.1 - 2024-11-14
+
+### Bug fixes
+
+- Drop support for generate_handler to simplify interface, [[d91a703](https://github.com/NRWLDev/fastapi-problem/commit/d91a703055dbb7b221b72958e4867aae5ba3be7c)]
+
 ## v0.10.0 - 2024-11-14
 
 ### Bug fixes
