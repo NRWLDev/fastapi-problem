@@ -21,7 +21,7 @@ jobs:
 
     - name: Publish
       env:
-        TWINE_USERNAME: EdgyEdgemond
+        TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_PUBLISH_TOKEN }}
       run: |
         uv build
