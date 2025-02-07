@@ -27,7 +27,7 @@ if t.TYPE_CHECKING:
     from fastapi_problem.cors import CorsConfiguration
 
 
-def customise_openapi(func: t.Callable[..., dict]) -> t.Callable[..., dict]:
+def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = True) -> t.Callable[..., dict]:
     """Customize OpenAPI schema."""
 
     def wrapper() -> dict:
@@ -103,8 +103,9 @@ def customise_openapi(func: t.Callable[..., dict]) -> t.Callable[..., dict]:
             "title": "Problem",
         }
 
-        res["components"]["schemas"]["HTTPValidationError"] = validation_error
-        res["components"]["schemas"]["Problem"] = problem
+        if generic_defaults:
+            res["components"]["schemas"]["HTTPValidationError"] = validation_error
+            res["components"]["schemas"]["Problem"] = problem
 
         return res
 
@@ -141,6 +142,7 @@ def add_exception_handler(  # noqa: PLR0913
     post_hooks: list[PostHook] | None = None,
     documentation_uri_template: str = "",
     *,
+    generic_swagger_defaults: bool = True,
     strict_rfc9457: bool = False,
 ) -> ExceptionHandler:
     handlers = handlers or {}
@@ -173,7 +175,7 @@ def add_exception_handler(  # noqa: PLR0913
     app.add_exception_handler(RequestValidationError, eh)
 
     # Override default 422 with Problem schema
-    app.openapi = customise_openapi(app.openapi)
+    app.openapi = customise_openapi(app.openapi, generic_defaults=generic_swagger_defaults)
 
     return eh
 
