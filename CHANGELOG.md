@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.2 - 2025-02-07
+
+### Features and Improvements
+
+- Replace default 422 response in swagger with an accurate Problem component. [[28](https://github.com/NRWLDev/fastapi-problem/issues/28)] [[e92514f](https://github.com/NRWLDev/fastapi-problem/commit/e92514f8b253db4b2df3a2d21135c7a75d33155c)]
+
 ## v0.10.1 - 2024-11-14
 
 ### Bug fixes
