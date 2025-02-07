@@ -512,6 +512,12 @@ async def test_customise_openapi():
                     "schema": {
                         "$ref": "#/components/schemas/Problem",
                     },
+                    "example": {
+                        "title": "User facing error message.",
+                        "details": "Additional error context.",
+                        "type": "client-error-type",
+                        "status": 400,
+                    },
                 },
             },
             "description": "Client Error",
@@ -521,6 +527,12 @@ async def test_customise_openapi():
                 "application/json": {
                     "schema": {
                         "$ref": "#/components/schemas/Problem",
+                    },
+                    "example": {
+                        "title": "User facing error message.",
+                        "details": "Additional error context.",
+                        "type": "server-error-type",
+                        "status": 500,
                     },
                 },
             },

@@ -93,6 +93,12 @@ def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = T
                     "title": "Problem detail",
                 },
             },
+            "example": {
+                "title": "Request validation error.",
+                "errors": [],
+                "type": "request-validation-failed",
+                "status": 422,
+            },
             "type": "object",
             "required": [
                 "type",
@@ -116,6 +122,12 @@ def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = T
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem",
                                 },
+                                "example": {
+                                    "title": "User facing error message.",
+                                    "details": "Additional error context.",
+                                    "type": "client-error-type",
+                                    "status": 400,
+                                },
                             },
                         },
                     }
@@ -125,6 +137,12 @@ def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = T
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Problem",
+                                },
+                                "example": {
+                                    "title": "User facing error message.",
+                                    "details": "Additional error context.",
+                                    "type": "server-error-type",
+                                    "status": 500,
                                 },
                             },
                         },
