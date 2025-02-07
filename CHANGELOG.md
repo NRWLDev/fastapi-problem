@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.3 - 2025-02-07
+
+### Features and Improvements
+
+- Register generic 4xx and 5xx responses for paths in swagger docs. [[de698cc](https://github.com/NRWLDev/fastapi-problem/commit/de698ccc61ef10e3245c5201640ecf7d418fe01f)]
+
 ## v0.10.2 - 2025-02-07
 
 ### Features and Improvements
