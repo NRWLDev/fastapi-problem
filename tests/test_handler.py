@@ -439,3 +439,57 @@ async def test_exception_handler_in_app_post_register():
         "detail": "Not Found",
         "status": 404,
     }
+
+
+async def test_customise_openapi():
+    app = FastAPI()
+
+    app.openapi = handler.customise_openapi(app.openapi)
+
+    @app.get("/status")
+    async def status(_a: str) -> dict:
+        return {}
+
+    res = app.openapi()
+    assert res["components"]["schemas"]["HTTPValidationError"] == {
+        "properties": {
+            "title": {
+                "type": "string",
+                "title": "Problem Title",
+            },
+            "type": {
+                "type": "string",
+                "title": "Problem type",
+            },
+            "status": {
+                "type": "integer",
+                "title": "Status code",
+            },
+            "errors": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ValidationError",
+                },
+            },
+        },
+        "type": "object",
+        "required": [
+            "type",
+            "title",
+            "errors",
+            "status",
+        ],
+        "title": "ValidationError",
+    }
+    assert "Problem" in res["components"]["schemas"]
+    assert "ValidationError" in res["components"]["schemas"]
+
+
+async def test_customise_openapi_handles_no_components():
+    app = FastAPI()
+
+    app.openapi = handler.customise_openapi(app.openapi)
+
+    res = app.openapi()
+    assert res["paths"] == {}
+    assert "components" not in res

@@ -27,6 +27,90 @@ if t.TYPE_CHECKING:
     from fastapi_problem.cors import CorsConfiguration
 
 
+def customise_openapi(func: t.Callable[..., dict]) -> t.Callable[..., dict]:
+    """Customize OpenAPI schema."""
+
+    def wrapper() -> dict:
+        """Wrapper."""
+        res = func()
+
+        if "components" not in res:
+            return res
+
+        validation_error = {
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "title": "Problem Title",
+                },
+                "type": {
+                    "type": "string",
+                    "title": "Problem type",
+                },
+                "status": {
+                    "type": "integer",
+                    "title": "Status code",
+                },
+                "errors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/components/schemas/ValidationError",
+                    },
+                },
+            },
+            "type": "object",
+            "required": [
+                "type",
+                "title",
+                "errors",
+                "status",
+            ],
+            "title": "ValidationError",
+        }
+        problem = {
+            "properties": {
+                "title": {
+                    "type": "string",
+                    "title": "Problem Title",
+                },
+                "type": {
+                    "type": "string",
+                    "title": "Problem type",
+                },
+                "status": {
+                    "type": "integer",
+                    "title": "Status code",
+                },
+                "detail": {
+                    "anyOf": [
+                        {
+                            "type": "string",
+                        },
+                        {
+                            "type": "null",
+                        },
+                    ],
+                    "title": "Problem detail",
+                },
+            },
+            "type": "object",
+            "required": [
+                "type",
+                "title",
+                "detail",
+                "status",
+            ],
+            "title": "Problem",
+        }
+
+        res["components"]["schemas"]["HTTPValidationError"] = validation_error
+        res["components"]["schemas"]["Problem"] = problem
+
+        return res
+
+    return wrapper
+
+
 def request_validation_handler(
     eh: ExceptionHandler,
     _request: Request,
@@ -87,6 +171,9 @@ def add_exception_handler(  # noqa: PLR0913
     app.add_exception_handler(rfc9457.Problem, eh)
     app.add_exception_handler(HTTPException, eh)
     app.add_exception_handler(RequestValidationError, eh)
+
+    # Override default 422 with Problem schema
+    app.openapi = customise_openapi(app.openapi)
 
     return eh
 
