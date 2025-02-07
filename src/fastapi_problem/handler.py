@@ -103,9 +103,32 @@ def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = T
             "title": "Problem",
         }
 
+        res["components"]["schemas"]["HTTPValidationError"] = validation_error
+        res["components"]["schemas"]["Problem"] = problem
+
         if generic_defaults:
-            res["components"]["schemas"]["HTTPValidationError"] = validation_error
-            res["components"]["schemas"]["Problem"] = problem
+            for methods in res["paths"].values():
+                for details in methods.values():
+                    details["responses"]["4XX"] = {
+                        "description": "Client Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem",
+                                },
+                            },
+                        },
+                    }
+                    details["responses"]["5XX"] = {
+                        "description": "Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem",
+                                },
+                            },
+                        },
+                    }
 
         return res
 

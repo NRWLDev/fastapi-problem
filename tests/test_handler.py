@@ -484,6 +484,50 @@ async def test_customise_openapi():
     assert "Problem" in res["components"]["schemas"]
     assert "ValidationError" in res["components"]["schemas"]
 
+    assert res["paths"]["/status"]["get"]["responses"] == {
+        "200": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "title": "Response Status Status Get",
+                        "type": "object",
+                    },
+                },
+            },
+            "description": "Successful Response",
+        },
+        "422": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "$ref": "#/components/schemas/HTTPValidationError",
+                    },
+                },
+            },
+            "description": "Validation Error",
+        },
+        "4XX": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "$ref": "#/components/schemas/Problem",
+                    },
+                },
+            },
+            "description": "Client Error",
+        },
+        "5XX": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "$ref": "#/components/schemas/Problem",
+                    },
+                },
+            },
+            "description": "Server Error",
+        },
+    }
+
 
 async def test_customise_openapi_handles_no_components():
     app = FastAPI()
@@ -493,3 +537,71 @@ async def test_customise_openapi_handles_no_components():
     res = app.openapi()
     assert res["paths"] == {}
     assert "components" not in res
+
+
+async def test_customise_openapi_generic_opt_out():
+    app = FastAPI()
+
+    app.openapi = handler.customise_openapi(app.openapi, generic_defaults=False)
+
+    @app.get("/status")
+    async def status(_a: str) -> dict:
+        return {}
+
+    res = app.openapi()
+    assert res["components"]["schemas"]["HTTPValidationError"] == {
+        "properties": {
+            "title": {
+                "type": "string",
+                "title": "Problem Title",
+            },
+            "type": {
+                "type": "string",
+                "title": "Problem type",
+            },
+            "status": {
+                "type": "integer",
+                "title": "Status code",
+            },
+            "errors": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ValidationError",
+                },
+            },
+        },
+        "type": "object",
+        "required": [
+            "type",
+            "title",
+            "errors",
+            "status",
+        ],
+        "title": "ValidationError",
+    }
+    assert "Problem" in res["components"]["schemas"]
+    assert "ValidationError" in res["components"]["schemas"]
+
+    assert res["paths"]["/status"]["get"]["responses"] == {
+        "200": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "title": "Response Status Status Get",
+                        "type": "object",
+                    },
+                },
+            },
+            "description": "Successful Response",
+        },
+        "422": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "$ref": "#/components/schemas/HTTPValidationError",
+                    },
+                },
+            },
+            "description": "Validation Error",
+        },
+    }
