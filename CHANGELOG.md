@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.5 - 2025-02-07
+
+### Bug fixes
+
+- Include examples for 4xx and 5xx responses. [[234b84b](https://github.com/NRWLDev/fastapi-problem/commit/234b84b6331892f1ecefaad24357fa9b92cd9825)]
+
 ## v0.10.4 - 2025-02-07
 
 ### Features and Improvements
