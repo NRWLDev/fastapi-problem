@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import typing as t
+from http.client import responses
 
 import rfc9457
 from fastapi.exceptions import RequestValidationError
@@ -25,6 +26,34 @@ if t.TYPE_CHECKING:
     from starlette.requests import Request
 
     from fastapi_problem.cors import CorsConfiguration
+
+
+def _swagger_problem_response(description: str, title: str, status: str, type_: str) -> dict:
+    return {
+        "description": description,
+        "content": {
+            "application/json": {
+                "schema": {
+                    "$ref": "#/components/schemas/Problem",
+                },
+                "example": {
+                    "title": title,
+                    "details": "Additional error context.",
+                    "type": type_,
+                    "status": status,
+                },
+            },
+        },
+    }
+
+
+def generate_swagger_response(exc: Problem) -> dict:
+    return _swagger_problem_response(
+        responses[exc.status],
+        title=exc.title,
+        type_=exc.type_ or rfc9457.error_class_to_type(exc("detail")),
+        status=exc.status,
+    )
 
 
 def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = True) -> t.Callable[..., dict]:
@@ -115,38 +144,18 @@ def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = T
         if generic_defaults:
             for methods in res["paths"].values():
                 for details in methods.values():
-                    details["responses"]["4XX"] = {
-                        "description": "Client Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Problem",
-                                },
-                                "example": {
-                                    "title": "User facing error message.",
-                                    "details": "Additional error context.",
-                                    "type": "client-error-type",
-                                    "status": 400,
-                                },
-                            },
-                        },
-                    }
-                    details["responses"]["5XX"] = {
-                        "description": "Server Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Problem",
-                                },
-                                "example": {
-                                    "title": "User facing error message.",
-                                    "details": "Additional error context.",
-                                    "type": "server-error-type",
-                                    "status": 500,
-                                },
-                            },
-                        },
-                    }
+                    details["responses"]["4XX"] = _swagger_problem_response(
+                        description="Client Error",
+                        title="User facing error message.",
+                        type_="client-error-type",
+                        status=400,
+                    )
+                    details["responses"]["5XX"] = _swagger_problem_response(
+                        description="Server Error",
+                        title="User facing error message.",
+                        type_="server-error-type",
+                        status=500,
+                    )
 
         return res
 
