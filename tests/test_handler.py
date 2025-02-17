@@ -441,6 +441,68 @@ async def test_exception_handler_in_app_post_register():
     }
 
 
+def test_swagger_problem_response():
+    assert handler._swagger_problem_response(
+        description="Client Error",
+        title="User facing error message.",
+        type_="client-error-type",
+        status=400,
+    ) == {
+        "content": {
+            "application/json": {
+                "schema": {
+                    "$ref": "#/components/schemas/Problem",
+                },
+                "example": {
+                    "title": "User facing error message.",
+                    "details": "Additional error context.",
+                    "type": "client-error-type",
+                    "status": 400,
+                },
+            },
+        },
+        "description": "Client Error",
+    }
+
+
+def test_generate_swagger_response_status_problem():
+    assert handler.generate_swagger_response(error.BadRequestProblem) == {
+        "content": {
+            "application/json": {
+                "schema": {
+                    "$ref": "#/components/schemas/Problem",
+                },
+                "example": {
+                    "title": "Base http exception.",
+                    "details": "Additional error context.",
+                    "type": "bad-request-problem",
+                    "status": 400,
+                },
+            },
+        },
+        "description": "Bad Request",
+    }
+
+
+def test_generate_swagger_response_custom_problem():
+    assert handler.generate_swagger_response(CustomUnhandledException) == {
+        "content": {
+            "application/json": {
+                "schema": {
+                    "$ref": "#/components/schemas/Problem",
+                },
+                "example": {
+                    "title": "Unhandled exception occurred.",
+                    "details": "Additional error context.",
+                    "type": "custom-unhandled-exception",
+                    "status": 500,
+                },
+            },
+        },
+        "description": "Internal Server Error",
+    }
+
+
 async def test_customise_openapi():
     app = FastAPI()
 

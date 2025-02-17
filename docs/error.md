@@ -201,19 +201,3 @@ add_exception_handler(
     ...
 }
 ```
-
-### Swagger defaults
-
-When the exception handlers are registered, the default `422` response type is
-updated to match the Problem format instead of the FastAPI default response.
-
-A generic `4XX` and `5XX` response is added to each path as well, these can be
-opted out of by passing `generic_swagger_defaults=False` when registering the
-exception handlers.
-
-```python
-add_exception_handler(
-    app,
-    generic_swagger_defaults=False,
-)
-```
