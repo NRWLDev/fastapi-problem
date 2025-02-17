@@ -78,6 +78,41 @@ add_exception_handler(
 )
 ```
 
+## Swagger
+
+When the exception handlers are registered, the default `422` response type is
+updated to match the Problem format instead of the FastAPI default response.
+
+A generic `4XX` and `5XX` response is added to each path as well, these can be
+opted out of by passing `generic_swagger_defaults=False` when registering the
+exception handlers.
+
+```python
+add_exception_handler(
+    app,
+    generic_swagger_defaults=False,
+)
+```
+
+To specify specific error responses per endpoint, when registering the route
+the swagger responses for each possible error can be generated using the
+`generate_swagger_response` helper method.
+
+```
+from fastapi_problem.error import StatusProblem
+from fastapi_problem.handler import generate_swagger_response
+
+class NotFoundError(StatusProblem):
+    status = 404
+    title = "Endpoint not found."
+
+
+@app.post(
+    "/path",
+    responses={400: generate_swagger_response(NotFoundError)}},
+)
+...
+```
 ## Sentry
 
 `fastapi_problem` is designed to play nicely with [Sentry](https://sentry.io),
