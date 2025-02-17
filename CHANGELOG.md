@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.6 - 2025-02-17
+
+### Features and Improvements
+
+- Add support for generating specific error responses for swagger. [[31](https://github.com/NRWLDev/fastapi-problem/issues/31)] [[bed7f10](https://github.com/NRWLDev/fastapi-problem/commit/bed7f100f0c1a8afab8220665e1dcb2e9b80866f)]
+
 ## v0.10.5 - 2025-02-07
 
 ### Bug fixes
