@@ -541,7 +541,7 @@ async def test_customise_openapi():
             "errors",
             "status",
         ],
-        "title": "ValidationError",
+        "title": "RequestValidationError",
     }
     assert "Problem" in res["components"]["schemas"]
     assert "ValidationError" in res["components"]["schemas"]
@@ -651,7 +651,7 @@ async def test_customise_openapi_generic_opt_out():
             "errors",
             "status",
         ],
-        "title": "ValidationError",
+        "title": "RequestValidationError",
     }
     assert "Problem" in res["components"]["schemas"]
     assert "ValidationError" in res["components"]["schemas"]
