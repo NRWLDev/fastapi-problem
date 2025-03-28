@@ -94,7 +94,7 @@ def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = T
                 "errors",
                 "status",
             ],
-            "title": "ValidationError",
+            "title": "RequestValidationError",
         }
         problem = {
             "properties": {
