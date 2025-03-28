@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.7 - 2025-03-28
+
+### Bug fixes
+
+- Prevent request validation errors from appearing as a duplicate of internal validation errors in swagger docs. [[33](https://github.com/NRWLDev/fastapi-problem/issues/33)] [[9082dbe](https://github.com/NRWLDev/fastapi-problem/commit/9082dbefbec6777be62ef2e87b8ca442e5a67a42)]
+
 ## v0.10.6 - 2025-02-17
 
 ### Features and Improvements
