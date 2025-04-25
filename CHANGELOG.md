@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.10 - 2025-04-25
+
+### Bug fixes
+
+- Support user defined http and request validation exception handlers. [[28dcb79](https://github.com/NRWLDev/fastapi-problem/commit/28dcb7968d3efc2717d546c94e5a6a88c161dcc1)]
+
 ## v0.10.9 - 2025-04-25
 
 ### Bug fixes
