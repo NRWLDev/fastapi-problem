@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.8 - 2025-04-25
+
+### Bug fixes
+
+- Update content type to correctly match rfc9457 spec in swagger docs [[31](https://github.com/NRWLDev/fastapi-problem/issues/31)] [[97d9472](https://github.com/NRWLDev/fastapi-problem/commit/97d94726f3ac567c4b50f84e7943323911a1d694)]
+
 ## v0.10.7 - 2025-03-28
 
 ### Bug fixes
