@@ -199,13 +199,12 @@ def add_exception_handler(  # noqa: PLR0913
     generic_swagger_defaults: bool = True,
     strict_rfc9457: bool = False,
 ) -> ExceptionHandler:
+    handlers_ = {
+        HTTPException: http_exception_handler,
+        RequestValidationError: request_validation_handler,
+    }
     handlers = handlers or {}
-    handlers.update(
-        {
-            HTTPException: http_exception_handler,
-            RequestValidationError: request_validation_handler,
-        },
-    )
+    handlers_.update(handlers)
     pre_hooks = pre_hooks or []
     post_hooks = post_hooks or []
 
@@ -216,7 +215,7 @@ def add_exception_handler(  # noqa: PLR0913
     eh = ExceptionHandler(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
-        handlers=handlers,
+        handlers=handlers_,
         pre_hooks=pre_hooks,
         post_hooks=post_hooks,
         documentation_uri_template=documentation_uri_template,

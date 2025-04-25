@@ -679,3 +679,25 @@ async def test_customise_openapi_generic_opt_out():
             "description": "Validation Error",
         },
     }
+
+
+async def test_custom_http_exception_handler_in_app():
+    def custom_handler(_eh, _request, _exc) -> error.Problem:
+        return error.Problem("a problem")
+
+    app = FastAPI()
+
+    handler.add_exception_handler(
+        app=app,
+        handlers={HTTPException: custom_handler},
+    )
+
+    transport = httpx.ASGITransport(app=app, raise_app_exceptions=False, client=("1.2.3.4", 123))
+    client = httpx.AsyncClient(transport=transport, base_url="https://test")
+
+    r = await client.get("/endpoint")
+    assert r.json() == {
+        "type": "problem",
+        "title": "a problem",
+        "status": 500,
+    }
