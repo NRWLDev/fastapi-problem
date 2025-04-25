@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.10.9 - 2025-04-25
+
+### Bug fixes
+
+- Update underlying starlette problem library with support for user defined HTTPException handler. [[7a9898e](https://github.com/NRWLDev/fastapi-problem/commit/7a9898e12b8da49f74124627c7d34b70f821fbf5)]
+
 ## v0.10.8 - 2025-04-25
 
 ### Bug fixes
