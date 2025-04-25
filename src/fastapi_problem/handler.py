@@ -32,7 +32,7 @@ def _swagger_problem_response(description: str, title: str, status: str, type_: 
     return {
         "description": description,
         "content": {
-            "application/json": {
+            "application/problem+json": {
                 "schema": {
                     "$ref": "#/components/schemas/Problem",
                 },
@@ -144,6 +144,10 @@ def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = T
         if generic_defaults:
             for methods in res["paths"].values():
                 for details in methods.values():
+                    if "422" in details["responses"]:
+                        details["responses"]["422"]["content"]["application/problem+json"] = details["responses"][
+                            "422"
+                        ]["content"].pop("application/json")
                     details["responses"]["4XX"] = _swagger_problem_response(
                         description="Client Error",
                         title="User facing error message.",

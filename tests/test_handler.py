@@ -449,7 +449,7 @@ def test_swagger_problem_response():
         status=400,
     ) == {
         "content": {
-            "application/json": {
+            "application/problem+json": {
                 "schema": {
                     "$ref": "#/components/schemas/Problem",
                 },
@@ -468,7 +468,7 @@ def test_swagger_problem_response():
 def test_generate_swagger_response_status_problem():
     assert handler.generate_swagger_response(error.BadRequestProblem) == {
         "content": {
-            "application/json": {
+            "application/problem+json": {
                 "schema": {
                     "$ref": "#/components/schemas/Problem",
                 },
@@ -487,7 +487,7 @@ def test_generate_swagger_response_status_problem():
 def test_generate_swagger_response_custom_problem():
     assert handler.generate_swagger_response(CustomUnhandledException) == {
         "content": {
-            "application/json": {
+            "application/problem+json": {
                 "schema": {
                     "$ref": "#/components/schemas/Problem",
                 },
@@ -560,7 +560,7 @@ async def test_customise_openapi():
         },
         "422": {
             "content": {
-                "application/json": {
+                "application/problem+json": {
                     "schema": {
                         "$ref": "#/components/schemas/HTTPValidationError",
                     },
@@ -570,7 +570,7 @@ async def test_customise_openapi():
         },
         "4XX": {
             "content": {
-                "application/json": {
+                "application/problem+json": {
                     "schema": {
                         "$ref": "#/components/schemas/Problem",
                     },
@@ -586,7 +586,7 @@ async def test_customise_openapi():
         },
         "5XX": {
             "content": {
-                "application/json": {
+                "application/problem+json": {
                     "schema": {
                         "$ref": "#/components/schemas/Problem",
                     },
