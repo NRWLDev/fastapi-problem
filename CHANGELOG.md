@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.0 - 2025-04-26
+
+### Features and Improvements
+
+- **Breaking** Migrate http_exception_handler and request_validation_handler definition to first class parameters. [[bff1fa1](https://github.com/NRWLDev/fastapi-problem/commit/bff1fa18ff19a4742ef4c7b732dfaeca720701ce)]
+
 ## v0.10.10 - 2025-04-25
 
 ### Bug fixes
