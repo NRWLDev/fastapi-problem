@@ -211,7 +211,7 @@ class TestExceptionHandler:
         request = mock.Mock()
         exc = HTTPException(404)
 
-        eh = handler.ExceptionHandler(handlers={HTTPException: handler.http_exception_handler})
+        eh = handler.ExceptionHandler(handlers={HTTPException: handler.http_exception_handler_})
         response = eh(request, exc)
 
         assert response.status_code == http.HTTPStatus.NOT_FOUND
@@ -227,7 +227,7 @@ class TestExceptionHandler:
         exc = HTTPException(404)
 
         eh = handler.ExceptionHandler(
-            handlers={HTTPException: handler.http_exception_handler},
+            handlers={HTTPException: handler.http_exception_handler_},
             unhandled_wrappers={
                 "404": SomethingWrongError,
             },
@@ -689,7 +689,7 @@ async def test_custom_http_exception_handler_in_app():
 
     handler.add_exception_handler(
         app=app,
-        handlers={HTTPException: custom_handler},
+        http_exception_handler=custom_handler,
     )
 
     transport = httpx.ASGITransport(app=app, raise_app_exceptions=False, client=("1.2.3.4", 123))

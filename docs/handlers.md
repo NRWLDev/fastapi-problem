@@ -51,6 +51,34 @@ Any instance of CustomBaseError, or any subclasses, that reach the exception
 handler will then be converted into a Problem response, as opposed to an
 unhandled error response.
 
+## Builtin Handlers
+
+Starlette HTTPException and fastapi RequestValidationError instances are
+handled by default, to customise how these errors are processed, provide a
+handler for `starlette.exceptions.HTTPException` or
+`fastapi.exceptions.RequestValidationError`, similar to the custom handlers
+previously defined, but rather than passing it to handlers, use the
+`http_exception_handler` and `request_validation_handler` parameters respectively.
+
+```python
+import fastapi
+from fastapi_problem.error import Problem
+from fastapi_problem.handler import ExceptionHandler, add_exception_handler
+from starlette.exceptions import HTTPException
+from starlette.requests import Request
+
+
+def my_custom_handler(eh: ExceptionHandler, request: Request, exc: HTTPException) -> Problem:
+    return Problem(...)
+
+
+app = fastapi.FastAPI()
+add_exception_handler(
+    app,
+    http_exception_handler=my_custom_handler,
+)
+```
+
 ### Optional handling
 
 In some cases you may want to handle specific cases for a type of exception,

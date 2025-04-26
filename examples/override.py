@@ -50,7 +50,7 @@ app = fastapi.FastAPI()
 
 add_exception_handler(
     app,
-    handlers={HTTPException: http_exception_handler},
+    http_exception_handler=http_exception_handler,
 )
 
 

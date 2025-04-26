@@ -14,7 +14,7 @@ from starlette_problem.handler import (
     PostHook,
     PreHook,
     StripExtrasPostHook,
-    http_exception_handler,
+    http_exception_handler_,
 )
 
 from fastapi_problem.error import Problem, StatusProblem
@@ -166,7 +166,7 @@ def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = T
     return wrapper
 
 
-def request_validation_handler(
+def request_validation_handler_(
     eh: ExceptionHandler,
     _request: Request,
     exc: RequestValidationError,
@@ -195,16 +195,17 @@ def add_exception_handler(  # noqa: PLR0913
     pre_hooks: list[PreHook] | None = None,
     post_hooks: list[PostHook] | None = None,
     documentation_uri_template: str = "",
+    http_exception_handler: Handler = http_exception_handler_,
+    request_validation_handler: Handler = request_validation_handler_,
     *,
     generic_swagger_defaults: bool = True,
     strict_rfc9457: bool = False,
 ) -> ExceptionHandler:
-    handlers_ = {
+    handlers = handlers or {}
+    handlers.update({
         HTTPException: http_exception_handler,
         RequestValidationError: request_validation_handler,
-    }
-    handlers = handlers or {}
-    handlers_.update(handlers)
+    })
     pre_hooks = pre_hooks or []
     post_hooks = post_hooks or []
 
@@ -215,7 +216,7 @@ def add_exception_handler(  # noqa: PLR0913
     eh = ExceptionHandler(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
-        handlers=handlers_,
+        handlers=handlers,
         pre_hooks=pre_hooks,
         post_hooks=post_hooks,
         documentation_uri_template=documentation_uri_template,
@@ -241,5 +242,6 @@ __all__ = [
     "PreHook",
     "StripExtrasPostHook",
     "add_exception_handler",
-    "http_exception_handler",
+    "http_exception_handler_",
+    "request_validation_handler_",
 ]
