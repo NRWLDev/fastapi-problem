@@ -12,7 +12,7 @@ for informational purposes such as logging or debugging.
 import logging
 
 import fastapi
-from fastapi_problem.handler import add_exception_handler
+from fastapi_problem.handler import add_exception_handler, new_exception_handler
 from starlette.requests import Request
 
 logger = logging.getLogger(__name__)
@@ -24,10 +24,10 @@ def custom_hook(request: Request, exc: Exception) -> None:
 
 
 app = fastapi.FastAPI()
-add_exception_handler(
-    app,
+eh = new_exception_handler(
     pre_hooks=[custom_hook],
 )
+add_exception_handler(app, eh)
 ```
 
 ## Post Hooks
@@ -40,7 +40,7 @@ xml api etc, the raw content can be reprocessed.).
 
 ```python
 import fastapi
-from fastapi_problem.handler import add_exception_handler
+from fastapi_problem.handler import add_exception_handler, new_exception_handler
 from starlette.requests import Request
 from starlette.responses import Response
 
@@ -55,8 +55,8 @@ def custom_hook(content: dict, request: Request, response: Response) -> Response
 
 
 app = fastapi.FastAPI()
-add_exception_handler(
-    app,
+eh = new_exception_handler(
     post_hooks=[custom_hook],
 )
+add_exception_handler(app, eh)
 ```

@@ -18,7 +18,7 @@ from fastapi_problem.error import (
     ForbiddenProblem,
     UnauthorisedProblem,
 )
-from fastapi_problem.handler import add_exception_handler
+from fastapi_problem.handler import add_exception_handler, new_exception_handler
 
 
 class AuthorizationRequiredError(UnauthorisedProblem):
@@ -46,9 +46,8 @@ async def check_auth(
 
 app = fastapi.FastAPI()
 
-add_exception_handler(
-    app,
-)
+eh = new_exception_handler()
+add_exception_handler(app, eh)
 
 
 @app.get("/authorized")

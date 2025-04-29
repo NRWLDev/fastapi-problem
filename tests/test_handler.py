@@ -396,13 +396,16 @@ async def test_exception_handler_in_app():
         m.call("pre-hook")
 
     app = FastAPI()
-    handler.add_exception_handler(
-        app=app,
+    eh = handler.new_exception_handler(
         pre_hooks=[pre_hook],
         unhandled_wrappers={
             "422": CustomValidationError,
             "default": CustomUnhandledException,
         },
+    )
+    handler.add_exception_handler(
+        app=app,
+        eh=eh,
     )
 
     transport = httpx.ASGITransport(app=app, raise_app_exceptions=False, client=("1.2.3.4", 123))
@@ -459,7 +462,7 @@ def test_swagger_problem_response():
                 },
                 "example": {
                     "title": "User facing error message.",
-                    "details": "Additional error context.",
+                    "detail": "Additional error context.",
                     "type": "client-error-type",
                     "status": 400,
                 },
@@ -494,7 +497,7 @@ def test_swagger_problem_response_multiple_examples():
                     "User facing error message.": {
                         "value": {
                             "title": "User facing error message.",
-                            "details": "Additional error context.",
+                            "detail": "Additional error context.",
                             "type": "client-error-type",
                             "status": 400,
                         },
@@ -502,7 +505,7 @@ def test_swagger_problem_response_multiple_examples():
                     "Another user facing error message.": {
                         "value": {
                             "title": "Another user facing error message.",
-                            "details": "Additional error context.",
+                            "detail": "Additional error context.",
                             "type": "another-client-error-type",
                             "status": 400,
                         },
@@ -515,7 +518,8 @@ def test_swagger_problem_response_multiple_examples():
 
 
 def test_generate_swagger_response_status_problem():
-    assert handler.generate_swagger_response(error.BadRequestProblem) == {
+    eh = handler.new_exception_handler()
+    assert eh.generate_swagger_response(error.BadRequestProblem) == {
         "content": {
             "application/problem+json": {
                 "schema": {
@@ -523,7 +527,7 @@ def test_generate_swagger_response_status_problem():
                 },
                 "example": {
                     "title": "Base http exception.",
-                    "details": "Additional error context.",
+                    "detail": "Additional error context.",
                     "type": "bad-request-problem",
                     "status": 400,
                 },
@@ -534,7 +538,8 @@ def test_generate_swagger_response_status_problem():
 
 
 def test_generate_swagger_response_custom_problem():
-    assert handler.generate_swagger_response(CustomUnhandledException) == {
+    eh = handler.new_exception_handler()
+    assert eh.generate_swagger_response(CustomUnhandledException) == {
         "content": {
             "application/problem+json": {
                 "schema": {
@@ -542,7 +547,7 @@ def test_generate_swagger_response_custom_problem():
                 },
                 "example": {
                     "title": "Unhandled exception occurred.",
-                    "details": "Additional error context.",
+                    "detail": "Additional error context.",
                     "type": "custom-unhandled-exception",
                     "status": 500,
                 },
@@ -553,7 +558,8 @@ def test_generate_swagger_response_custom_problem():
 
 
 def test_generate_swagger_response_multiple_problems():
-    assert handler.generate_swagger_response(CustomUnhandledException, error.ServerProblem) == {
+    eh = handler.new_exception_handler()
+    assert eh.generate_swagger_response(CustomUnhandledException, error.ServerProblem) == {
         "content": {
             "application/problem+json": {
                 "schema": {
@@ -563,7 +569,7 @@ def test_generate_swagger_response_multiple_problems():
                     "Base http exception.": {
                         "value": {
                             "title": "Base http exception.",
-                            "details": "Additional error context.",
+                            "detail": "Additional error context.",
                             "type": "server-problem",
                             "status": 500,
                         },
@@ -571,7 +577,7 @@ def test_generate_swagger_response_multiple_problems():
                     "Unhandled exception occurred.": {
                         "value": {
                             "title": "Unhandled exception occurred.",
-                            "details": "Additional error context.",
+                            "detail": "Additional error context.",
                             "type": "custom-unhandled-exception",
                             "status": 500,
                         },
@@ -580,6 +586,51 @@ def test_generate_swagger_response_multiple_problems():
             },
         },
         "description": "Internal Server Error",
+    }
+
+
+def test_generate_swagger_response_status_problem_with_uri_template():
+    eh = handler.new_exception_handler(
+        documentation_uri_template="https://docs/errors/{type}",
+    )
+    assert eh.generate_swagger_response(error.BadRequestProblem) == {
+        "content": {
+            "application/problem+json": {
+                "schema": {
+                    "$ref": "#/components/schemas/Problem",
+                },
+                "example": {
+                    "title": "Base http exception.",
+                    "detail": "Additional error context.",
+                    "type": "https://docs/errors/bad-request-problem",
+                    "status": 400,
+                },
+            },
+        },
+        "description": "Bad Request",
+    }
+
+
+def test_generate_swagger_response_status_problem_strict():
+    eh = handler.new_exception_handler(
+        documentation_uri_template="https://docs/errors/{type}",
+        strict_rfc9457=True,
+    )
+    assert eh.generate_swagger_response(error.BadRequestProblem) == {
+        "content": {
+            "application/problem+json": {
+                "schema": {
+                    "$ref": "#/components/schemas/Problem",
+                },
+                "example": {
+                    "title": "Base http exception.",
+                    "detail": "Additional error context.",
+                    "type": "about:blank",
+                    "status": 400,
+                },
+            },
+        },
+        "description": "Bad Request",
     }
 
 
@@ -657,7 +708,7 @@ async def test_customise_openapi():
                     },
                     "example": {
                         "title": "User facing error message.",
-                        "details": "Additional error context.",
+                        "detail": "Additional error context.",
                         "type": "client-error-type",
                         "status": 400,
                     },
@@ -673,7 +724,7 @@ async def test_customise_openapi():
                     },
                     "example": {
                         "title": "User facing error message.",
-                        "details": "Additional error context.",
+                        "detail": "Additional error context.",
                         "type": "server-error-type",
                         "status": 500,
                     },

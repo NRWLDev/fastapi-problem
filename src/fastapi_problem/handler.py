@@ -3,19 +3,20 @@ from __future__ import annotations
 import json
 import typing as t
 from http.client import responses
+from warnings import warn
 
 import rfc9457
 from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 from starlette_problem.handler import (
     CorsPostHook,
-    ExceptionHandler,
     Handler,
     PostHook,
     PreHook,
     StripExtrasPostHook,
     http_exception_handler_,
 )
+from starlette_problem.handler import ExceptionHandler as BaseExceptionHandler
 
 from fastapi_problem.error import Problem, StatusProblem
 
@@ -39,7 +40,7 @@ def _swagger_problem_response(description: str, examples: list[Example]) -> dict
         ex.title: {
             "value": {
                 "title": ex.title,
-                "details": "Additional error context.",
+                "detail": "Additional error context.",
                 "type": ex.type_,
                 "status": ex.status,
             },
@@ -64,18 +65,48 @@ def _swagger_problem_response(description: str, examples: list[Example]) -> dict
     return ret_val
 
 
-def generate_swagger_response(*exceptions: Problem) -> dict:
-    return _swagger_problem_response(
-        responses[exceptions[0].status],
-        examples=[
+def _generate_swagger_response(
+    *exceptions: Problem,
+    documentation_uri_template: str = "",
+    strict: bool = False,
+) -> dict:
+    examples = []
+    for e in exceptions:
+        exc = e("Additional error context.")
+        d = exc.marshal(uri=documentation_uri_template, strict=strict)
+        examples.append(
             Example(
-                title=exc.title,
-                type_=exc.type_ or rfc9457.error_class_to_type(exc("detail")),
-                status=exc.status,
-            )
-            for exc in exceptions
-        ],
+                title=d["title"],
+                type_=d["type"],
+                status=d["status"],
+            ),
+        )
+    return _swagger_problem_response(
+        responses[examples[0].status],
+        examples=examples,
     )
+
+
+def generate_swagger_response(*exceptions: Problem, documentation_uri_template: str = "", strict: bool = False) -> dict:
+    warn(
+        "Direct calls to generate_swagger_response are being deprecated, use `eh.generate_swagger_response(...)` instead.",
+        FutureWarning,
+        stacklevel=2,
+    )
+    return _generate_swagger_response(
+        *exceptions,
+        documentation_uri_template=documentation_uri_template,
+        strict=strict,
+    )
+
+
+class ExceptionHandler(BaseExceptionHandler):
+    def generate_swagger_response(self, *exceptions: Problem) -> dict:
+        return _generate_swagger_response(
+            *exceptions,
+            documentation_uri_template=self.documentation_uri_template,
+            strict=self.strict,
+        )
 
 
 def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = True) -> t.Callable[..., dict]:
@@ -213,8 +244,7 @@ def request_validation_handler_(
     )
 
 
-def add_exception_handler(  # noqa: PLR0913
-    app: FastAPI,
+def new_exception_handler(  # noqa: PLR0913
     logger: logging.Logger | None = None,
     cors: CorsConfiguration | None = None,
     unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
@@ -225,7 +255,6 @@ def add_exception_handler(  # noqa: PLR0913
     http_exception_handler: Handler = http_exception_handler_,
     request_validation_handler: Handler = request_validation_handler_,
     *,
-    generic_swagger_defaults: bool = True,
     strict_rfc9457: bool = False,
 ) -> ExceptionHandler:
     handlers = handlers or {}
@@ -242,7 +271,7 @@ def add_exception_handler(  # noqa: PLR0913
         # Ensure it runs first before any custom modifications
         post_hooks.insert(0, CorsPostHook(cors))
 
-    eh = ExceptionHandler(
+    return ExceptionHandler(
         logger=logger,
         unhandled_wrappers=unhandled_wrappers,
         handlers=handlers,
@@ -251,6 +280,43 @@ def add_exception_handler(  # noqa: PLR0913
         documentation_uri_template=documentation_uri_template,
         strict_rfc9457=strict_rfc9457,
     )
+
+
+def add_exception_handler(  # noqa: PLR0913
+    app: FastAPI,
+    eh: ExceptionHandler or None = None,
+    *,
+    logger: logging.Logger | None = None,
+    cors: CorsConfiguration | None = None,
+    unhandled_wrappers: dict[str, type[StatusProblem]] | None = None,
+    handlers: dict[type[Exception], Handler] | None = None,
+    pre_hooks: list[PreHook] | None = None,
+    post_hooks: list[PostHook] | None = None,
+    documentation_uri_template: str = "",
+    http_exception_handler: Handler = http_exception_handler_,
+    request_validation_handler: Handler = request_validation_handler_,
+    generic_swagger_defaults: bool = True,
+    strict_rfc9457: bool = False,
+) -> ExceptionHandler:
+    if eh is None:
+        warn(
+            "Generating exception handler while adding is being deprecated, use `new_exception_handler(...)`..",
+            FutureWarning,
+            stacklevel=2,
+        )
+
+        eh = new_exception_handler(
+            logger=logger,
+            cors=cors,
+            unhandled_wrappers=unhandled_wrappers,
+            handlers=handlers,
+            pre_hooks=pre_hooks,
+            post_hooks=post_hooks,
+            documentation_uri_template=documentation_uri_template,
+            http_exception_handler=http_exception_handler,
+            request_validation_handler=request_validation_handler,
+            strict_rfc9457=strict_rfc9457,
+        )
 
     app.add_exception_handler(Exception, eh)
     app.add_exception_handler(rfc9457.Problem, eh)
@@ -270,6 +336,7 @@ __all__ = [
     "PostHook",
     "PreHook",
     "StripExtrasPostHook",
+    "new_exception_handler",
     "add_exception_handler",
     "http_exception_handler_",
     "request_validation_handler_",

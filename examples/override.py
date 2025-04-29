@@ -14,7 +14,7 @@ import logging
 import fastapi
 from starlette.exceptions import HTTPException
 
-from fastapi_problem.handler import ExceptionHandler, add_exception_handler
+from fastapi_problem.handler import ExceptionHandler, add_exception_handler, new_exception_handler
 from fastapi_problem.error import NotFoundProblem, Problem, ServerProblem, StatusProblem
 
 logging.getLogger("uvicorn.error").disabled = True
@@ -48,10 +48,10 @@ def http_exception_handler(
 
 app = fastapi.FastAPI()
 
-add_exception_handler(
-    app,
+eh = new_exception_handler(
     http_exception_handler=http_exception_handler,
 )
+add_exception_handler(app, eh)
 
 
 @app.post("/not-allowed")

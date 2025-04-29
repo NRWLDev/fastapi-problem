@@ -149,10 +149,10 @@ called with the type, title, status and any additional extras provided when the
 error is raised.
 
 ```python
-add_exception_handler(
-    app,
+eh = new_exception_handler(
     documentation_uri_template="https://link-to/my/errors/{type}",
 )
+add_exception_handler(app, eh)
 ```
 
 ```json
@@ -166,10 +166,10 @@ Where a full resolvable documentation uri does not exist, the rfc allows for a
 [tag uri](https://en.wikipedia.org/wiki/Tag_URI_scheme#Format).
 
 ```python
-add_exception_handler(
-    app,
-    documentation_uri_template="tag:my-domain.com,2024-01-01:{type}",
+eh = new_exception_handler(
+    documentation_uri_template="https://link-to/my/errors/{type}",
 )
+add_exception_handler(app, eh)
 ```
 
 ```json
@@ -188,11 +188,11 @@ in cases where the Problem doesn't explicitly define a `type_` attribute, the
 type will default to `about:blank`.
 
 ```python
-add_exception_handler(
-    app,
+eh = new_exception_handler(
     documentation_uri_template="https://link-to/my/errors/{type}",
     strict_rfc9457=True,
 )
+add_exception_handler(app, eh)
 ```
 
 ```json

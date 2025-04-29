@@ -19,7 +19,7 @@ import logging
 
 import fastapi
 
-from fastapi_problem.handler import add_exception_handler
+from fastapi_problem.handler import add_exception_handler, new_exception_handler
 from fastapi_problem.error import NotFoundProblem, ServerProblem, StatusProblem, UnprocessableProblem
 
 logging.getLogger("uvicorn.error").disabled = True
@@ -44,8 +44,7 @@ class CustomServer(ServerProblem):
 
 app = fastapi.FastAPI()
 
-add_exception_handler(
-    app,
+eh = new_exception_handler(
     unhandled_wrappers={
         "404": CustomNotFound,
         "405": CustomNotAllowed,
@@ -53,6 +52,7 @@ add_exception_handler(
         "default": CustomServer,
     },
 )
+add_exception_handler(app, eh)
 
 
 @app.get("/validation-error")
