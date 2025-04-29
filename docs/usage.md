@@ -96,7 +96,8 @@ add_exception_handler(
 
 To specify specific error responses per endpoint, when registering the route
 the swagger responses for each possible error can be generated using the
-`generate_swagger_response` helper method.
+`generate_swagger_response` helper method. Multiple exceptions can be provided
+if the route can return different errors of the same status code.
 
 ```
 from fastapi_problem.error import StatusProblem

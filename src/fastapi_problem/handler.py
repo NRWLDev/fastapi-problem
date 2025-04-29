@@ -28,31 +28,53 @@ if t.TYPE_CHECKING:
     from fastapi_problem.cors import CorsConfiguration
 
 
-def _swagger_problem_response(description: str, title: str, status: str, type_: str) -> dict:
-    return {
+class Example(t.NamedTuple):
+    title: str
+    type_: str
+    status: int
+
+
+def _swagger_problem_response(description: str, examples: list[Example]) -> dict:
+    examples_ = {
+        ex.title: {
+            "value": {
+                "title": ex.title,
+                "details": "Additional error context.",
+                "type": ex.type_,
+                "status": ex.status,
+            },
+        }
+        for ex in examples
+    }
+    ret_val = {
         "description": description,
         "content": {
             "application/problem+json": {
                 "schema": {
                     "$ref": "#/components/schemas/Problem",
                 },
-                "example": {
-                    "title": title,
-                    "details": "Additional error context.",
-                    "type": type_,
-                    "status": status,
-                },
             },
         },
     }
+    key = "examples" if len(examples) > 1 else "example"
+    ret_val["content"]["application/problem+json"][key] = (
+        examples_ if len(examples) > 1 else examples_[examples[0].title]["value"]
+    )
+
+    return ret_val
 
 
-def generate_swagger_response(exc: Problem) -> dict:
+def generate_swagger_response(*exceptions: Problem) -> dict:
     return _swagger_problem_response(
-        responses[exc.status],
-        title=exc.title,
-        type_=exc.type_ or rfc9457.error_class_to_type(exc("detail")),
-        status=exc.status,
+        responses[exceptions[0].status],
+        examples=[
+            Example(
+                title=exc.title,
+                type_=exc.type_ or rfc9457.error_class_to_type(exc("detail")),
+                status=exc.status,
+            )
+            for exc in exceptions
+        ],
     )
 
 
@@ -122,12 +144,6 @@ def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = T
                     "title": "Problem detail",
                 },
             },
-            "example": {
-                "title": "Request validation error.",
-                "errors": [],
-                "type": "request-validation-failed",
-                "status": 422,
-            },
             "type": "object",
             "required": [
                 "type",
@@ -144,21 +160,32 @@ def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = T
         if generic_defaults:
             for methods in res["paths"].values():
                 for details in methods.values():
-                    if "422" in details["responses"]:
+                    if (
+                        "422" in details["responses"]
+                        and "application/problem+json" not in details["responses"]["422"]["content"]
+                    ):
                         details["responses"]["422"]["content"]["application/problem+json"] = details["responses"][
                             "422"
                         ]["content"].pop("application/json")
                     details["responses"]["4XX"] = _swagger_problem_response(
                         description="Client Error",
-                        title="User facing error message.",
-                        type_="client-error-type",
-                        status=400,
+                        examples=[
+                            Example(
+                                title="User facing error message.",
+                                type_="client-error-type",
+                                status=400,
+                            ),
+                        ],
                     )
                     details["responses"]["5XX"] = _swagger_problem_response(
                         description="Server Error",
-                        title="User facing error message.",
-                        type_="server-error-type",
-                        status=500,
+                        examples=[
+                            Example(
+                                title="User facing error message.",
+                                type_="server-error-type",
+                                status=500,
+                            ),
+                        ],
                     )
 
         return res
@@ -202,10 +229,12 @@ def add_exception_handler(  # noqa: PLR0913
     strict_rfc9457: bool = False,
 ) -> ExceptionHandler:
     handlers = handlers or {}
-    handlers.update({
-        HTTPException: http_exception_handler,
-        RequestValidationError: request_validation_handler,
-    })
+    handlers.update(
+        {
+            HTTPException: http_exception_handler,
+            RequestValidationError: request_validation_handler,
+        },
+    )
     pre_hooks = pre_hooks or []
     post_hooks = post_hooks or []
 

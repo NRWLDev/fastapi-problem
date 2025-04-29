@@ -444,9 +444,13 @@ async def test_exception_handler_in_app_post_register():
 def test_swagger_problem_response():
     assert handler._swagger_problem_response(
         description="Client Error",
-        title="User facing error message.",
-        type_="client-error-type",
-        status=400,
+        examples=[
+            handler.Example(
+                title="User facing error message.",
+                type_="client-error-type",
+                status=400,
+            ),
+        ],
     ) == {
         "content": {
             "application/problem+json": {
@@ -458,6 +462,51 @@ def test_swagger_problem_response():
                     "details": "Additional error context.",
                     "type": "client-error-type",
                     "status": 400,
+                },
+            },
+        },
+        "description": "Client Error",
+    }
+
+
+def test_swagger_problem_response_multiple_examples():
+    assert handler._swagger_problem_response(
+        description="Client Error",
+        examples=[
+            handler.Example(
+                title="User facing error message.",
+                type_="client-error-type",
+                status=400,
+            ),
+            handler.Example(
+                title="Another user facing error message.",
+                type_="another-client-error-type",
+                status=400,
+            ),
+        ],
+    ) == {
+        "content": {
+            "application/problem+json": {
+                "schema": {
+                    "$ref": "#/components/schemas/Problem",
+                },
+                "examples": {
+                    "User facing error message.": {
+                        "value": {
+                            "title": "User facing error message.",
+                            "details": "Additional error context.",
+                            "type": "client-error-type",
+                            "status": 400,
+                        },
+                    },
+                    "Another user facing error message.": {
+                        "value": {
+                            "title": "Another user facing error message.",
+                            "details": "Additional error context.",
+                            "type": "another-client-error-type",
+                            "status": 400,
+                        },
+                    },
                 },
             },
         },
@@ -503,6 +552,37 @@ def test_generate_swagger_response_custom_problem():
     }
 
 
+def test_generate_swagger_response_multiple_problems():
+    assert handler.generate_swagger_response(CustomUnhandledException, error.ServerProblem) == {
+        "content": {
+            "application/problem+json": {
+                "schema": {
+                    "$ref": "#/components/schemas/Problem",
+                },
+                "examples": {
+                    "Base http exception.": {
+                        "value": {
+                            "title": "Base http exception.",
+                            "details": "Additional error context.",
+                            "type": "server-problem",
+                            "status": 500,
+                        },
+                    },
+                    "Unhandled exception occurred.": {
+                        "value": {
+                            "title": "Unhandled exception occurred.",
+                            "details": "Additional error context.",
+                            "type": "custom-unhandled-exception",
+                            "status": 500,
+                        },
+                    },
+                },
+            },
+        },
+        "description": "Internal Server Error",
+    }
+
+
 async def test_customise_openapi():
     app = FastAPI()
 
@@ -512,7 +592,8 @@ async def test_customise_openapi():
     async def status(_a: str) -> dict:
         return {}
 
-    res = app.openapi()
+    app.openapi()
+    res = app.openapi()  # ensure openapi can be called repeatedly
     assert res["components"]["schemas"]["HTTPValidationError"] == {
         "properties": {
             "title": {
