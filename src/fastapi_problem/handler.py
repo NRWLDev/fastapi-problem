@@ -65,7 +65,11 @@ def _swagger_problem_response(description: str, examples: list[Example]) -> dict
     return ret_val
 
 
-def generate_swagger_response(*exceptions: Problem, documentation_uri_template: str = "", strict: bool = False) -> dict:
+def _generate_swagger_response(
+    *exceptions: Problem,
+    documentation_uri_template: str = "",
+    strict: bool = False,
+) -> dict:
     examples = []
     for e in exceptions:
         exc = e("Additional error context.")
@@ -83,9 +87,22 @@ def generate_swagger_response(*exceptions: Problem, documentation_uri_template: 
     )
 
 
+def generate_swagger_response(*exceptions: Problem, documentation_uri_template: str = "", strict: bool = False) -> dict:
+    warn(
+        "Direct calls to generate_swagger_response are being deprecated, use `eh.generate_swagger_response(...)` instead.",
+        FutureWarning,
+        stacklevel=2,
+    )
+    return _generate_swagger_response(
+        *exceptions,
+        documentation_uri_template=documentation_uri_template,
+        strict=strict,
+    )
+
+
 class ExceptionHandler(BaseExceptionHandler):
     def generate_swagger_response(self, *exceptions: Problem) -> dict:
-        return generate_swagger_response(
+        return _generate_swagger_response(
             *exceptions,
             documentation_uri_template=self.documentation_uri_template,
             strict=self.strict,

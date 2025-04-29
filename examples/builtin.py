@@ -23,15 +23,14 @@ import logging
 import fastapi
 import pydantic
 
-from fastapi_problem.handler import add_exception_handler
+from fastapi_problem.handler import add_exception_handler, new_exception_handler
 
 logging.getLogger("uvicorn.error").disabled = True
 
 app = fastapi.FastAPI()
 
-add_exception_handler(
-    app,
-)
+eh = new_exception_handler()
+add_exception_handler(app, eh)
 
 
 @app.get("/validation-error")

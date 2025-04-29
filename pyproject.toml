@@ -116,6 +116,7 @@ select = ["ALL"]
 ignore = [
     "ANN002",  # ParamSpec not available in 3.9
     "ANN003",  # ParamSpec not available in 3.9
+    "E501",    # Handled by ruff format
     "FIX",  # allow TODO
     "D",
 ]
