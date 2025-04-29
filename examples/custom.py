@@ -19,7 +19,7 @@ import logging
 
 import fastapi
 
-from fastapi_problem.handler import add_exception_handler, generate_swagger_response
+from fastapi_problem.handler import add_exception_handler
 from fastapi_problem.error import NotFoundProblem, ServerProblem, StatusProblem, UnprocessableProblem
 
 logging.getLogger("uvicorn.error").disabled = True
@@ -65,16 +65,7 @@ async def method_not_allowed() -> dict:
     return {}
 
 
-@app.get(
-    "/unexpected-error",
-    responses={
-        "404": generate_swagger_response(NotFoundProblem),
-        "409": generate_swagger_response(
-            ServerProblem,
-            CustomServer,
-        ),
-    },
-)
+@app.get("/unexpected-error")
 async def unexpected_error() -> dict:
     return {"value": 1 / 0}
 
