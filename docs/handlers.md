@@ -24,7 +24,7 @@ A custom handler can then be defined in your application.
 import fastapi
 from rfc9457 import error_class_to_type
 from fastapi_problem.error import Problem
-from fastapi_problem.handler import ExceptionHandler, add_exception_handler
+from fastapi_problem.handler import ExceptionHandler, add_exception_handler, new_exception_handler
 from starlette.requests import Request
 
 from third_party.error import CustomBaseError
@@ -39,12 +39,12 @@ def my_custom_handler(eh: ExceptionHandler, request: Request, exc: CustomBaseErr
     )
 
 app = fastapi.FastAPI()
-add_exception_handler(
-    app,
+eh = new_exception_handler(
     handlers={
         CustomBaseError: my_custom_handler,
     },
 )
+add_exception_handler(app, eh)
 ```
 
 Any instance of CustomBaseError, or any subclasses, that reach the exception
@@ -63,7 +63,7 @@ previously defined, but rather than passing it to handlers, use the
 ```python
 import fastapi
 from fastapi_problem.error import Problem
-from fastapi_problem.handler import ExceptionHandler, add_exception_handler
+from fastapi_problem.handler import ExceptionHandler, add_exception_handler, new_exception_handler
 from starlette.exceptions import HTTPException
 from starlette.requests import Request
 
@@ -73,10 +73,10 @@ def my_custom_handler(eh: ExceptionHandler, request: Request, exc: HTTPException
 
 
 app = fastapi.FastAPI()
-add_exception_handler(
-    app,
+eh = new_excep, new_exception_handler(
     http_exception_handler=my_custom_handler,
 )
+add_exception_handler(app, eh)
 ```
 
 ### Optional handling
@@ -90,7 +90,7 @@ will be pass to the next defined handler.
 import fastapi
 from rfc9457 import error_class_to_type
 from fastapi_problem.error import Problem
-from fastapi_problem.handler import ExceptionHandler, add_exception_handler
+from fastapi_problem.handler import ExceptionHandler, add_exception_handler, new_exception_handler
 from starlette.requests import Request
 
 def no_response_handler(eh: ExceptionHandler, request: Request, exc: RuntimeError) -> Problem | None:
@@ -112,13 +112,13 @@ def base_handler(eh: ExceptionHandler, request: Request, exc: Exception) -> Prob
     )
 
 app = fastapi.FastAPI()
-add_exception_handler(
-    app,
+eh = new_exception_handler(
     handlers={
         RuntimeError: no_response_handler,
         Exception: base_handler,
     },
 )
+add_exception_handler(app, eh)
 ```
 
 At the time of writing there was (is?) a

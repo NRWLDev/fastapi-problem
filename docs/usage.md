@@ -6,24 +6,23 @@ import fastapi_problem.handler
 
 
 app = fastapi.FastAPI()
-fastapi_problem.handler.add_exception_handler(app)
+eh = fastapi_problem.handler.new_exception_handler()
+fastapi_problem.handler.add_exception_handler(app, eh)
 ```
 
 A custom logger can be provided using:
 
 ```python
-add_exception_handler(
-    app,
+new_exception_handler(
     logger=...,
 )
 ```
 
 If you require cors headers, you can pass a `fastapi_problem.cors.CorsConfiguration`
-instance to `add_exception_handler(cors=...)`.
+instance to `new_exception_handler(cors=...)`.
 
 ```python
-add_exception_handler(
-    app,
+new_exception_handler(
     cors=CorsConfiguration(
         allow_origins=["*"],
         allow_methods=["*"],
@@ -40,18 +39,18 @@ for all unhandled exceptions.
 
 ```python
 from fastapi_problem.error import StatusProblem
-from fastapi_problem.handler import add_exception_handler
+from fastapi_problem.handler import add_exception_handler, new_exception_handler
 
 class NotFoundError(StatusProblem):
     status = 404
     message = "Endpoint not found."
 
-add_exception_handler(
-    app,
+eh = new_exception_handler(
     unhandled_wrappers={
         "404": NotFoundError,
     },
 )
+add_exception_handler(app, eh)
 ```
 
 If you wish to hide debug messaging from external users, `StripExtrasPostHook`
@@ -64,10 +63,9 @@ allow extras for specific status codes. Allowing expected fields to reach the
 user, while suppressing unexpected server errors etc.
 
 ```python
-from fastapi_problem.handler import StripExtrasPostHook, add_exception_handler
+from fastapi_problem.handler import StripExtrasPostHook, add_exception_handler, new_exception_handler
 
-add_exception_handler(
-    app,
+eh = new_exception_handler(
     post_hooks=[
         StripExtrasPostHook(
             mandatory_fields=["type", "title", "status", "detail", "custom-extra"],
@@ -76,6 +74,7 @@ add_exception_handler(
         )
     ],
 )
+add_exception_handler(app, eh)
 ```
 
 ## Swagger
@@ -88,10 +87,10 @@ opted out of by passing `generic_swagger_defaults=False` when registering the
 exception handlers.
 
 ```python
-add_exception_handler(
-    app,
+eh = new_exception_handler(
     generic_swagger_defaults=False,
 )
+add_exception_handler(app, eh)
 ```
 
 To specify specific error responses per endpoint, when registering the route
@@ -108,9 +107,12 @@ class NotFoundError(StatusProblem):
     title = "Endpoint not found."
 
 
+eh = new_exception_handler()
+add_exception_handler(app, eh)
+
 @app.post(
     "/path",
-    responses={400: generate_swagger_response(NotFoundError)}},
+    responses={400: eh.generate_swagger_response(NotFoundError)}},
 )
 ...
 ```

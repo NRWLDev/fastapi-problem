@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import typing as t
 from http.client import responses
+from warnings import warn
 
 import rfc9457
 from fastapi.exceptions import RequestValidationError
@@ -281,6 +282,12 @@ def add_exception_handler(  # noqa: PLR0913
     strict_rfc9457: bool = False,
 ) -> ExceptionHandler:
     if eh is None:
+        warn(
+            "Generating exception handler while adding is being deprecated, use `new_exception_handler(...)`..",
+            FutureWarning,
+            stacklevel=2,
+        )
+
         eh = new_exception_handler(
             logger=logger,
             cors=cors,
