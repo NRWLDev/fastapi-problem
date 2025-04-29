@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.11.1 - 2025-04-29
+
+### Features and Improvements
+
+- Add support for generating response examples for multiple exceptions under the same status code in swagger docs. [[37](https://github.com/NRWLDev/fastapi-problem/issues/37)] [[863178e](https://github.com/NRWLDev/fastapi-problem/commit/863178ea7efb8af77dad850ab685a18a83d14b03)]
+- Add generate_swagger_response method to ExceptionHandler to support generating responses with documentation_uris. [[38](https://github.com/NRWLDev/fastapi-problem/issues/38)] [[8bba952](https://github.com/NRWLDev/fastapi-problem/commit/8bba9521ba3c6adb652212b468a3c9ff59f5e2e1)]
+
 ## v0.11.0 - 2025-04-26
 
 ### Features and Improvements
