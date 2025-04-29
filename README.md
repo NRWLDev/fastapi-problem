@@ -45,11 +45,12 @@ raise UserNotFoundError(detail="detail")
 
 ```python
 import fastapi
-from fastapi_problem.handler import add_exception_handler
+from fastapi_problem.handler import add_exception_handler, new_exception_handler
 
 
 app = fastapi.FastAPI()
-add_exception_handler(app)
+eh = new_exception_handler()
+add_exception_handler(app, eh)
 
 @app.get("/user")
 async def get_user():
