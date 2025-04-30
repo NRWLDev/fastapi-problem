@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.11.2 - 2025-04-30
+
+### Bug fixes
+
+- Support instantiated problems when generating swagger responses to allow for customising details and additional keys. [[85d4a7d](https://github.com/NRWLDev/fastapi-problem/commit/85d4a7d916054c15c474a4fc8d11c8daa9b52a3d)]
+- Ensure generic swagger problem definitions inherit documentation uri template and strict settings. [[f33e013](https://github.com/NRWLDev/fastapi-problem/commit/f33e01398d130815df487fa6578629fa8ae5278e)]
+- Correctly set 422 content type in swagger when generic error responses are excluded. [[997a2a6](https://github.com/NRWLDev/fastapi-problem/commit/997a2a6e327b6870baca81290e33d5589b922707)]
+
 ## v0.11.1 - 2025-04-29
 
 ### Features and Improvements
