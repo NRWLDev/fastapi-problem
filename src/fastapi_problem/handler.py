@@ -33,6 +33,7 @@ class Example(t.NamedTuple):
     title: str
     type_: str
     status: int
+    detail: str
 
 
 def _swagger_problem_response(description: str, examples: list[Example]) -> dict:
@@ -40,7 +41,7 @@ def _swagger_problem_response(description: str, examples: list[Example]) -> dict
         ex.title: {
             "value": {
                 "title": ex.title,
-                "detail": "Additional error context.",
+                "detail": ex.detail,
                 "type": ex.type_,
                 "status": ex.status,
             },
@@ -79,6 +80,7 @@ def _generate_swagger_response(
                 title=d["title"],
                 type_=d["type"],
                 status=d["status"],
+                detail=d["detail"],
             ),
         )
     return _swagger_problem_response(
@@ -87,7 +89,11 @@ def _generate_swagger_response(
     )
 
 
-def generate_swagger_response(*exceptions: type[Problem], documentation_uri_template: str = "", strict: bool = False) -> dict:
+def generate_swagger_response(
+    *exceptions: type[Problem],
+    documentation_uri_template: str = "",
+    strict: bool = False,
+) -> dict:
     warn(
         "Direct calls to generate_swagger_response are being deprecated, use `eh.generate_swagger_response(...)` instead.",
         FutureWarning,
@@ -109,7 +115,13 @@ class ExceptionHandler(BaseExceptionHandler):
         )
 
 
-def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = True) -> t.Callable[..., dict]:
+def customise_openapi(
+    func: t.Callable[..., dict],
+    *,
+    documentation_uri_template: str = "",
+    strict: bool = False,
+    generic_defaults: bool = True,
+) -> t.Callable[..., dict]:
     """Customize OpenAPI schema."""
 
     def wrapper() -> dict:
@@ -198,23 +210,39 @@ def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = T
                         "content"
                     ].pop("application/json")
                 if generic_defaults:
+                    user_error = Problem(
+                        "User facing error message.",
+                        type_="client-error-type",
+                        status=400,
+                        detail="Additional error context.",
+                    )
+                    d = user_error.marshal(uri=documentation_uri_template, strict=strict)
                     details["responses"]["4XX"] = _swagger_problem_response(
                         description="Client Error",
                         examples=[
                             Example(
-                                title="User facing error message.",
-                                type_="client-error-type",
-                                status=400,
+                                title=d["title"],
+                                type_=d["type"],
+                                status=d["status"],
+                                detail=d["detail"],
                             ),
                         ],
                     )
+                    server_error = Problem(
+                        "User facing error message.",
+                        type_="server-error-type",
+                        status=500,
+                        detail="Additional error context.",
+                    )
+                    d = server_error.marshal(uri=documentation_uri_template, strict=strict)
                     details["responses"]["5XX"] = _swagger_problem_response(
                         description="Server Error",
                         examples=[
                             Example(
-                                title="User facing error message.",
-                                type_="server-error-type",
-                                status=500,
+                                title=d["title"],
+                                type_=d["type"],
+                                status=d["status"],
+                                detail=d["detail"],
                             ),
                         ],
                     )
@@ -324,7 +352,12 @@ def add_exception_handler(  # noqa: PLR0913
     app.add_exception_handler(RequestValidationError, eh)
 
     # Override default 422 with Problem schema
-    app.openapi = customise_openapi(app.openapi, generic_defaults=generic_swagger_defaults)
+    app.openapi = customise_openapi(
+        app.openapi,
+        generic_defaults=generic_swagger_defaults,
+        documentation_uri_template=eh.documentation_uri_template,
+        strict=eh.strict,
+    )
 
     return eh
 

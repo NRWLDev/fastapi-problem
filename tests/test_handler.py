@@ -452,6 +452,7 @@ def test_swagger_problem_response():
                 title="User facing error message.",
                 type_="client-error-type",
                 status=400,
+                detail="Additional error context.",
             ),
         ],
     ) == {
@@ -480,11 +481,13 @@ def test_swagger_problem_response_multiple_examples():
                 title="User facing error message.",
                 type_="client-error-type",
                 status=400,
+                detail="Additional error context.",
             ),
             handler.Example(
                 title="Another user facing error message.",
                 type_="another-client-error-type",
                 status=400,
+                detail="Additional error context.",
             ),
         ],
     ) == {
@@ -514,6 +517,25 @@ def test_swagger_problem_response_multiple_examples():
             },
         },
         "description": "Client Error",
+    }
+
+
+def test_generate_swagger_response_status_problem_deprecated():
+    assert handler.generate_swagger_response(error.BadRequestProblem) == {
+        "content": {
+            "application/problem+json": {
+                "schema": {
+                    "$ref": "#/components/schemas/Problem",
+                },
+                "example": {
+                    "title": "Base http exception.",
+                    "detail": "Additional error context.",
+                    "type": "bad-request-problem",
+                    "status": 400,
+                },
+            },
+        },
+        "description": "Bad Request",
     }
 
 
