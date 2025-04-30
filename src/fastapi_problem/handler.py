@@ -188,16 +188,16 @@ def customise_openapi(func: t.Callable[..., dict], *, generic_defaults: bool = T
         res["components"]["schemas"]["HTTPValidationError"] = validation_error
         res["components"]["schemas"]["Problem"] = problem
 
-        if generic_defaults:
-            for methods in res["paths"].values():
-                for details in methods.values():
-                    if (
-                        "422" in details["responses"]
-                        and "application/problem+json" not in details["responses"]["422"]["content"]
-                    ):
-                        details["responses"]["422"]["content"]["application/problem+json"] = details["responses"][
-                            "422"
-                        ]["content"].pop("application/json")
+        for methods in res["paths"].values():
+            for details in methods.values():
+                if (
+                    "422" in details["responses"]
+                    and "application/problem+json" not in details["responses"]["422"]["content"]
+                ):
+                    details["responses"]["422"]["content"]["application/problem+json"] = details["responses"]["422"][
+                        "content"
+                    ].pop("application/json")
+                if generic_defaults:
                     details["responses"]["4XX"] = _swagger_problem_response(
                         description="Client Error",
                         examples=[

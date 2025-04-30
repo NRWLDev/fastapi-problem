@@ -802,7 +802,7 @@ async def test_customise_openapi_generic_opt_out():
         },
         "422": {
             "content": {
-                "application/json": {
+                "application/problem+json": {
                     "schema": {
                         "$ref": "#/components/schemas/HTTPValidationError",
                     },
