@@ -448,12 +448,12 @@ def test_swagger_problem_response():
     assert handler._swagger_problem_response(
         description="Client Error",
         examples=[
-            handler.Example(
+            error.Problem(
                 title="User facing error message.",
                 type_="client-error-type",
                 status=400,
                 detail="Additional error context.",
-            ),
+            ).marshal(),
         ],
     ) == {
         "content": {
@@ -477,18 +477,18 @@ def test_swagger_problem_response_multiple_examples():
     assert handler._swagger_problem_response(
         description="Client Error",
         examples=[
-            handler.Example(
+            error.Problem(
                 title="User facing error message.",
                 type_="client-error-type",
                 status=400,
                 detail="Additional error context.",
-            ),
-            handler.Example(
+            ).marshal(),
+            error.Problem(
                 title="Another user facing error message.",
                 type_="another-client-error-type",
                 status=400,
                 detail="Additional error context.",
-            ),
+            ).marshal(),
         ],
     ) == {
         "content": {
@@ -532,6 +532,27 @@ def test_generate_swagger_response_status_problem_deprecated():
                     "detail": "Additional error context.",
                     "type": "bad-request-problem",
                     "status": 400,
+                },
+            },
+        },
+        "description": "Bad Request",
+    }
+
+
+def test_generate_swagger_response_instantiated_problem():
+    eh = handler.new_exception_handler()
+    assert eh.generate_swagger_response(error.BadRequestProblem("Custom detail", additional="key")) == {
+        "content": {
+            "application/problem+json": {
+                "schema": {
+                    "$ref": "#/components/schemas/Problem",
+                },
+                "example": {
+                    "title": "Base http exception.",
+                    "detail": "Custom detail",
+                    "type": "bad-request-problem",
+                    "status": 400,
+                    "additional": "key",
                 },
             },
         },

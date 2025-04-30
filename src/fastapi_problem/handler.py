@@ -29,22 +29,10 @@ if t.TYPE_CHECKING:
     from fastapi_problem.cors import CorsConfiguration
 
 
-class Example(t.NamedTuple):
-    title: str
-    type_: str
-    status: int
-    detail: str
-
-
-def _swagger_problem_response(description: str, examples: list[Example]) -> dict:
+def _swagger_problem_response(description: str, examples: list[dict]) -> dict:
     examples_ = {
-        ex.title: {
-            "value": {
-                "title": ex.title,
-                "detail": ex.detail,
-                "type": ex.type_,
-                "status": ex.status,
-            },
+        ex["title"]: {
+            "value": ex,
         }
         for ex in examples
     }
@@ -60,37 +48,29 @@ def _swagger_problem_response(description: str, examples: list[Example]) -> dict
     }
     key = "examples" if len(examples) > 1 else "example"
     ret_val["content"]["application/problem+json"][key] = (
-        examples_ if len(examples) > 1 else examples_[examples[0].title]["value"]
+        examples_ if len(examples) > 1 else examples_[examples[0]["title"]]["value"]
     )
 
     return ret_val
 
 
 def _generate_swagger_response(
-    *exceptions: type[Problem],
+    *exceptions: type[Problem] | Problem,
     documentation_uri_template: str = "",
     strict: bool = False,
 ) -> dict:
     examples = []
     for e in exceptions:
-        exc = e("Additional error context.")
-        d = exc.marshal(uri=documentation_uri_template, strict=strict)
-        examples.append(
-            Example(
-                title=d["title"],
-                type_=d["type"],
-                status=d["status"],
-                detail=d["detail"],
-            ),
-        )
+        exc = e("Additional error context.") if not isinstance(e, Problem) else e
+        examples.append(exc.marshal(uri=documentation_uri_template, strict=strict))
     return _swagger_problem_response(
-        responses[examples[0].status],
+        responses[exceptions[0].status],
         examples=examples,
     )
 
 
 def generate_swagger_response(
-    *exceptions: type[Problem],
+    *exceptions: type[Problem] | Problem,
     documentation_uri_template: str = "",
     strict: bool = False,
 ) -> dict:
@@ -107,7 +87,7 @@ def generate_swagger_response(
 
 
 class ExceptionHandler(BaseExceptionHandler):
-    def generate_swagger_response(self, *exceptions: type[Problem]) -> dict:
+    def generate_swagger_response(self, *exceptions: type[Problem] | Problem) -> dict:
         return _generate_swagger_response(
             *exceptions,
             documentation_uri_template=self.documentation_uri_template,
@@ -216,35 +196,19 @@ def customise_openapi(
                         status=400,
                         detail="Additional error context.",
                     )
-                    d = user_error.marshal(uri=documentation_uri_template, strict=strict)
-                    details["responses"]["4XX"] = _swagger_problem_response(
-                        description="Client Error",
-                        examples=[
-                            Example(
-                                title=d["title"],
-                                type_=d["type"],
-                                status=d["status"],
-                                detail=d["detail"],
-                            ),
-                        ],
-                    )
                     server_error = Problem(
                         "User facing error message.",
                         type_="server-error-type",
                         status=500,
                         detail="Additional error context.",
                     )
-                    d = server_error.marshal(uri=documentation_uri_template, strict=strict)
+                    details["responses"]["4XX"] = _swagger_problem_response(
+                        description="Client Error",
+                        examples=[user_error.marshal(uri=documentation_uri_template, strict=strict)],
+                    )
                     details["responses"]["5XX"] = _swagger_problem_response(
                         description="Server Error",
-                        examples=[
-                            Example(
-                                title=d["title"],
-                                type_=d["type"],
-                                status=d["status"],
-                                detail=d["detail"],
-                            ),
-                        ],
+                        examples=[server_error.marshal(uri=documentation_uri_template, strict=strict)],
                     )
 
         return res
