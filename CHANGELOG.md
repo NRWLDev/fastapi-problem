@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.4 - 2025-05-05
+
+### Documentation
+
+- Add documentation url for pypi. [[f580c25](https://github.com/NRWLDev/fastapi-problem/commit/f580c2535e31207a11ba2975fb41cd635986ed9f)]
+
 ## v0.11.3 - 2025-05-05
 
 ### Bug fixes
