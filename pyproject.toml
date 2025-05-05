@@ -6,8 +6,6 @@ authors = [
     {name = "Daniel Edgecombe", email = "daniel@nrwl.co"},
 ]
 license = "Apache-2.0"
-repository="https://github.com/NRWLDev/fastapi-problem/"
-homepage="https://github.com/NRWLDev/fastapi-problem/"
 readme = "README.md"
 requires-python = ">=3.9"
 keywords = ["exception", "handler", "webdev", "starlette"]
@@ -22,13 +20,15 @@ classifiers = [
     "Framework :: FastAPI",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3",
 ]
+
+[project.urls]
+homepage="https://github.com/NRWLDev/fastapi-problem/"
 
 dependencies = [
     "rfc9457 >= 0.1.1",

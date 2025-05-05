@@ -5,41 +5,7 @@ To view a list of available commands:
 $ invoke --list
 """
 
-import subprocess
-
 import invoke
-
-
-def current_branch():
-    """Get the current branch from git cli using subprocess."""
-    try:
-        rev_parse_out = (
-            subprocess.check_output(
-                [
-                    "git",
-                    "rev-parse",
-                    "--tags",
-                    "--abbrev-ref",
-                    "HEAD",
-                ],
-                stderr=subprocess.STDOUT,
-            )
-            .decode()
-            .strip()
-            .split("\n")
-        )
-    except subprocess.CalledProcessError as e:
-        msg = "Could not get current branch name."
-        raise invoke.exceptions.Exit(msg) from e
-
-    return rev_parse_out[-1]
-
-
-def enforce_branch(branch_name):
-    """Enforce that the current branch matches the supplied branch_name."""
-    if current_branch() != branch_name:
-        msg = f"Command can not be run outside of {branch_name}."
-        raise invoke.exceptions.Exit(msg)
 
 
 @invoke.task
