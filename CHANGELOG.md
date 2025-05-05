@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.3 - 2025-05-05
+
+### Bug fixes
+
+- Ensure urls appear in pypi. [[524c4ba](https://github.com/NRWLDev/fastapi-problem/commit/524c4ba791ee75a165bb25430ccff741db7732fa)]
+
 ## v0.11.2 - 2025-04-30
 
 ### Bug fixes

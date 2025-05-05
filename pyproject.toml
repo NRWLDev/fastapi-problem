@@ -1,6 +1,6 @@
 [project]
 name = "fastapi-problem"
-version = "0.11.2"
+version = "0.11.3"
 description = "FastAPI support for RFC9457 problems."
 authors = [
     {name = "Daniel Edgecombe", email = "daniel@nrwl.co"},
@@ -27,13 +27,13 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 
-[project.urls]
-homepage="https://github.com/NRWLDev/fastapi-problem/"
-
 dependencies = [
     "rfc9457 >= 0.1.1",
     "starlette_problem >=0.12.0",
 ]
+
+[project.urls]
+homepage="https://github.com/NRWLDev/fastapi-problem/"
 
 [project.optional-dependencies]
 dev = [
@@ -55,7 +55,7 @@ dev = [
 ]
 
 [tool.changelog_gen]
-current_version = "0.11.2"
+current_version = "0.11.3"
 reject_empty = true
 statistics = true
 allowed_branches = [
