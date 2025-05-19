@@ -444,82 +444,6 @@ async def test_exception_handler_in_app_post_register():
     }
 
 
-def test_swagger_problem_response():
-    assert handler._swagger_problem_response(
-        description="Client Error",
-        examples=[
-            error.Problem(
-                title="User facing error message.",
-                type_="client-error-type",
-                status=400,
-                detail="Additional error context.",
-            ).marshal(),
-        ],
-    ) == {
-        "content": {
-            "application/problem+json": {
-                "schema": {
-                    "$ref": "#/components/schemas/Problem",
-                },
-                "example": {
-                    "title": "User facing error message.",
-                    "detail": "Additional error context.",
-                    "type": "client-error-type",
-                    "status": 400,
-                },
-            },
-        },
-        "description": "Client Error",
-    }
-
-
-def test_swagger_problem_response_multiple_examples():
-    assert handler._swagger_problem_response(
-        description="Client Error",
-        examples=[
-            error.Problem(
-                title="User facing error message.",
-                type_="client-error-type",
-                status=400,
-                detail="Additional error context.",
-            ).marshal(),
-            error.Problem(
-                title="Another user facing error message.",
-                type_="another-client-error-type",
-                status=400,
-                detail="Additional error context.",
-            ).marshal(),
-        ],
-    ) == {
-        "content": {
-            "application/problem+json": {
-                "schema": {
-                    "$ref": "#/components/schemas/Problem",
-                },
-                "examples": {
-                    "User facing error message.": {
-                        "value": {
-                            "title": "User facing error message.",
-                            "detail": "Additional error context.",
-                            "type": "client-error-type",
-                            "status": 400,
-                        },
-                    },
-                    "Another user facing error message.": {
-                        "value": {
-                            "title": "Another user facing error message.",
-                            "detail": "Additional error context.",
-                            "type": "another-client-error-type",
-                            "status": 400,
-                        },
-                    },
-                },
-            },
-        },
-        "description": "Client Error",
-    }
-
-
 def test_generate_swagger_response_status_problem_deprecated():
     assert handler.generate_swagger_response(error.BadRequestProblem) == {
         "content": {
@@ -692,7 +616,7 @@ async def test_customise_openapi():
         "properties": {
             "title": {
                 "type": "string",
-                "title": "Problem Title",
+                "title": "Problem title",
             },
             "type": {
                 "type": "string",
@@ -713,8 +637,8 @@ async def test_customise_openapi():
         "required": [
             "type",
             "title",
-            "errors",
             "status",
+            "errors",
         ],
         "title": "RequestValidationError",
     }
@@ -802,7 +726,7 @@ async def test_customise_openapi_generic_opt_out():
         "properties": {
             "title": {
                 "type": "string",
-                "title": "Problem Title",
+                "title": "Problem title",
             },
             "type": {
                 "type": "string",
@@ -823,8 +747,8 @@ async def test_customise_openapi_generic_opt_out():
         "required": [
             "type",
             "title",
-            "errors",
             "status",
+            "errors",
         ],
         "title": "RequestValidationError",
     }

@@ -193,7 +193,7 @@ wheels = [
 
 [[package]]
 name = "fastapi-problem"
-version = "0.10.10"
+version = "0.11.4"
 source = { editable = "." }
 dependencies = [
     { name = "rfc9457" },
@@ -223,7 +223,7 @@ requires-dist = [
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=4.1.0" },
     { name = "pytest-httpx", marker = "extra == 'dev'", specifier = ">=0.26.0" },
     { name = "pytest-random-order", marker = "extra == 'dev'", specifier = ">=1.0" },
-    { name = "rfc9457", specifier = ">=0.1.1" },
+    { name = "rfc9457", specifier = ">=0.3.4" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.6.4" },
     { name = "starlette-problem", specifier = ">=0.12.0" },
 ]
@@ -739,14 +739,14 @@ wheels = [
 
 [[package]]
 name = "rfc9457"
-version = "0.3.2"
+version = "0.3.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "multidict" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/2e/27/673e5ba7eb9b8bb1a372530675e71ceef848284a978043987bc7affc820b/rfc9457-0.3.2.tar.gz", hash = "sha256:fb1dc624e45ccd922b94fcf7151cb77549d6be4505c0702acc7bb92214c01558", size = 46967 }
+sdist = { url = "https://files.pythonhosted.org/packages/c1/4b/fa2dcf24b0b380e3f86380f4638cfda3f5b2d7ceb90808d97e22414b6611/rfc9457-0.3.4.tar.gz", hash = "sha256:221b105b9ea6153b10f2ddd3cf76b71bea09a3bf7fc82b023ebfd0fb2b42788c", size = 47974 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/97/f9/c8ae05e89e6351285ac77e95db0b5c694f1ade3ba60b5c9d79b48d794978/rfc9457-0.3.2-py3-none-any.whl", hash = "sha256:b3b857440ccf0962d91456aad1c76eb0f3582b8c783da23e983cfd7232901820", size = 8078 },
+    { url = "https://files.pythonhosted.org/packages/cb/12/6b6f2229423e0beee5d3d9ec82e623a5015a1683276afb3cad49b69fd046/rfc9457-0.3.4-py3-none-any.whl", hash = "sha256:f7abd203504ae5cfd44aae23f3362d4d042f44268b300e5cfa9f9837c887b705", size = 8762 },
 ]
 
 [[package]]

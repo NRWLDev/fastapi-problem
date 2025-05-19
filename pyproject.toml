@@ -28,7 +28,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "rfc9457 >= 0.1.1",
+    "rfc9457 >= 0.3.4",
     "starlette_problem >=0.12.0",
 ]
 

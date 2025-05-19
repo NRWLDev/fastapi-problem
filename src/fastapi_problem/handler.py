@@ -7,6 +7,7 @@ from warnings import warn
 
 import rfc9457
 from fastapi.exceptions import RequestValidationError
+from rfc9457.openapi import problem_component, problem_response
 from starlette.exceptions import HTTPException
 from starlette_problem.handler import (
     CorsPostHook,
@@ -29,31 +30,6 @@ if t.TYPE_CHECKING:
     from fastapi_problem.cors import CorsConfiguration
 
 
-def _swagger_problem_response(description: str, examples: list[dict]) -> dict:
-    examples_ = {
-        ex["title"]: {
-            "value": ex,
-        }
-        for ex in examples
-    }
-    ret_val = {
-        "description": description,
-        "content": {
-            "application/problem+json": {
-                "schema": {
-                    "$ref": "#/components/schemas/Problem",
-                },
-            },
-        },
-    }
-    key = "examples" if len(examples) > 1 else "example"
-    ret_val["content"]["application/problem+json"][key] = (
-        examples_ if len(examples) > 1 else examples_[examples[0]["title"]]["value"]
-    )
-
-    return ret_val
-
-
 def _generate_swagger_response(
     *exceptions: type[Problem] | Problem,
     documentation_uri_template: str = "",
@@ -63,7 +39,7 @@ def _generate_swagger_response(
     for e in exceptions:
         exc = e("Additional error context.") if not isinstance(e, Problem) else e
         examples.append(exc.marshal(uri=documentation_uri_template, strict=strict))
-    return _swagger_problem_response(
+    return problem_response(
         responses[exceptions[0].status],
         examples=examples,
     )
@@ -111,71 +87,17 @@ def customise_openapi(
         if "components" not in res:
             return res
 
-        validation_error = {
-            "properties": {
-                "title": {
-                    "type": "string",
-                    "title": "Problem Title",
-                },
-                "type": {
-                    "type": "string",
-                    "title": "Problem type",
-                },
-                "status": {
-                    "type": "integer",
-                    "title": "Status code",
-                },
-                "errors": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/components/schemas/ValidationError",
-                    },
+        validation_error = problem_component(
+            "RequestValidationError",
+            required=["errors"],
+            errors={
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ValidationError",
                 },
             },
-            "type": "object",
-            "required": [
-                "type",
-                "title",
-                "errors",
-                "status",
-            ],
-            "title": "RequestValidationError",
-        }
-        problem = {
-            "properties": {
-                "title": {
-                    "type": "string",
-                    "title": "Problem Title",
-                },
-                "type": {
-                    "type": "string",
-                    "title": "Problem type",
-                },
-                "status": {
-                    "type": "integer",
-                    "title": "Status code",
-                },
-                "detail": {
-                    "anyOf": [
-                        {
-                            "type": "string",
-                        },
-                        {
-                            "type": "null",
-                        },
-                    ],
-                    "title": "Problem detail",
-                },
-            },
-            "type": "object",
-            "required": [
-                "type",
-                "title",
-                "detail",
-                "status",
-            ],
-            "title": "Problem",
-        }
+        )
+        problem = problem_component("Problem")
 
         res["components"]["schemas"]["HTTPValidationError"] = validation_error
         res["components"]["schemas"]["Problem"] = problem
@@ -202,11 +124,11 @@ def customise_openapi(
                         status=500,
                         detail="Additional error context.",
                     )
-                    details["responses"]["4XX"] = _swagger_problem_response(
+                    details["responses"]["4XX"] = problem_response(
                         description="Client Error",
                         examples=[user_error.marshal(uri=documentation_uri_template, strict=strict)],
                     )
-                    details["responses"]["5XX"] = _swagger_problem_response(
+                    details["responses"]["5XX"] = problem_response(
                         description="Server Error",
                         examples=[server_error.marshal(uri=documentation_uri_template, strict=strict)],
                     )
