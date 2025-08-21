@@ -84,8 +84,14 @@ def customise_openapi(
         """Wrapper."""
         res = func()
 
-        if "components" not in res:
+        if not res["paths"]:
+            # If there are no paths, we don't need to add any responses
             return res
+
+        if "components" not in res:
+            res["components"] = {"schemas": {}}
+        elif "schemas" not in res["components"]:
+            res["components"]["schemas"] = {}
 
         validation_error = problem_component(
             "RequestValidationError",
