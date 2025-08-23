@@ -808,7 +808,7 @@ async def test_customise_openapi_handles_security_components_no_422():
     app = FastAPI()
 
     @app.get("/status")
-    async def status(bearer: str = Depends(bearer_scheme)) -> dict:
+    async def status(bearer: str = Depends(bearer_scheme)) -> dict:  # noqa: ARG001
         return {}
 
     app.openapi = handler.customise_openapi(app.openapi)
