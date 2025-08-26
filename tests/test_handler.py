@@ -4,8 +4,9 @@ from unittest import mock
 
 import httpx
 import pytest
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.exceptions import RequestValidationError
+from fastapi.security import HTTPBearer
 from starlette.exceptions import HTTPException
 
 from fastapi_problem import error, handler
@@ -702,7 +703,7 @@ async def test_customise_openapi():
     }
 
 
-async def test_customise_openapi_handles_no_components():
+async def test_customise_openapi_handles_no_components_no_paths():
     app = FastAPI()
 
     app.openapi = handler.customise_openapi(app.openapi)
@@ -710,6 +711,188 @@ async def test_customise_openapi_handles_no_components():
     res = app.openapi()
     assert res["paths"] == {}
     assert "components" not in res
+
+
+async def test_customise_openapi_handles_no_components_no_422():
+    app = FastAPI()
+
+    @app.get("/status")
+    async def status() -> dict:
+        return {}
+
+    app.openapi = handler.customise_openapi(app.openapi)
+
+    res = app.openapi()
+
+    assert res["components"]["schemas"]["HTTPValidationError"] == {
+        "properties": {
+            "title": {
+                "type": "string",
+                "title": "Problem title",
+            },
+            "type": {
+                "type": "string",
+                "title": "Problem type",
+            },
+            "status": {
+                "type": "integer",
+                "title": "Status code",
+            },
+            "errors": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ValidationError",
+                },
+            },
+        },
+        "type": "object",
+        "required": [
+            "type",
+            "title",
+            "status",
+            "errors",
+        ],
+        "title": "RequestValidationError",
+    }
+    assert "Problem" in res["components"]["schemas"]
+
+    assert res["paths"]["/status"]["get"]["responses"] == {
+        "200": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "title": "Response Status Status Get",
+                        "type": "object",
+                    },
+                },
+            },
+            "description": "Successful Response",
+        },
+        "4XX": {
+            "content": {
+                "application/problem+json": {
+                    "schema": {
+                        "$ref": "#/components/schemas/Problem",
+                    },
+                    "example": {
+                        "title": "User facing error message.",
+                        "detail": "Additional error context.",
+                        "type": "client-error-type",
+                        "status": 400,
+                    },
+                },
+            },
+            "description": "Client Error",
+        },
+        "5XX": {
+            "content": {
+                "application/problem+json": {
+                    "schema": {
+                        "$ref": "#/components/schemas/Problem",
+                    },
+                    "example": {
+                        "title": "User facing error message.",
+                        "detail": "Additional error context.",
+                        "type": "server-error-type",
+                        "status": 500,
+                    },
+                },
+            },
+            "description": "Server Error",
+        },
+    }
+
+
+async def test_customise_openapi_handles_security_components_no_422():
+    bearer_scheme = HTTPBearer(bearerFormat="JWT")
+    app = FastAPI()
+
+    @app.get("/status")
+    async def status(bearer: str = Depends(bearer_scheme)) -> dict:  # noqa: ARG001
+        return {}
+
+    app.openapi = handler.customise_openapi(app.openapi)
+
+    res = app.openapi()
+
+    assert res["components"]["schemas"]["HTTPValidationError"] == {
+        "properties": {
+            "title": {
+                "type": "string",
+                "title": "Problem title",
+            },
+            "type": {
+                "type": "string",
+                "title": "Problem type",
+            },
+            "status": {
+                "type": "integer",
+                "title": "Status code",
+            },
+            "errors": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ValidationError",
+                },
+            },
+        },
+        "type": "object",
+        "required": [
+            "type",
+            "title",
+            "status",
+            "errors",
+        ],
+        "title": "RequestValidationError",
+    }
+    assert "Problem" in res["components"]["schemas"]
+    assert "securitySchemes" in res["components"]
+
+    assert res["paths"]["/status"]["get"]["responses"] == {
+        "200": {
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "title": "Response Status Status Get",
+                        "type": "object",
+                    },
+                },
+            },
+            "description": "Successful Response",
+        },
+        "4XX": {
+            "content": {
+                "application/problem+json": {
+                    "schema": {
+                        "$ref": "#/components/schemas/Problem",
+                    },
+                    "example": {
+                        "title": "User facing error message.",
+                        "detail": "Additional error context.",
+                        "type": "client-error-type",
+                        "status": 400,
+                    },
+                },
+            },
+            "description": "Client Error",
+        },
+        "5XX": {
+            "content": {
+                "application/problem+json": {
+                    "schema": {
+                        "$ref": "#/components/schemas/Problem",
+                    },
+                    "example": {
+                        "title": "User facing error message.",
+                        "detail": "Additional error context.",
+                        "type": "server-error-type",
+                        "status": 500,
+                    },
+                },
+            },
+            "description": "Server Error",
+        },
+    }
 
 
 async def test_customise_openapi_generic_opt_out():
