@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.5 - 2025-08-26
+
+### Bug fixes
+
+- OpenAPI Swagger docs generation in certain scenarios [[44](https://github.com/NRWLDev/fastapi-problem/issues/44)] [[18a18cf](https://github.com/NRWLDev/fastapi-problem/commit/18a18cfe54cef1b87abab3a4474f0906d49cda6a)]
+
 ## v0.11.4 - 2025-05-05
 
 ### Documentation
