@@ -204,7 +204,7 @@ def new_exception_handler(  # noqa: PLR0913
 
 def add_exception_handler(  # noqa: PLR0913
     app: FastAPI,
-    eh: ExceptionHandler or None = None,
+    eh: ExceptionHandler | None = None,
     *,
     logger: logging.Logger | None = None,
     cors: CorsConfiguration | None = None,
