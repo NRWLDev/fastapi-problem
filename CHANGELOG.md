@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.11.6 - 2025-10-20
+
+### Bug fixes
+
+- (`handler`) fix an invalid type hint [[a40de5a](https://github.com/NRWLDev/fastapi-problem/commit/a40de5a08c7b93dc163f66e7d6d80e50bfcc94fd)]
+
 ## v0.11.5 - 2025-08-26
 
 ### Bug fixes

@@ -1,6 +1,6 @@
 [project]
 name = "fastapi-problem"
-version = "0.11.5"
+version = "0.11.6"
 description = "FastAPI support for RFC9457 problems."
 authors = [
     {name = "Daniel Edgecombe", email = "daniel@nrwl.co"},
@@ -56,7 +56,7 @@ dev = [
 ]
 
 [tool.changelog_gen]
-current_version = "0.11.5"
+current_version = "0.11.6"
 reject_empty = true
 statistics = true
 allowed_branches = [
