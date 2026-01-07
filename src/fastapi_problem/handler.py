@@ -261,8 +261,8 @@ __all__ = [
     "PostHook",
     "PreHook",
     "StripExtrasPostHook",
-    "new_exception_handler",
     "add_exception_handler",
     "http_exception_handler_",
+    "new_exception_handler",
     "request_validation_handler_",
 ]

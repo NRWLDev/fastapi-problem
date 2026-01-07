@@ -17,14 +17,14 @@ from rfc9457 import (
 )
 
 __all__ = [
-    "Problem",
-    "StatusProblem",
     "BadRequestProblem",
     "ConflictProblem",
     "ForbiddenProblem",
     "NotFoundProblem",
+    "Problem",
     "RedirectProblem",
     "ServerProblem",
+    "StatusProblem",
     "UnauthorisedProblem",
     "UnprocessableProblem",
 ]
