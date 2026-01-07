@@ -651,6 +651,7 @@ async def test_customise_openapi():
             "content": {
                 "application/json": {
                     "schema": {
+                        "additionalProperties": True,
                         "title": "Response Status Status Get",
                         "type": "object",
                     },
@@ -761,6 +762,7 @@ async def test_customise_openapi_handles_no_components_no_422():
             "content": {
                 "application/json": {
                     "schema": {
+                        "additionalProperties": True,
                         "title": "Response Status Status Get",
                         "type": "object",
                     },
@@ -853,6 +855,7 @@ async def test_customise_openapi_handles_security_components_no_422():
             "content": {
                 "application/json": {
                     "schema": {
+                        "additionalProperties": True,
                         "title": "Response Status Status Get",
                         "type": "object",
                     },
@@ -943,6 +946,7 @@ async def test_customise_openapi_generic_opt_out():
             "content": {
                 "application/json": {
                     "schema": {
+                        "additionalProperties": True,
                         "title": "Response Status Status Get",
                         "type": "object",
                     },
