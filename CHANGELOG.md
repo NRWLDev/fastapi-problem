@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.12.0 - 2026-01-07
+
+### Features and Improvements
+
+- **Breaking** Drop python 3.9 support. [[24268d0](https://github.com/NRWLDev/fastapi-problem/commit/24268d09d96da6a5d4754cf2db090bcbcb240a83)]
+
 ## v0.11.6 - 2025-10-20
 
 ### Bug fixes
