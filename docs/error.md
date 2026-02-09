@@ -1,7 +1,7 @@
 # Errors
 
 The base `fastapi_problem.error.Problem` accepts a `title`, `detail`, `status`
-(default 500) and optional `**kwargs`. An additional `code` can be passed in,
+(default 500) and optional `**kwargs`. An additional `type_` can be passed in,
 which will be used as the `type`, if not provided the `type` is derived from
 the class name.
 
@@ -21,7 +21,7 @@ And will return a JSON response with `exc.status` as the status code and respons
 Derived types are generated using the class name after dropping `...Error` from
 the end, and converting to `kebab-case`. i.e. `PascalCaseError` will derive the
 type `pascal-case`. If the class name doesn't suit your purposes, an optional
-`code` attribute can be set with the desired value of there response `type`
+`type` attribute can be set with the desired value of there response `type`
 field.
 
 Some convenience Problems are provided with predefined `status` attributes.
@@ -60,7 +60,7 @@ raise UserNotFoundError(detail="detail")
 }
 ```
 
-Whereas a defined `code` will be used in the output.
+Whereas a defined `type_` will be used in the output.
 
 ```python
 class UserNotFoundError(NotFoundProblem):

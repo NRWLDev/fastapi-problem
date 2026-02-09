@@ -1,11 +1,15 @@
 # Custom Handler
 
 In the event that you are using a third party library with a custom error
-class, a handler specifically a common base class can be provided.
+class, a handler specific to a common base class can be provided.
 
 Providing a custom handler allows for conversion from the custom error class
-into a `Problem`, when the exception handler catches it, rather than converting
-each raised instance into a `Problem` at the time it is raised.
+into a `Problem`, when the base exception handler catches it, rather than
+converting each raised instance into a `Problem` at the time it is raised.
+
+This does not replace the base exception handler, but provides it with
+additional capability to handle custom exceptions during the handling of any
+given exception.
 
 ## Usage
 
@@ -49,7 +53,9 @@ add_exception_handler(app, eh)
 
 Any instance of CustomBaseError, or any subclasses, that reach the exception
 handler will then be converted into a Problem response, as opposed to an
-unhandled error response.
+unhandled error response. Once the exception has been processed by the custom
+handler, the exception handler continues as before including any existing
+logging logic.
 
 ## Builtin Handlers
 
