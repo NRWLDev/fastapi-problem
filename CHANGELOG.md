@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.12.1 - 2026-02-10
+
+### Features and Improvements
+
+- Support inclusion/exclusion by exception type in [[051d553](https://github.com/NRWLDev/fastapi-problem/commit/051d553ae6a0fce07735427a983e2e3deee78287)]
+
+### Miscellaneous
+
+- Fix type hinting issues. [[9b4f8e6](https://github.com/NRWLDev/fastapi-problem/commit/9b4f8e61fdae8f3149e090b7d51532e7aac32327)]
+- Update docs to more accurately describe custom handlers, and fix issue with reference to a legacy attribute. [[5c2bc16](https://github.com/NRWLDev/fastapi-problem/commit/5c2bc16709000f6bcc1bc8fbc90b43ce0f83d862)]
+- Add latest python versions to test matrix [[c2e2482](https://github.com/NRWLDev/fastapi-problem/commit/c2e2482e286d430a0ab586cec0e4f9f919848f39)]
+
 ## v0.12.0 - 2026-01-07
 
 ### Features and Improvements
