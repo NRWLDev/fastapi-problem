@@ -39,6 +39,7 @@ def _generate_swagger_response(
     for e in exceptions:
         exc = e("Additional error context.") if not isinstance(e, Problem) else e
         examples.append(exc.marshal(uri=documentation_uri_template, strict=strict))
+    exceptions = t.cast("tuple[Problem]", exceptions)
     return problem_response(
         responses[exceptions[0].status],
         examples=examples,
@@ -77,10 +78,10 @@ def customise_openapi(
     documentation_uri_template: str = "",
     strict: bool = False,
     generic_defaults: bool = True,
-) -> t.Callable[..., dict]:
+) -> t.Callable[..., dict[str, t.Any]]:
     """Customize OpenAPI schema."""
 
-    def wrapper() -> dict:
+    def wrapper() -> dict[str, t.Any]:
         """Wrapper."""
         res = func()
 
@@ -244,7 +245,7 @@ def add_exception_handler(  # noqa: PLR0913
     app.add_exception_handler(RequestValidationError, eh)
 
     # Override default 422 with Problem schema
-    app.openapi = customise_openapi(
+    app.openapi = customise_openapi(  # ty: ignore[invalid-assignment]
         app.openapi,
         generic_defaults=generic_swagger_defaults,
         documentation_uri_template=eh.documentation_uri_template,
