@@ -30,7 +30,7 @@ classifiers = [
 
 dependencies = [
     "rfc9457 >= 0.4.0",
-    "starlette_problem >=0.13.2",
+    "starlette_problem >=0.13.3",
 ]
 
 [project.urls]

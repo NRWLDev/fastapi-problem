@@ -272,7 +272,7 @@ requires-dist = [
     { name = "pytest-random-order", marker = "extra == 'dev'", specifier = ">=1.2.0" },
     { name = "rfc9457", specifier = ">=0.4.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.14.10" },
-    { name = "starlette-problem", specifier = ">=0.13.0" },
+    { name = "starlette-problem", specifier = ">=0.13.3" },
 ]
 
 [[package]]
@@ -1062,14 +1062,14 @@ wheels = [
 
 [[package]]
 name = "starlette-problem"
-version = "0.13.1"
+version = "0.13.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "rfc9457" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/50/67/7857dbf4e9714d40b8acef45599bde8393810b59cfd5a728b45918562bd9/starlette_problem-0.13.1.tar.gz", hash = "sha256:7a25e6691a7a62765ea01562c88c2ba531e6a86ae4b480561a8354f034786fd3", size = 82499 }
+sdist = { url = "https://files.pythonhosted.org/packages/f1/bc/ecc70c45e52bc6bd226a421cc988aeb1237d4185db92eb78da9a8a8bbfd2/starlette_problem-0.13.3.tar.gz", hash = "sha256:e651a77d9d7a1126e436328a1193865b6b6b9dff0f9680b7fa1d3f02f015e48a", size = 82921 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/24/96/7148bd2deaaea1064a46ec5dc493824b75fb6ed5a40579b91656f3bee8ba/starlette_problem-0.13.1-py3-none-any.whl", hash = "sha256:77b6c5f30e622b1d0597cbfc2adcc404c6141b3993ef4522c304b589460b68fc", size = 11505 },
+    { url = "https://files.pythonhosted.org/packages/1a/66/c4f1ba16dd6dd3712c5f67f20b10d838dc30b8598fe92429709aae92b527/starlette_problem-0.13.3-py3-none-any.whl", hash = "sha256:8598278081348d176a8773284a55ab642e4d238aa5a3cb4aed0a3d27de177447", size = 11564 },
 ]
 
 [[package]]
