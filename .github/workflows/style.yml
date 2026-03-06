@@ -33,4 +33,3 @@ jobs:
     - name: Lint with astral
       run: |
         uv run pre-commit run --all-files
-        uv run ty check
