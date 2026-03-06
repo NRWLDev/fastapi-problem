@@ -68,7 +68,3 @@ async def method_not_allowed() -> dict:
 @app.get("/unexpected-error")
 async def unexpected_error() -> dict:
     return {"value": 1 / 0}
-
-
-if __name__ == "__main__":
-    app.run()

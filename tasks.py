@@ -5,7 +5,7 @@ To view a list of available commands:
 $ invoke --list
 """
 
-import invoke
+import invoke  # type: ignore[unresolved-import]
 
 
 @invoke.task

@@ -42,8 +42,8 @@ def http_exception_handler(
     _request: fastapi.Request,
     exc: HTTPException,
 ) -> Problem:
-    exc, detail = status_mapping.get(str(exc.status_code))
-    return exc(detail)
+    exc_, detail = status_mapping[str(exc.status_code)]
+    return exc_(detail)
 
 
 app = fastapi.FastAPI()
@@ -57,7 +57,3 @@ add_exception_handler(app, eh)
 @app.post("/not-allowed")
 async def method_not_allowed() -> dict:
     return {}
-
-
-if __name__ == "__main__":
-    app.run()

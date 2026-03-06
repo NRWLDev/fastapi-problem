@@ -41,7 +41,3 @@ async def user_error() -> dict:
 @app.get("/server-error")
 async def server_error() -> dict:
     raise KnownServerProblem("A known server error use case occurred.")
-
-
-if __name__ == "__main__":
-    app.run()
