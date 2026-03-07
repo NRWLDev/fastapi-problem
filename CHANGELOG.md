@@ -1,16 +1,24 @@
 # Changelog
 
+## v0.12.2 - 2026-03-07
+
+### Miscellaneous
+
+- Pin new release management tools [[9e1c025](https://github.com/NRWLDev/fastapi-problem/commit/9e1c025084893743183ef167e3cd52fb92a9ceb1)]
+- Commit bumpversion config [[da0bb1c](https://github.com/NRWLDev/fastapi-problem/commit/da0bb1c0d9729eda672e19535005ef341e7daa07)]
+- Add git-cliff configuration [[356be44](https://github.com/NRWLDev/fastapi-problem/commit/356be44590e35ce9f27234d42634861913ae9fc0)]
+- Remove manual ty check in pipeline [[4a7cef1](https://github.com/NRWLDev/fastapi-problem/commit/4a7cef16557b9219e22dc5d643c16b3477554f21)]
+- Add ty pre-commit [[8a81651](https://github.com/NRWLDev/fastapi-problem/commit/8a816516692dd12aeed69108c342f8c6faca0532)]
+- Include ty in dev tooling [[0873fef](https://github.com/NRWLDev/fastapi-problem/commit/0873fef1676bf45417aed47c6517a3ebf814402d)]
+- Update docs to match starlette-problem deprecation of StripExtraPostHook parameters. [[27f7da9](https://github.com/NRWLDev/fastapi-problem/commit/27f7da9cb89a21ccd0edf4ea303ed73203f37363)]
+
 ## v0.12.1 - 2026-02-10
-
-### Features and Improvements
-
-- Support inclusion/exclusion by exception type in [[051d553](https://github.com/NRWLDev/fastapi-problem/commit/051d553ae6a0fce07735427a983e2e3deee78287)]
 
 ### Miscellaneous
 
 - Fix type hinting issues. [[9b4f8e6](https://github.com/NRWLDev/fastapi-problem/commit/9b4f8e61fdae8f3149e090b7d51532e7aac32327)]
-- Update docs to more accurately describe custom handlers, and fix issue with reference to a legacy attribute. [[5c2bc16](https://github.com/NRWLDev/fastapi-problem/commit/5c2bc16709000f6bcc1bc8fbc90b43ce0f83d862)]
 - Add latest python versions to test matrix [[c2e2482](https://github.com/NRWLDev/fastapi-problem/commit/c2e2482e286d430a0ab586cec0e4f9f919848f39)]
+- Update docs to more accurately describe custom handlers, and fix issue with reference to a legacy attribute. [[5c2bc16](https://github.com/NRWLDev/fastapi-problem/commit/5c2bc16709000f6bcc1bc8fbc90b43ce0f83d862)]
 
 ## v0.12.0 - 2026-01-07
 
@@ -22,13 +30,13 @@
 
 ### Bug fixes
 
-- (`handler`) fix an invalid type hint [[a40de5a](https://github.com/NRWLDev/fastapi-problem/commit/a40de5a08c7b93dc163f66e7d6d80e50bfcc94fd)]
+- Fix an invalid type hint [[a40de5a](https://github.com/NRWLDev/fastapi-problem/commit/a40de5a08c7b93dc163f66e7d6d80e50bfcc94fd)]
 
 ## v0.11.5 - 2025-08-26
 
 ### Bug fixes
 
-- OpenAPI Swagger docs generation in certain scenarios [[44](https://github.com/NRWLDev/fastapi-problem/issues/44)] [[18a18cf](https://github.com/NRWLDev/fastapi-problem/commit/18a18cfe54cef1b87abab3a4474f0906d49cda6a)]
+- OpenAPI Swagger docs generation in certain scenarios [#44](https://github.com/NRWLDev/fastapi-problem/issues/44)  [[18a18cf](https://github.com/NRWLDev/fastapi-problem/commit/18a18cfe54cef1b87abab3a4474f0906d49cda6a)]
 
 ## v0.11.4 - 2025-05-05
 
@@ -54,8 +62,8 @@
 
 ### Features and Improvements
 
-- Add support for generating response examples for multiple exceptions under the same status code in swagger docs. [[37](https://github.com/NRWLDev/fastapi-problem/issues/37)] [[863178e](https://github.com/NRWLDev/fastapi-problem/commit/863178ea7efb8af77dad850ab685a18a83d14b03)]
-- Add generate_swagger_response method to ExceptionHandler to support generating responses with documentation_uris. [[38](https://github.com/NRWLDev/fastapi-problem/issues/38)] [[8bba952](https://github.com/NRWLDev/fastapi-problem/commit/8bba9521ba3c6adb652212b468a3c9ff59f5e2e1)]
+- Add generate_swagger_response method to ExceptionHandler to support generating responses with documentation_uris. [#38](https://github.com/NRWLDev/fastapi-problem/issues/38)  [[8bba952](https://github.com/NRWLDev/fastapi-problem/commit/8bba9521ba3c6adb652212b468a3c9ff59f5e2e1)]
+- Add support for generating response examples for multiple exceptions under the same status code in swagger docs. [#37](https://github.com/NRWLDev/fastapi-problem/issues/37)  [[863178e](https://github.com/NRWLDev/fastapi-problem/commit/863178ea7efb8af77dad850ab685a18a83d14b03)]
 
 ## v0.11.0 - 2025-04-26
 
@@ -79,19 +87,20 @@
 
 ### Bug fixes
 
-- Update content type to correctly match rfc9457 spec in swagger docs [[31](https://github.com/NRWLDev/fastapi-problem/issues/31)] [[97d9472](https://github.com/NRWLDev/fastapi-problem/commit/97d94726f3ac567c4b50f84e7943323911a1d694)]
+- Update content type to correctly match rfc9457 spec in swagger docs [#31](https://github.com/NRWLDev/fastapi-problem/issues/31)  [[97d9472](https://github.com/NRWLDev/fastapi-problem/commit/97d94726f3ac567c4b50f84e7943323911a1d694)]
 
 ## v0.10.7 - 2025-03-28
 
 ### Bug fixes
 
-- Prevent request validation errors from appearing as a duplicate of internal validation errors in swagger docs. [[33](https://github.com/NRWLDev/fastapi-problem/issues/33)] [[9082dbe](https://github.com/NRWLDev/fastapi-problem/commit/9082dbefbec6777be62ef2e87b8ca442e5a67a42)]
+- Prevent request validation errors from appearing as a duplicate of internal validation errors in swagger docs. [#33](https://github.com/NRWLDev/fastapi-problem/issues/33)  [[9082dbe](https://github.com/NRWLDev/fastapi-problem/commit/9082dbefbec6777be62ef2e87b8ca442e5a67a42)]
 
 ## v0.10.6 - 2025-02-17
 
 ### Features and Improvements
 
-- Add support for generating specific error responses for swagger. [[31](https://github.com/NRWLDev/fastapi-problem/issues/31)] [[bed7f10](https://github.com/NRWLDev/fastapi-problem/commit/bed7f100f0c1a8afab8220665e1dcb2e9b80866f)]
+- Add support for generating specific error responses for swagger. [#31](https://github.com/NRWLDev/fastapi-problem/issues/31)  [[c2f9c62](https://github.com/NRWLDev/fastapi-problem/commit/c2f9c62b1fb25eb64e4c3ee22491530295f94df1)]
+- Add support for generating specific error responses for swagger. [#31](https://github.com/NRWLDev/fastapi-problem/issues/31)  [[bed7f10](https://github.com/NRWLDev/fastapi-problem/commit/bed7f100f0c1a8afab8220665e1dcb2e9b80866f)]
 
 ## v0.10.5 - 2025-02-07
 
@@ -115,7 +124,7 @@
 
 ### Features and Improvements
 
-- Replace default 422 response in swagger with an accurate Problem component. [[28](https://github.com/NRWLDev/fastapi-problem/issues/28)] [[e92514f](https://github.com/NRWLDev/fastapi-problem/commit/e92514f8b253db4b2df3a2d21135c7a75d33155c)]
+- Replace default 422 response in swagger with an accurate Problem component. [#28](https://github.com/NRWLDev/fastapi-problem/issues/28)  [[e92514f](https://github.com/NRWLDev/fastapi-problem/commit/e92514f8b253db4b2df3a2d21135c7a75d33155c)]
 
 ## v0.10.1 - 2024-11-14
 
@@ -139,7 +148,7 @@
 
 ### Bug fixes
 
-- Update starlette-problem pin to include deprecation for strip_debug fields. [[26](https://github.com/NRWLDev/fastapi-problem/issues/26)] [[e1c5ae1](https://github.com/NRWLDev/fastapi-problem/commit/e1c5ae1aeeb284246f6cced9610460feaa870be5)]
+- Update starlette-problem pin to include deprecation for strip_debug fields. [#26](https://github.com/NRWLDev/fastapi-problem/issues/26)  [[e1c5ae1](https://github.com/NRWLDev/fastapi-problem/commit/e1c5ae1aeeb284246f6cced9610460feaa870be5)]
 
 ## v0.9.4 - 2024-09-09
 
@@ -170,7 +179,7 @@
 
 ### Miscellaneous
 
-- **Breaking:** Update rfc9457 with fix for correct response format per spec. [[8401bc7](https://github.com/NRWLDev/fastapi-problem/commit/8401bc738c7fb61bc57d738777d8b6f5c8290240)]
+- **Breaking** Update rfc9457 with fix for correct response format per spec. [[8401bc7](https://github.com/NRWLDev/fastapi-problem/commit/8401bc738c7fb61bc57d738777d8b6f5c8290240)]
 
 ## v0.8.1 - 2024-06-28
 
@@ -180,11 +189,14 @@
 
 ### Miscellaneous
 
+- Run mutation tests to detect missed coverage [[9e2c9ba](https://github.com/NRWLDev/fastapi-problem/commit/9e2c9baae8fe0848ab4277bd045e4476f54d8269)]
+- Run mutation tests to detect missed coverage [[e0c2280](https://github.com/NRWLDev/fastapi-problem/commit/e0c22807eb7f415298463755a2d73a1dccf5ed23)]
+
 ## v0.8.0 - 2024-06-14
 
 ### Features and Improvements
 
-- **Breaking:** Drop deprecated features from 0.7 release. [[79f1026](https://github.com/NRWLDev/fastapi-problem/commit/79f1026e4519dd8fc7ff9091060dbf595e42f3a4)]
+- **Breaking** Drop deprecated features from 0.7 release. [[79f1026](https://github.com/NRWLDev/fastapi-problem/commit/79f1026e4519dd8fc7ff9091060dbf595e42f3a4)]
 
 ## v0.7.20 - 2024-05-31
 
@@ -212,7 +224,7 @@
 
 ### Bug fixes
 
-- Add deprecation warnings to deprecated modules. [[#15](https://github.com/NRWLDev/fastapi-problem/issues/15)] [[a23747f](https://github.com/NRWLDev/fastapi-problem/commit/a23747f82fcdbcbf35a12effc977651c0c2be936)]
+- Add deprecation warnings to deprecated modules. [#15](https://github.com/NRWLDev/fastapi-problem/issues/15) [#15](https://github.com/NRWLDev/fastapi-problem/issues/15)  [[a23747f](https://github.com/NRWLDev/fastapi-problem/commit/a23747f82fcdbcbf35a12effc977651c0c2be936)]
 
 ## v0.7.16 - 2024-05-23
 
@@ -224,7 +236,7 @@
 
 ### Bug fixes
 
-- rfc9457 now supports headers and status_code, no need to reimplement base classes. [[089c65f](https://github.com/NRWLDev/fastapi-problem/commit/089c65fdeacd589a3db5ff4e6a095b3732054a08)]
+- Rfc9457 now supports headers and status_code, no need to reimplement base classes. [[089c65f](https://github.com/NRWLDev/fastapi-problem/commit/089c65fdeacd589a3db5ff4e6a095b3732054a08)]
 
 ## v0.7.14 - 2024-05-22
 
@@ -234,21 +246,15 @@
 
 ## v0.7.13 - 2024-05-22
 
-### Miscellaneous
+### Revert
 
 - Multiclass inheritance from starlette.HTTPException introduces unexpected side effects in testing and middleware. [[c8b0f3d](https://github.com/NRWLDev/fastapi-problem/commit/c8b0f3d291622fccf630284e57737b006ab2a7dd)]
-
-## v0.7.12 - 2024-05-22
-
-### Bug fixes
-
-- Remove __str__ implementation overrides, rely on rfc9457 implementation [[fc90194](https://github.com/NRWLDev/fastapi-problem/commit/fc901947bea38386240afea09731754bd1002191)]
 
 ## v0.7.11 - 2024-05-21
 
 ### Bug fixes
 
-- Pin rfc9457 [[50bb647](https://github.com/NRWLDev/fastapi-problem/commit/50bb647e6130abe8e118a9f4156d5537ae8ccdcc)]
+- Pin rfc9457 >= 0.0.5 for starlette exception chaining. [[50bb647](https://github.com/NRWLDev/fastapi-problem/commit/50bb647e6130abe8e118a9f4156d5537ae8ccdcc)]
 
 ## v0.7.10 - 2024-05-21
 
@@ -260,8 +266,13 @@
 
 ### Bug fixes
 
-- Subclass rfc9457 Problems with HTTPException to support sentry_sdk starlette integrations. [[#11](https://github.com/NRWLDev/fastapi-problem/issues/11)] [[8b43192](https://github.com/NRWLDev/fastapi-problem/commit/8b43192b8336b9d94164f0d1cfad9d396a6af08c)]
-- Add in py.typed file so mypy/pyright acknowledge type hints. [[#12](https://github.com/NRWLDev/fastapi-problem/issues/12)] [[010f6da](https://github.com/NRWLDev/fastapi-problem/commit/010f6da1b718d9397187fd8a71a225f8f155ad72)]
+- Subclass rfc9457 Problems with HTTPException to support sentry_sdk starlette integrations. [#11](https://github.com/NRWLDev/fastapi-problem/issues/11)  [[8b43192](https://github.com/NRWLDev/fastapi-problem/commit/8b43192b8336b9d94164f0d1cfad9d396a6af08c)]
+
+## v0.7.8 - 2024-05-17
+
+### Bug fixes
+
+- Add in py.typed file so mypy/pyright acknowledge type hints. [#12](https://github.com/NRWLDev/fastapi-problem/issues/12)  [[010f6da](https://github.com/NRWLDev/fastapi-problem/commit/010f6da1b718d9397187fd8a71a225f8f155ad72)]
 
 ## v0.7.7 - 2024-05-16
 
@@ -271,19 +282,20 @@
 
 ## v0.7.6 - 2024-05-15
 
-### Miscellaneous
+### Refactor
 
 - Deprecate code in favour of type_ on base class implementations. [[fa828a2](https://github.com/NRWLDev/fastapi-problem/commit/fa828a2cf42b826018bb09769ff587bca92d146a)]
+- Drop starlette handler, anyone using starlette wont want fastapi installed over the top. [[112631e](https://github.com/NRWLDev/fastapi-problem/commit/112631efdc0b8358126777283ca12bdfbeb307d5)]
 
 ## v0.7.5 - 2024-05-13
 
-### Bug fixes
+### Bug
 
 - Fix issue where custom handlers were ignored. [[34898e7](https://github.com/NRWLDev/fastapi-problem/commit/34898e79f436847145428114bd0ca7aebde83bab)]
 
 ## v0.7.4 - 2024-05-13
 
-### Bug fixes
+### Bug
 
 - Fix typo in HttpException init. [[1c7fcf9](https://github.com/NRWLDev/fastapi-problem/commit/1c7fcf970cce7e208e0f74102e88a1574d2db2ad)]
 
@@ -297,9 +309,9 @@
 
 ### Features and Improvements
 
-- Add support for pre/post hooks. [[#1](https://github.com/NRWLDev/fastapi-problem/issues/1)] [[a02b7cf](https://github.com/NRWLDev/fastapi-problem/commit/a02b7cf70b77feb7d300a979d27fcb9a6a0288d8)]
-- Support custom exception handler functions [[#2](https://github.com/NRWLDev/fastapi-problem/issues/2)] [[95e56d1](https://github.com/NRWLDev/fastapi-problem/commit/95e56d1ca78bf11aa95c29970ba155e8e418be18)]
-- Implement base error class Problem [[#3](https://github.com/NRWLDev/fastapi-problem/issues/3)] [[e35bfcf](https://github.com/NRWLDev/fastapi-problem/commit/e35bfcffccdf9b9564b4ec3dad6059c01e5680e5)]
+- Add support for pre/post hooks. [#1](https://github.com/NRWLDev/fastapi-problem/issues/1) [#1](https://github.com/NRWLDev/fastapi-problem/issues/1)  [[a02b7cf](https://github.com/NRWLDev/fastapi-problem/commit/a02b7cf70b77feb7d300a979d27fcb9a6a0288d8)]
+- Support custom exception handler functions [#2](https://github.com/NRWLDev/fastapi-problem/issues/2)  [[95e56d1](https://github.com/NRWLDev/fastapi-problem/commit/95e56d1ca78bf11aa95c29970ba155e8e418be18)]
+- Implement base error class Problem [#3](https://github.com/NRWLDev/fastapi-problem/issues/3)  [[e35bfcf](https://github.com/NRWLDev/fastapi-problem/commit/e35bfcffccdf9b9564b4ec3dad6059c01e5680e5)]
 
 ## v0.7.1 - 2024-05-01
 
@@ -311,147 +323,75 @@
 
 ### Features and Improvements
 
-- **Breaking:** Drop support for legacy modes from web_error [[89bff61](https://github.com/NRWLDev/fastapi-problem/commit/89bff61eddcb6d068c7e8a7a8cf4a231cb4bd7dc)]
+- **Breaking** Drop support for legacy modes from web_error [[89bff61](https://github.com/NRWLDev/fastapi-problem/commit/89bff61eddcb6d068c7e8a7a8cf4a231cb4bd7dc)]
 
 ## v0.6.10 - 2024-04-11
 
 ### Features and Improvements
 
-- Support stripping debug by status code, rather than flag. [#1](https://github.com/EdgyEdgemond/web-error/issues/1) [4d76e1e](https://github.com/EdgyEdgemond/web-error/commit/4d76e1eb65efa004d62812e64d40fcc8a224405a)
+- Support stripping debug by status code, rather than flag. [#1](https://github.com/NRWLDev/fastapi-problem/issues/1)  [[4d76e1e](https://github.com/NRWLDev/fastapi-problem/commit/4d76e1eb65efa004d62812e64d40fcc8a224405a)]
 
 ## v0.6.9 - 2024-03-12
 
 ### Bug fixes
 
-- Fix incorrect string method used in type generation [01f2c1b](https://github.com/EdgyEdgemond/web-error/commit/01f2c1b26ee296ef723d4c852dbe162e0218174f)
+- Fix incorrect string method used in type generation [[01f2c1b](https://github.com/NRWLDev/fastapi-problem/commit/01f2c1b26ee296ef723d4c852dbe162e0218174f)]
 
 ## v0.6.8 - 2024-03-12
 
 ### Bug fixes
 
-- Only replace last instance of Error in class name [eff6b14](https://github.com/EdgyEdgemond/web-error/commit/eff6b149f1d72a58fa4ec0340f0a9511a88d85e1)
+- Only replace last instance of Error in class name [[eff6b14](https://github.com/NRWLDev/fastapi-problem/commit/eff6b149f1d72a58fa4ec0340f0a9511a88d85e1)]
 
 ## v0.6.7 - 2024-03-11
 
 ### Bug fixes
 
-- Cleanup legacy warning detection [[9c54796](https://github.com/EdgyEdgemond/web-error/commit/9c54796458082a1a9f7b265c33348335f65f5e44)]
+- Cleanup legacy warning detection [[9c54796](https://github.com/NRWLDev/fastapi-problem/commit/9c54796458082a1a9f7b265c33348335f65f5e44)]
 
 ## v0.6.6 - 2024-03-08
 
 ### Bug fixes
 
-- Clean up message deprecation detection [[c2a0e3f](https://github.com/EdgyEdgemond/web-error/commit/c2a0e3f552fad60e0ea73b449e269c89c3c2f43c)]
+- Clean up message deprecation detection [[c2a0e3f](https://github.com/NRWLDev/fastapi-problem/commit/c2a0e3f552fad60e0ea73b449e269c89c3c2f43c)]
 
 ## v0.6.5 - 2024-03-08
 
 ### Bug fixes
 
-- Expose legacy attributes, accessing new attributes. [[30c3682](https://github.com/EdgyEdgemond/web-error/commit/30c3682ea9526b6c2a4b180cd928becd69396961)]
+- Expose legacy attributes, accessing new attributes. [[30c3682](https://github.com/NRWLDev/fastapi-problem/commit/30c3682ea9526b6c2a4b180cd928becd69396961)]
 
 ## v0.6.4 - 2024-03-08
 
 ### Bug fixes
 
-- Handle legacy exception definitions with message attribute [[c07215c](https://github.com/EdgyEdgemond/web-error/commit/c07215cc4ec9e10953abded8311a93717704a324)]
+- Handle legacy exception definitions with message attribute [[c07215c](https://github.com/NRWLDev/fastapi-problem/commit/c07215cc4ec9e10953abded8311a93717704a324)]
 
 ## v0.6.3 - 2024-03-08
 
 ### Bug fixes
 
-- Support legacy init [[e83a8f8](https://github.com/EdgyEdgemond/web-error/commit/e83a8f8b29b11694414b20e2e2ac1856b61dbb0c)]
+- Support legacy init [[e83a8f8](https://github.com/NRWLDev/fastapi-problem/commit/e83a8f8b29b11694414b20e2e2ac1856b61dbb0c)]
 
 ## v0.6.2 - 2024-03-04
 
 ### Features and Improvements
 
-- Attach exception handlers to an active app, rather than providing to `__init__` [[#23](https://github.com/EdgyEdgemond/web-error/issues/23)] [[3d61d82](https://github.com/EdgyEdgemond/web-error/commit/3d61d82be86e12ee477cb5737e8085ff8982167f)]
+- Attach exception handlers to an active app, rather than providing to `__init__` [#23](https://github.com/NRWLDev/fastapi-problem/issues/23)  [[3d61d82](https://github.com/NRWLDev/fastapi-problem/commit/3d61d82be86e12ee477cb5737e8085ff8982167f)]
 
 ## v0.6.1 - 2024-02-29
 
 ### Bug fixes
 
-- Derive title/type from unexpected error status_codes.  [[#19](https://github.com/EdgyEdgemond/web-error/issues/19)] [[a62d99a](https://github.com/EdgyEdgemond/web-error/commit/a62d99a64b02d79a0e54ceaab7c3d7bc689b56e1)]
+- Derive title/type from unexpected error status_codes. [#19](https://github.com/NRWLDev/fastapi-problem/issues/19)  [[a62d99a](https://github.com/NRWLDev/fastapi-problem/commit/a62d99a64b02d79a0e54ceaab7c3d7bc689b56e1)]
 
-## v0.6.0
-
-### Features and Improvements
-
-- **Breaking:** Drop support for aiohttp, flask and pyramid. Refactor fastapi/starlette interface. [[#16](https://github.com/EdgyEdgemond/web-error/issues/16)]
-- Default to RFC9457 response formats, optional legacy generator kwarg can be provided to maintain old response formats. [[#15](https://github.com/EdgyEdgemond/web-error/issues/15)]
-
-## v0.5.6
-
-## v0.5.5
-
-## v0.5.4
-
-## v0.5.3
-
-## v0.5.2
-
-## v0.5.1
-
-## v0.5.0
+## vv0.6.0 - 2024-02-29
 
 ### Features and Improvements
 
-- Introduce ruff, black, pre-commit. Drop support for py 3.7 and earlier. [[#13](https://github.com/EdgyEdgemond/web-error/issues/13)]
+- Support RFC9457 response formats [#15](https://github.com/NRWLDev/fastapi-problem/issues/15)  [[3ec4c2f](https://github.com/NRWLDev/fastapi-problem/commit/3ec4c2fcac9668e0ba0312628c764cd7ee5034d0)]
+- **Breaking** Drop support for aiohttp, flask and pyramid. Refactor fastapi/starlette interface. [#16](https://github.com/NRWLDev/fastapi-problem/issues/16)  [[ec3f14f](https://github.com/NRWLDev/fastapi-problem/commit/ec3f14f1310389d7fb439fc6bda5192b634acced)]
 
-## v0.4.2
+## v0.0.1 - 2020-10-05
 
-### Bug fixes
-
-- Handle starlette core exceptions [[#11](https://github.com/EdgyEdgemond/web-error/issues/11)]
-
-## v0.4.1
-
-## v0.4.0
-
-### Features and Improvements
-
-- Migrate fastapi handler to starlette handler, extend starlette handler to support fastapi. [[#9](https://github.com/EdgyEdgemond/web-error/issues/9)]
-
-## v0.3.1
-
-### Bug fixes
-
-- Generate fastapi handler with cors support. [[#7](https://github.com/EdgyEdgemond/web-error/issues/7)]
-
-## v0.3.0
-
-### Features and Improvements
-
-- Add support for reraising from an error response from another api. [[#5](https://github.com/EdgyEdgemond/web-error/issues/5)]
-
-## v0.2.2
-
-### Bug fixes
-
-- Support RequestValidationError exceptions in fastapi handler. [[#4](https://github.com/EdgyEdgemond/web-error/issues/4)]
-
-## v0.2.1
-
-### Bug fixes
-
-- Bugfix for fastapi exception logging [[#2](https://github.com/EdgyEdgemond/web-error/issues/2)]
-
-## v0.2.0
-
-### Features and Improvements
-
-- Add handler to support fastapi [[#2](https://github.com/EdgyEdgemond/web-error/issues/2)]
-
-## v0.1.1
-
-## v0.1.0
-
-### Features and Improvements
-
-- Add in pyramid exception handlers [[#1](https://github.com/EdgyEdgemond/web-error/issues/1)]
-
-## v0.0.2
-
-### Bug fixes
-
-- Initial code release
+<!-- generated by git-cliff -->

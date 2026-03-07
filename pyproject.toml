@@ -1,6 +1,6 @@
 [project]
 name = "fastapi-problem"
-version = "0.12.1"
+version = "0.12.2"
 description = "FastAPI support for RFC9457 problems."
 authors = [
     {name = "Daniel Edgecombe", email = "daniel@nrwl.co"},
@@ -119,7 +119,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.bumpversion]
-current_version = "0.12.1"
+current_version = "0.12.2"
 allow_dirty = true
 allow_missing = true
 commit_extra = ["CHANGELOG.md"]
