@@ -147,3 +147,55 @@ exclude = ["tests/*"]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.git-cliff.bump]
+features_always_bump_minor = false
+breaking_always_bump_major = false
+
+[tool.git-cliff.changelog]
+header = """
+# Changelog\n
+"""
+body = """
+{% if version %}\
+    ## {{ version  }} (released {{ timestamp | date(format="%Y-%m-%d") }})
+{% else %}\
+    ## Unreleased
+{% endif %}\
+{% for group, commits in commits | group_by(attribute="group") %}
+    ### {{ group | upper_first }}
+    {% for commit in commits %}
+        - {% if commit.breaking %}**Breaking:** {% endif %}\
+        {{ commit.message | split(pat="\n") | first | upper_first | trim }}\
+        {%- if commit.links %} ({% for link in commit.links %}[{{link.text}}]({{link.href}}){% endfor -%}) {% endif %}\
+        [[{{ commit.id | truncate(length=7, end="") }}](https://github.com/NRWLDev/fastapi-problem/commit/{{ commit.id }})]\
+    {% endfor %}
+{% endfor %}\n
+"""
+trim = true
+
+[tool.git-cliff.git]
+link_parsers = [
+    { pattern = "#(\\d+)", href = "https://github.com/NRWLDev/fastapi-problem/issues/$1"},
+]
+
+commit_preprocessors = [
+  # Remove issue numbers.
+  { pattern = '\((\w+\s)?#([0-9]+)\)', replace = "" },
+]
+commit_parsers = [
+    { message = "^feat", group = "Features and Improvements" },
+    { message = "^fix", group = "Bug fixes" },
+    { message = "^doc", group = "Documentation" },
+    { message = "^perf", group = "Performance" },
+    { message = "^refactor", group = "Refactor" },
+    { message = "^style", group = "Styling" },
+    { message = "^test", group = "Miscellaneous" },
+    { message = "^chore\\(deps.*\\)", skip = true },
+    { message = "^chore\\(pr\\)", skip = true },
+    { message = "^chore\\(pull\\)", skip = true },
+    { message = "^chore\\(release\\): prepare for", skip = true },
+    { message = "^chore|^ci", group = "Miscellaneous Tasks" },
+    { body = ".*security", group = "Security" },
+]
+sort_commits = "newest"

@@ -37,3 +37,11 @@ def tests(context):
 def tests_coverage(context):
     """Run pytest unit tests with coverage."""
     context.run("pytest --cov -x --cov-report=xml")
+
+
+@invoke.task
+def bump(context):
+    context.run("git-cliff --config pyproject.toml -o CHANGELOG.md")
+    result = context.run("git-cliff --bumped-version")
+    x = result.stdout.splitlines()[0]
+    context.run(f"bumpversion --version-number={x}")
