@@ -41,7 +41,7 @@ def tests_coverage(context):
 
 @invoke.task
 def bump(context):
-    context.run("git-cliff --config pyproject.toml -o CHANGELOG.md")
+    context.run("git-cliff --config pyproject.toml --bump -o CHANGELOG.md")
     result = context.run("git-cliff --bumped-version")
-    x = result.stdout.splitlines()[0]
-    context.run(f"bumpversion --version-number={x}")
+    x = result.stdout.splitlines()[0].lstrip("v")
+    context.run(f"bumpversion {x}")
